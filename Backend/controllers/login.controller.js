@@ -1,4 +1,4 @@
-const loginService = require('../services/loginService');
+const loginService = require('../services/login.service');
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 
