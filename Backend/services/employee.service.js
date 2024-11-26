@@ -79,5 +79,77 @@ async function getAllEmployees() {
   const rows = await db.query(query);
   return rows;
 }
+// A function to update an employee
+async function updateEmployee(employeeId, employeeData) {
+  try {
+    // Check if the employee exists
+    const existingEmployee = await getEmployeeByEmail(
+      employeeData.employee_email
+    );
+    if (!existingEmployee) {
+      throw new Error("Employee not found.");
+    }
 
-module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getAllEmployees};
+    // Start building the update query
+    let updateQuery = "UPDATE employee SET ";
+    let values = [];
+
+    // Update employee email or other fields as needed
+    if (employeeData.employee_email) {
+      updateQuery += "employee_email = ?, ";
+      values.push(employeeData.employee_email);
+    }
+
+    // Update active employee status
+    if (employeeData.active_employee !== undefined) {
+      updateQuery += "active_employee = ?, ";
+      values.push(employeeData.active_employee);
+    }
+
+    updateQuery = updateQuery.slice(0, -2); // Remove trailing comma and space
+    updateQuery += " WHERE employee_id = ?";
+    values.push(employeeId);
+
+    const updateResult = await db.query(updateQuery, values);
+
+    // If password is provided, hash and update it
+    if (employeeData.employee_password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(
+        employeeData.employee_password,
+        salt
+      );
+
+      const updatePasswordQuery =
+        "UPDATE employee_pass SET employee_password_hashed = ? WHERE employee_id = ?";
+      await db.query(updatePasswordQuery, [hashedPassword, employeeId]);
+    }
+
+    // Update employee info
+    const updateInfoQuery =
+      "UPDATE employee_info SET employee_first_name = ?, employee_last_name = ?, employee_phone = ? WHERE employee_id = ?";
+    await db.query(updateInfoQuery, [
+      employeeData.employee_first_name,
+      employeeData.employee_last_name,
+      employeeData.employee_phone,
+      employeeId,
+    ]);
+
+    // Update employee role if provided
+    if (employeeData.company_role_id) {
+      const updateRoleQuery =
+        "UPDATE employee_role SET company_role_id = ? WHERE employee_id = ?";
+      await db.query(updateRoleQuery, [
+        employeeData.company_role_id,
+        employeeId,
+      ]);
+    }
+
+    return { message: "Employee updated successfully" };
+  } catch (err) {
+    console.error("Error updating employee:", err);
+    throw new Error("Failed to update employee.");
+  }
+}
+
+module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getAllEmployees, updateEmployee};

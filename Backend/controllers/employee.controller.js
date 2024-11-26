@@ -52,4 +52,22 @@ async function getAllEmployees(req, res, next) {
   }
 }
 
-module.exports = { createEmployee, getAllEmployees };
+// Controller for updating an employee
+async function updateEmployee(req, res, next) {
+  const employeeId = req.params.id;
+  const employeeData = req.body;
+
+  try {
+    // Call the service function to update the employee
+    const result = await employeeService.updateEmployee(employeeId, employeeData);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    if (err.message === "Employee not found.") {
+      return res.status(404).json({ message: err.message });
+    }
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+module.exports = { createEmployee, getAllEmployees, updateEmployee };
