@@ -12,6 +12,12 @@ const employeeRoutes = require("./routes/employeeRoutes");
 // employee routes middleware
 app.use(employeeRoutes);
 
+// login routes middleware file
+const loginRoutes = require("./routes/loginRoutes");
+
+// login routes middleware
+app.use(loginRoutes);
+
 // start the Express server
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
