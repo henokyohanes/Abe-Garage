@@ -22,6 +22,10 @@ const loginRoutes = require("./routes/login.routes");
 // login routes middleware
 app.use(loginRoutes);
 
+const customerRoutes = require("./routes/customer.routes");
+
+app.use(customerRoutes);
+
 // start the Express server
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
