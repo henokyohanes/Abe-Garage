@@ -152,4 +152,22 @@ async function updateEmployee(employeeId, employeeData) {
   }
 }
 
-module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getAllEmployees, updateEmployee};
+// Service function to delete an employee
+async function deleteEmployee(employeeId) {
+  // Verify the employee exists
+  const checkQuery = "SELECT * FROM employee WHERE employee_id = ?";
+  const rows = await db.query(checkQuery, [employeeId]);
+
+  if (rows.length === 0) {
+    // Employee does not exist
+    return false;
+  }
+
+  // Proceed with deletion
+  const deleteQuery = "DELETE FROM employee WHERE employee_id = ?";
+  const result = await db.query(deleteQuery, [employeeId]);
+
+  return result.affectedRows === 1; // Return true if deletion was successful
+}
+
+module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getAllEmployees, updateEmployee, deleteEmployee};

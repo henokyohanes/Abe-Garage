@@ -70,4 +70,24 @@ async function updateEmployee(req, res, next) {
   }
 }
 
-module.exports = { createEmployee, getAllEmployees, updateEmployee };
+// Controller for deleting an employee
+async function deleteEmployee(req, res, next) {
+  const employeeId = req.params.id;
+
+  try {
+    // Call the service function to delete the employee
+    const result = await employeeService.deleteEmployee(employeeId);
+
+    if (!result) {
+      // If the employee does not exist, return 404
+      return res.status(404).json({ message: "Employee not found." });
+    }
+
+    res.status(200).json({ message: "Employee deleted successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+module.exports = { createEmployee, getAllEmployees, updateEmployee, deleteEmployee };
