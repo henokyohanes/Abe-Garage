@@ -15,4 +15,11 @@ const createCustomer = async (customerData) => {
   );
 };
 
-module.exports = {findCustomerByEmail, createCustomer};
+// Get all customers
+const getAllCustomers = async () => {
+  // Query to fetch all customers
+  const [rows] = await db.execute('SELECT * FROM customers');
+  return rows;
+};
+
+module.exports = {findCustomerByEmail, createCustomer, getAllCustomers};

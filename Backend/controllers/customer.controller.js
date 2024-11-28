@@ -87,4 +87,23 @@ const createCustomer = async (req, res) => {
   }
 };
 
-module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer]};
+// Get all customers
+const getAllCustomers = async (req, res) => {
+  try {
+    // Fetch all customers from the database
+    const customers = await customerService.getAllCustomers();
+
+    // Successful response with the list of customers
+    return res.status(200).json({ status: 'success', data: customers });
+  } catch (err) {
+    // Log the error and return an internal server error response
+    console.error('Error retrieving customers:', err.message);
+    return res.status(500).json({
+      status: 'fail',
+      message: 'Failed to retrieve customers',
+      error: err.message,
+    });
+  }
+};
+
+module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers};

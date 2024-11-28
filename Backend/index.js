@@ -22,8 +22,10 @@ const loginRoutes = require("./routes/login.routes");
 // login routes middleware
 app.use(loginRoutes);
 
+// customer routes middleware file  
 const customerRoutes = require("./routes/customer.routes");
 
+// customer routes middleware
 app.use(customerRoutes);
 
 // start the Express server

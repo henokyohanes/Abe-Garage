@@ -11,4 +11,11 @@ router.post(
   customerController.createCustomer
 );
 
+// Route to get all customers (admin-only access)
+router.get(
+  '/api/all-customers',
+  [authMiddleware.verifyToken, authMiddleware.isAdmin],
+  customerController.getAllCustomers
+);
+
 module.exports = router;
