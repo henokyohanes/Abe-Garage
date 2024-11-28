@@ -106,4 +106,46 @@ const getAllCustomers = async (req, res) => {
   }
 };
 
-module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers};
+// Get a single customer by ID
+const getCustomerById = async (req, res) => {
+  const { id } = req.params;
+
+  // Validate the ID
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      status: "fail",
+      error: "Bad Request",
+      message: "The customer ID provided is invalid or missing",
+    });
+  }
+
+  try {
+    // Fetch the customer by ID
+    const customer = await customerService.getCustomerById(id);
+
+    // If no customer is found
+    if (!customer) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Customer not found",
+        message: "The customer ID provided does not exist",
+      });
+    }
+
+    // Return the customer data
+    return res.status(200).json({
+      status: "success",
+      data: customer,
+    });
+  } catch (err) {
+    // Log the error and return an internal server error response
+    console.error("Error retrieving customer:", err.message);
+    return res.status(500).json({
+      status: "fail",
+      message: "Failed to retrieve customer",
+      error: err.message,
+    });
+  }
+};
+
+module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById};

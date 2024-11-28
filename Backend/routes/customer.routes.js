@@ -18,4 +18,11 @@ router.get(
   customerController.getAllCustomers
 );
 
+// Route to get a single customer by ID (admin-only access)
+router.get(
+  '/api/customers/:id',
+  [authMiddleware.verifyToken, authMiddleware.isAdmin],
+  customerController.getCustomerById
+);
+
 module.exports = router;

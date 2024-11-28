@@ -22,4 +22,11 @@ const getAllCustomers = async () => {
   return rows;
 };
 
-module.exports = {findCustomerByEmail, createCustomer, getAllCustomers};
+// Get a customer by ID
+const getCustomerById = async (id) => {
+  // Query to fetch the customer by ID
+  const [rows] = await db.execute('SELECT * FROM customers WHERE id = ?', [id]);
+  return rows[0]; // Return the first row if found
+};
+
+module.exports = {findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById};
