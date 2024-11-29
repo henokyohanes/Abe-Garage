@@ -148,4 +148,55 @@ const getCustomerById = async (req, res) => {
   }
 };
 
-module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById};
+// Update customer information
+const updateCustomer = async (req, res) => {
+  const { id } = req.params;
+  const { customer_phone_number, customer_first_name, customer_last_name } =
+    req.body;
+
+  // Validate ID
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      status: "fail",
+      error: "Bad Request",
+      message: "The customer ID provided is invalid or missing",
+    });
+  }
+
+  try {
+    // Check if customer exists
+    const existingCustomer = await customerService.getCustomerById(id);
+    if (!existingCustomer) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Customer Not Found",
+        message: "The customer ID provided does not exist.",
+      });
+    }
+
+    // Update customer information
+    const updatedCustomer = await customerService.updateCustomer(id, {
+      customer_phone_number,
+      customer_first_name,
+      customer_last_name,
+    });
+
+    // Send success response
+    return res.status(200).json({
+      status: "success",
+      message: "Customer updated successfully",
+      data: updatedCustomer,
+    });
+  } catch (err) {
+    // Log the error and return an internal server error response
+    console.error("Error updating customer:", err.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message:
+        "There was an issue updating the customer details. Please try again later.",
+    });
+  }
+};
+
+module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById, updateCustomer};

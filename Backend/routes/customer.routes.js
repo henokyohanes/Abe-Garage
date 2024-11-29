@@ -25,4 +25,11 @@ router.get(
   customerController.getCustomerById
 );
 
+// Update customer endpoint
+router.put(
+  '/api/update-customer/:id',
+  [authMiddleware.verifyToken, authMiddleware.isAdmin],
+  customerController.updateCustomer
+);
+
 module.exports = router;

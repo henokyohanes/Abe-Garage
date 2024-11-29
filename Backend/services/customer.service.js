@@ -29,4 +29,33 @@ const getCustomerById = async (id) => {
   return rows[0]; // Return the first row if found
 };
 
-module.exports = {findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById};
+// Update customer information
+const updateCustomer = async (id, customerData) => {
+  const fields = [];
+  const values = [];
+
+  // Dynamically build query based on provided fields
+  for (const [key, value] of Object.entries(customerData)) {
+    if (value) {
+      fields.push(`${key} = ?`);
+      values.push(value);
+    }
+  }
+
+  // If no fields to update, throw an error
+  if (fields.length === 0) {
+    throw new Error("No fields provided for update");
+  }
+
+  // Add ID to values for the WHERE clause
+  values.push(id);
+
+  // Update query
+  const query = `UPDATE customers SET ${fields.join(", ")} WHERE id = ?`;
+  const [result] = await db.execute(query, values);
+
+  // Return updated rows
+  return result.affectedRows > 0;
+};
+
+module.exports = {findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById, updateCustomer};
