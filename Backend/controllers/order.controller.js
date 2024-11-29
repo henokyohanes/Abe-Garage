@@ -58,4 +58,25 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = {createOrder};
+// Get all orders
+const getAllOrders = async (req, res) => {
+  try {
+    // Fetch all orders and their details
+    const orders = await orderService.getAllOrders();
+
+    // Return successful response
+    return res.status(200).json({
+      status: 'success',
+      data: orders,
+    });
+  } catch (error) {
+    console.error('Error retrieving orders:', error.message);
+    return res.status(500).json({
+      status: 'fail',
+      error: 'Internal Server Error',
+      message: 'There was an issue retrieving the orders. Please try again later.',
+    });
+  }
+};
+
+module.exports = {createOrder, getAllOrders};

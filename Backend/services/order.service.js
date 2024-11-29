@@ -61,4 +61,38 @@ const createOrder = async (orderData) => {
   }
 };
 
-module.exports = {createOrder};
+// Get all orders
+const getAllOrders = async () => {
+  try {
+    // Query to fetch all orders along with associated order services
+    const [orders] = await db.execute(`
+      SELECT 
+        o.id AS order_id,
+        o.employee_id,
+        o.customer_id,
+        o.vehicle_id,
+        o.order_description,
+        o.order_date,
+        o.estimated_completion_date,
+        o.completion_date,
+        o.order_completed,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'service_id', os.service_id,
+            'service_description', os.service_description,
+            'service_cost', os.service_cost
+          )
+        ) AS order_services
+      FROM orders o
+      LEFT JOIN order_services os ON o.id = os.order_id
+      GROUP BY o.id
+      ORDER BY o.order_date DESC
+    `);
+
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {createOrder, getAllOrders};

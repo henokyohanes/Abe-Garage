@@ -11,4 +11,11 @@ router.post(
   orderController.createOrder
 );
 
+// Get all orders endpoint
+router.get(
+  '/api/orders',
+  [authMiddleware.verifyToken, authMiddleware.isAdmin],
+  orderController.getAllOrders
+);
+
 module.exports = router;
