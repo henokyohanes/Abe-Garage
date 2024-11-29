@@ -18,4 +18,11 @@ router.get(
   orderController.getAllOrders
 );
 
+// Get single order endpoint
+router.get(
+  '/api/order/:id',
+  [authMiddleware.verifyToken, authMiddleware.isAdmin],
+  orderController.getOrderById
+);
+
 module.exports = router;

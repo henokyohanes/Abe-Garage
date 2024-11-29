@@ -95,4 +95,42 @@ const getAllOrders = async () => {
   }
 };
 
-module.exports = {createOrder, getAllOrders};
+// Get a single order by ID
+const getOrderById = async (id) => {
+  try {
+    // Query to fetch order details and associated services
+    const [order] = await db.execute(
+      `
+      SELECT 
+        o.id AS order_id,
+        o.employee_id,
+        o.customer_id,
+        o.vehicle_id,
+        o.order_description,
+        o.order_date,
+        o.estimated_completion_date,
+        o.completion_date,
+        o.order_completed,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'service_id', os.service_id,
+            'service_description', os.service_description,
+            'service_cost', os.service_cost
+          )
+        ) AS order_services
+      FROM orders o
+      LEFT JOIN order_services os ON o.id = os.order_id
+      WHERE o.id = ?
+      GROUP BY o.id
+    `,
+      [id]
+    );
+
+    // If no order is found, return null
+    return order.length > 0 ? order[0] : null;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById};
