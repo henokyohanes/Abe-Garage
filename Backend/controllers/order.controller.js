@@ -121,4 +121,70 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById};
+// Update order by ID
+const updateOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      order_description,
+      estimated_completion_date,
+      completion_date,
+      order_completed,
+      order_services,
+    } = req.body;
+
+    // Validate ID and required fields
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        status: "fail",
+        error: "Bad Request",
+        message: "The order ID provided is invalid or missing.",
+      });
+    }
+
+    // Validate that the order exists
+    const orderExists = await orderService.getOrderById(id);
+    if (!orderExists) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Not Found",
+        message: "The order ID provided does not exist.",
+      });
+    }
+
+    // Update order in the database
+    const updatedOrder = await orderService.updateOrder(
+      id,
+      order_description,
+      estimated_completion_date,
+      completion_date,
+      order_completed,
+      order_services
+    );
+
+    // Check for successful update
+    if (!updatedOrder) {
+      return res.status(500).json({
+        status: "fail",
+        error: "Internal Server Error",
+        message:
+          "There was an issue updating the order. Please try again later.",
+      });
+    }
+
+    // Return success response
+    return res.status(200).json({
+      status: "success",
+      message: "Order updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating order:", error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message: "There was an issue updating the order. Please try again later.",
+    });
+  }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, updateOrder};

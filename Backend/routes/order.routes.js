@@ -25,4 +25,11 @@ router.get(
   orderController.getOrderById
 );
 
+// Update order endpoint
+router.put(
+  '/api/order/:id',
+  [authMiddleware.verifyToken, authMiddleware.isAdmin],
+  orderController.updateOrder
+);
+
 module.exports = router;

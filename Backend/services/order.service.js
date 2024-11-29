@@ -133,4 +133,77 @@ const getOrderById = async (id) => {
   }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById};
+// Update order and its associated services
+const updateOrder = async (
+  id,
+  order_description,
+  estimated_completion_date,
+  completion_date,
+  order_completed,
+  order_services
+) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // Update order details
+    const [result] = await connection.execute(
+      `
+      UPDATE orders
+      SET
+        order_description = ?,
+        estimated_completion_date = ?,
+        completion_date = ?,
+        order_completed = ?
+      WHERE id = ?
+    `,
+      [
+        order_description,
+        estimated_completion_date,
+        completion_date,
+        order_completed,
+        id,
+      ]
+    );
+
+    // Handle case where no rows were updated
+    if (result.affectedRows === 0) {
+      await connection.rollback();
+      return null;
+    }
+
+    // Update order_services if provided
+    if (order_services && Array.isArray(order_services)) {
+      // Delete existing services
+      await connection.execute(
+        `
+        DELETE FROM order_services WHERE order_id = ?
+      `,
+        [id]
+      );
+
+      // Insert new services
+      for (const service of order_services) {
+        const { service_id, service_description, service_cost } = service;
+        await connection.execute(
+          `
+          INSERT INTO order_services (order_id, service_id, service_description, service_cost)
+          VALUES (?, ?, ?, ?)
+        `,
+          [id, service_id, service_description, service_cost]
+        );
+      }
+    }
+
+    // Commit transaction
+    await connection.commit();
+    return true;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, updateOrder};
