@@ -44,4 +44,25 @@ const addService = async (req, res) => {
   }
 };
 
-module.exports = {addService};
+// Get all services
+const getAllServices = async (req, res) => {
+  try {
+    // Fetch all services from the database
+    const services = await serviceService.fetchAllServices();
+
+    // Successful response
+    return res.status(200).json({
+      status: 'success',
+      services,
+    });
+  } catch (error) {
+    console.error('Error fetching services:', error.message);
+    return res.status(500).json({
+      status: 'fail',
+      error: 'Internal Server Error',
+      message: 'An unexpected error occurred while fetching services.',
+    });
+  }
+};
+
+module.exports = {addService, getAllServices};

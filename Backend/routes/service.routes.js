@@ -13,4 +13,11 @@ router.post(
   serviceController.addService
 );
 
+// Get All Services Endpoint
+router.get(
+  '/api/services',
+  authMiddleware.verifyToken,
+  serviceController.getAllServices
+);
+
 module.exports = router;
