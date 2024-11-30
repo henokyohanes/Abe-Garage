@@ -65,4 +65,36 @@ const getAllServices = async (req, res) => {
   }
 };
 
-module.exports = {addService, getAllServices};
+// Get a single service by ID
+const getServiceById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Fetch service details by ID
+    const service = await serviceService.fetchServiceById(id);
+
+    // If service not found
+    if (!service) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Not Found",
+        message: `Service with ID ${id} not found.`,
+      });
+    }
+
+    // Successful response
+    return res.status(200).json({
+      status: "success",
+      service,
+    });
+  } catch (error) {
+    console.error(`Error fetching service with ID ${id}:`, error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message: "An unexpected error occurred while fetching the service.",
+    });
+  }
+};
+
+module.exports = {addService, getAllServices, getServiceById};
