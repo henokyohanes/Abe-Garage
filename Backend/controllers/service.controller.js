@@ -1,0 +1,47 @@
+const serviceService = require("../services/service.service");
+
+// Add a new service
+const addService = async (req, res) => {
+  try {
+    const { service_name, service_description, service_cost } = req.body;
+
+    // Validate required fields
+    if (!service_name || !service_description || !service_cost) {
+      return res.status(400).json({
+        status: "fail",
+        error: "Bad Request",
+        message: "Missing or invalid fields in the request body.",
+      });
+    }
+
+    // Insert the service into the database
+    const newService = await serviceService.createService({
+      service_name,
+      service_description,
+      service_cost,
+    });
+
+    if (!newService) {
+      return res.status(500).json({
+        status: "fail",
+        error: "Internal Server Error",
+        message: "Unable to create the service. Please try again later.",
+      });
+    }
+
+    // Successful response
+    return res.status(201).json({
+      status: "success",
+      message: "Service created successfully",
+    });
+  } catch (error) {
+    console.error("Error creating service:", error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message: "An unexpected error occurred.",
+    });
+  }
+};
+
+module.exports = {addService};

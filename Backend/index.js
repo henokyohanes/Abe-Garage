@@ -34,6 +34,12 @@ const orderRoutes = require("./routes/order.routes");
 // order routes middleware
 app.use(orderRoutes);
 
+// service routes middleware file
+const serviceRoutes = require("./routes/service.routes");
+
+// service routes middleware
+app.use(serviceRoutes);
+
 // start the Express server
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
