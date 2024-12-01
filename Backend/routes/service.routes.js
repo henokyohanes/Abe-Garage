@@ -35,4 +35,12 @@ router.put(
   serviceController.updateService
 );
 
+// Delete Service by ID
+router.delete(
+  '/api/service/:id',
+  authMiddleware.verifyToken,
+  authMiddleware.isAdminOrManager,
+  serviceController.deleteService
+);
+
 module.exports = router;

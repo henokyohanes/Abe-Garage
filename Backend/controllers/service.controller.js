@@ -145,4 +145,37 @@ const updateService = async (req, res) => {
   }
 };
 
-module.exports = {addService, getAllServices, getServiceById, updateService};
+// Delete service by ID
+const deleteService = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Check if the service exists
+    const serviceExists = await serviceService.fetchServiceById(id);
+
+    if (!serviceExists) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Not Found",
+        message: `Service with ID ${id} not found.`,
+      });
+    }
+
+    // Delete the service
+    await serviceService.deleteServiceById(id);
+
+    return res.status(200).json({
+      status: "success",
+      message: "Service deleted successfully",
+    });
+  } catch (error) {
+    console.error(`Error deleting service with ID ${id}:`, error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message: "An unexpected error occurred while deleting the service.",
+    });
+  }
+};
+
+module.exports = {addService, getAllServices, getServiceById, updateService, deleteService};
