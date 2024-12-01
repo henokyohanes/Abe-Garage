@@ -38,6 +38,21 @@ const isAdmin = async (req, res, next) => {
   }
 }
 
-const authMiddleware = {verifyToken, isAdmin}
+// Middleware to check admin or manager role
+const isAdminOrManager = (req, res, next) => {
+  const { role_id } = req.user;
+
+  if (![2, 3].includes(role_id)) {
+    return res.status(403).json({
+      status: 'fail',
+      error: 'Forbidden',
+      message: 'You are not authorized to perform this action.',
+    });
+  }
+
+  next();
+};
+
+const authMiddleware = {verifyToken, isAdmin, isAdminOrManager};
 
 module.exports = authMiddleware;

@@ -27,4 +27,12 @@ router.get(
   serviceController.getServiceById
 );
 
+// Update Service by ID
+router.put(
+  '/api/service/:id',
+  authMiddleware.verifyToken,
+  authMiddleware.isAdminOrManager,
+  serviceController.updateService
+);
+
 module.exports = router;

@@ -67,4 +67,23 @@ const fetchServiceById = async (id) => {
   }
 };
 
-module.exports = {createService, fetchAllServices, fetchServiceById};
+// Update a service by ID
+const updateServiceById = async (id, service_name, service_description) => {
+  try {
+    const [result] = await db.execute(
+      `
+      UPDATE services
+      SET service_name = ?, service_description = ?
+      WHERE id = ?
+      `,
+      [service_name, service_description, id]
+    );
+
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error('Error updating service by ID:', error.message);
+    throw error;
+  }
+};
+
+module.exports = {createService, fetchAllServices, fetchServiceById, updateServiceById};

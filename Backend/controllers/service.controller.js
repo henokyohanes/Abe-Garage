@@ -97,4 +97,52 @@ const getServiceById = async (req, res) => {
   }
 };
 
-module.exports = {addService, getAllServices, getServiceById};
+// Update service by ID
+const updateService = async (req, res) => {
+  const { id } = req.params;
+  const { service_name, service_description } = req.body;
+
+  // Validate input
+  if (!service_name || !service_description) {
+    return res.status(400).json({
+      status: "fail",
+      error: "Bad Request",
+      message: "Missing required fields: service_name, service_description.",
+    });
+  }
+
+  try {
+    // Check if the service exists
+    const serviceExists = await serviceService.fetchServiceById(id);
+
+    if (!serviceExists) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Not Found",
+        message: `Service with ID ${id} not found.`,
+      });
+    }
+
+    // Update the service
+    await serviceService.updateServiceById(
+      id,
+      service_name,
+      service_description
+    );
+
+    return res.status(200).json({
+      status: "success",
+      message: "Service updated successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error(`Error updating service with ID ${id}:`, error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message: "An unexpected error occurred while updating the service.",
+    });
+  }
+};
+
+module.exports = {addService, getAllServices, getServiceById, updateService};
