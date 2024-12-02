@@ -1,0 +1,66 @@
+.footer {
+    background-color: #091336;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px 400px;
+}
+
+.contactDetails {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.contactDetails div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+} 
+
+.contactDetails i {
+    font-size: 40px;
+    color: #67283D;
+}
+
+.contactDetails p {
+    margin: 5px 0;
+}
+
+.footerBottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.column {
+    flex: 1;
+    margin-right: 40px;
+}
+
+h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 5px 0;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.socialMedia a {
+    margin-right: 10px;
+    font-size: 20px;
+}
