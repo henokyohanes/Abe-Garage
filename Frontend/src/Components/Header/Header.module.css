@@ -1,0 +1,71 @@
+.header {
+    font-family: Arial, sans-serif;
+}
+
+.topBar {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    background-color: #07184A;
+}
+
+.tagline {
+    background-color: #EC0D08;
+    padding: 10px 20px;
+}
+
+.workingHours {
+    background-color: #07184A;
+    padding: 10px 20px;
+}
+
+.contactInfo {
+    padding: 10px 20px;
+}
+
+.phone {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.mainHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.navMenu {
+    display: flex;
+    align-items: center;
+}   
+
+.navMenu ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin-right: 20px;
+    padding-right: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.navMenu ul a {
+    text-decoration: none;
+    font-size: 16px;
+    color: black;
+}
+
+.signInButton {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
