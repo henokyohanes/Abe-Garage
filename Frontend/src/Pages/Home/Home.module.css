@@ -1,0 +1,131 @@
+.container {
+    font-family: Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Main Banner */
+.banner {
+    background: url('../../assets/Images/banner.jpg') no-repeat center center/cover;
+    padding: 200px 200px;
+    color: white;
+}
+
+.bannerText {
+    font-size: 2.5rem;
+}
+
+.bannerButtons {
+    margin-top: 20px;
+}
+
+.bannerButton {
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.bannerButtonAlt {
+    padding: 10px 20px;
+    background-color: white;
+    color: red;
+    border: 1px solid red;
+    cursor: pointer;
+}
+
+/* Experience Section */
+.experience {
+    display: flex;
+    padding: 50px 20px;
+    /* gap: 10px; */
+    text-align: center;
+}
+
+.experienceImages img {
+    width: 40%;
+    border-radius: 10px;
+}
+
+.experienceContent {
+    width: 100%;
+}
+
+/* Services Section */
+.services {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.servicesGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.serviceCard {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.serviceIcon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.readMore {
+    color: red;
+    text-decoration: none;
+}
+
+/* Quality Service Section */
+.qualityService {
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+/* Why Choose Us Section */
+.whyChooseUs {
+    padding: 50px 20px;
+}
+
+.benefit {
+    margin: 10px 0;
+}
+
+/* Additional Services Section */
+.additionalServices {
+    padding: 50px 20px;
+}
+
+.additionalGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.additionalCard img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Call to Action Section */
+.callToAction {
+    background-color: red;
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.ctaButton {
+    padding: 10px 20px;
+    background-color: white;
+    color: red;
+    border: none;
+    cursor: pointer;
+}
