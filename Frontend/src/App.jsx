@@ -4,13 +4,15 @@ import Home from './Pages/Home/Home';
 import Footer from './Components/Footer/Footer'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import './App.css'
+import AdminMenu from './Components/AdminMenu/AdminMenu';
 
 const App = () => {
 
   return (
     <>
       <Header />
-      <Home />
+      {/* <Home /> */}
+      <AdminMenu />
       <Footer />
     </>
   )
