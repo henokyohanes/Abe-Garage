@@ -1,0 +1,98 @@
+.contactSection {
+  background-color: #f7f8fa;
+  padding: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sectionTitle h2 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.contactForm {
+  display: flex;
+  justify-content: center;
+}
+
+.innerContainer {
+  width: 100%;
+}
+
+.formContainer {
+  padding: 20px;
+}
+
+.form {
+  width: 100%;
+}
+
+.formGroupContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.formControl {
+  appearance: none;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #d82323;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.submitButton:hover {
+  background-color: #b81d1d;
+}
+
+.submitButton span {
+  display: block;
+}
+

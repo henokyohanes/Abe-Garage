@@ -5,6 +5,7 @@ import Footer from './Components/Footer/Footer'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import './App.css'
 import AdminMenu from './Components/AdminMenu/AdminMenu';
+import AddEmployeeForm from './Components/AddEmployeeForm/AddEmployeeForm';
 
 const App = () => {
 
@@ -12,7 +13,8 @@ const App = () => {
     <>
       <Header />
       {/* <Home /> */}
-      <AdminMenu />
+      {/* <AdminMenu /> */}
+      <AddEmployeeForm />
       <Footer />
     </>
   )
