@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import getAuth from "./util/auth";
+import getAuth from "../util/auth";
 
-const PrivateAuthRoute = ({ roles, children }) => {
+const PrivateAuthRoute = ({ roles = [], children }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -13,7 +13,8 @@ const PrivateAuthRoute = ({ roles, children }) => {
         const employee = await getAuth(); // Get employee data
         if (employee?.employee_token) {
           setIsLogged(true); // User is logged in
-          if (roles?.length > 0 && roles.includes(employee.employee_role)) {
+          // If roles are specified, check authorization
+          if (roles.length === 0 || roles.includes(employee.employee_role)) {
             setIsAuthorized(true); // User is authorized
           }
         }
@@ -25,18 +26,21 @@ const PrivateAuthRoute = ({ roles, children }) => {
     };
 
     checkAuthentication();
-  }, [roles]);
+  }, []); // Removed dependency on `roles` to avoid unnecessary re-checking
 
-  if (isChecked) {
-    if (!isLogged) {
-      return <Navigate to="/login" />; // Redirect to login if not logged in
-    }
-    if (!isAuthorized) {
-      return <Navigate to="/unauthorized" />; // Redirect to unauthorized page if not authorized
-    }
+  if (!isChecked) {
+    return null; // Show nothing until authentication is checked
   }
 
-  return isChecked ? children : null; // Render children if checks pass
+  if (!isLogged) {
+    return <Navigate to="/login" replace />; // Redirect to login if not logged in
+  }
+
+  if (!isAuthorized) {
+    return <Navigate to="/unauthorized" replace />; // Redirect to unauthorized page if not authorized
+  }
+
+  return children; // Render children if all checks pass
 };
 
 export default PrivateAuthRoute;
