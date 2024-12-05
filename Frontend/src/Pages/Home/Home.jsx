@@ -1,9 +1,11 @@
 import React from "react";
 import image from "../../assets/images/image.jpg";
 import styles from "./Home.module.css";
+import Layout from "../../Layout/Layout";
 
 const Home = () => {
     return (
+        <Layout>
         <div className={styles.container}>
             {/* Main Banner Section */}
             <section className={styles.banner}>
@@ -99,6 +101,7 @@ const Home = () => {
                 <button className={styles.ctaButton}>Book Now</button>
             </section>
         </div>
+        </Layout>
     );
 };
 

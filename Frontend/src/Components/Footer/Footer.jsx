@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Importing Link for React Router
 import styles from "./Footer.module.css";
+import "@fortawesome/fontawesome-free/css/all.css"; // Importing Font Awesome
 
 const Footer = () => {
     return (
@@ -8,42 +10,53 @@ const Footer = () => {
             <div className={styles.contactDetails}>
                 <div>
                     <i className="fas fa-map-marker-alt"></i>
-                    <p>548, Tailstoi Town 5238 MT,<br />La city, IA 522364</p>
+                    <p>
+                        548, Tailstoi Town 5238 MT,
+                        <br />
+                        La city, IA 522364
+                    </p>
                 </div>
                 <div>
                     <i className="fas fa-envelope"></i>
-                    <p>Email us:<br />
-                        <a href="mailto:contact@autorex.com">contact@autorex.com</a></p>
+                    <p>
+                        Email us:
+                        <br />
+                        <a href="mailto:contact@autorex.com">contact@autorex.com</a>
+                    </p>
                 </div>
                 <div>
                     <i className="fas fa-phone"></i>
-                    <p>Call us: <br /><a href="tel:+18004567890">+1 800 456 7890</a></p>
+                    <p>
+                        Call us: <br />
+                        <a href="tel:+18004567890">+1 800 456 7890</a>
+                    </p>
                 </div>
             </div>
 
             {/* Footer Bottom Section */}
             <div className={styles.footerBottom}>
                 <div className={styles.column}>
-                    Capitalize on low hanging fruit to identify a ballpark value added activity to beta test.
-                    Override the digital divide additional clickthroughs.
+                    Capitalize on low hanging fruit to identify a ballpark value-added
+                    activity to beta test. Override the digital divide additional
+                    clickthroughs.
                 </div>
                 <div className={styles.column}>
                     <h4>Useful Links</h4>
                     <ul>
                         <li>
-                            <a href="/home">Home</a>
+                            <Link to="/">Home</Link>
                         </li>
                         <li>
-                            <a href="/about-us">About Us</a>
+                            <Link to="/about-us">About Us</Link>
                         </li>
                         <li>
-                            <a href="/appointment">Appointment</a>
+                            <Link to="/appointment">Appointment</Link>
                         </li>
                         <li>
-                            <a href="/testimonials">Testimonials</a>
+                            <Link to="/testimonials">Testimonials</Link>
                         </li>
                         <li>
-                            <a href="/contact-us">Contact Us</a>
+                            <Link to="/contact-us">Contact Us</Link>
                         </li>
                     </ul>
                 </div>
@@ -63,16 +76,16 @@ const Footer = () => {
                     <h4>Newsletter</h4>
                     <p>Get the latest updates and offers.</p>
                     <div className={styles.socialMedia}>
-                        <a href="#">
+                        <a href="#" aria-label="Facebook">
                             <i className="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#">
+                        <a href="#" aria-label="Twitter">
                             <i className="fab fa-twitter"></i>
                         </a>
-                        <a href="#">
+                        <a href="#" aria-label="Instagram">
                             <i className="fab fa-instagram"></i>
                         </a>
-                        <a href="#">
+                        <a href="#" aria-label="Google">
                             <i className="fab fa-google"></i>
                         </a>
                     </div>
