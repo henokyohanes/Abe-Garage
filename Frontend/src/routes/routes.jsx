@@ -7,12 +7,14 @@ import Customers from "../pages/Customers/Customers";
 import AddEmployee from "../pages/AddEmployee/AddEmployee";
 import Unauthorized from "../pages/Unauthorized/Unauthorized";
 import Login from "../Pages/Login/Login";
+import AboutUs from "../Pages/AboutUs/AboutUs";
 
 const AppRoutes = () => (
   <Routes>
     {/* Public Routes */}
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
+    <Route path="/about-us" element={<AboutUs />} />
     <Route path="/unauthorized" element={<Unauthorized />} />
 
     {/* Protected Routes */}
