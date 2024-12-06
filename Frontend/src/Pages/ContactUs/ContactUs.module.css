@@ -1,0 +1,88 @@
+.contactUs {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Banner Section */
+.banner {
+  background: url('path/to/banner-image.jpg') no-repeat center/cover;
+  color: white;
+  text-align: center;
+  padding: 50px 0;
+}
+
+.banner h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.banner nav {
+  font-size: 1rem;
+}
+
+/* Info Section */
+.infoSection {
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 10%;
+}
+
+.map {
+  width: 60%;
+}
+
+.contactInfo {
+  width: 35%;
+}
+
+.contactInfo h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.contactInfo p {
+  margin: 10px 0;
+}
+
+/* Call to Action Section */
+.cta {
+  background: #e74c3c;
+  color: white;
+  text-align: center;
+  padding: 50px 10%;
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.cta p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ctaButtons span {
+  font-size: 1.5rem;
+  margin-right: 20px;
+}
+
+.ctaButtons button {
+  background: white;
+  color: #e74c3c;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ctaButtons button:hover {
+  background: #fff5f5;
+}
