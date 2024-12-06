@@ -10,6 +10,7 @@ import Login from "../Pages/Login/Login";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
+import Employees from "../Pages/Admin/Employees/Employees";
 
 const AppRoutes = () => (
   <Routes>
@@ -45,11 +46,19 @@ const AppRoutes = () => (
         </PrivateAuthRoute>
       }
     />
-  <Route
+    <Route
       path="/admin/dashboard"
       element={
         <PrivateAuthRoute roles={[3]}>
           <Dashboard />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/admin/employees"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <Employees />
         </PrivateAuthRoute>
       }
     />

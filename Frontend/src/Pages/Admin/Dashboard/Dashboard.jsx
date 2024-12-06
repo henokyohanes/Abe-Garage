@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Dashboard.module.css";
-import AdminMenu from "../../../components/AdminMenu/AdminMenu";
+import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 
 const Dashboard = () => {
     return (
