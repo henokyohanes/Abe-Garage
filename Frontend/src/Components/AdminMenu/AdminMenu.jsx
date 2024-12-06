@@ -1,21 +1,22 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import Styles from "./AdminMenu.module.css"
 
-function AdminMenu(props) {
+function AdminMenu() {
   return (
     <div className={Styles.adminMenuContainer}>
       <div className={Styles.adminMenu}>
         <h2>Admin Menu</h2>
       </div>
       <div className={Styles.listGroup}>
-        <a href="/admin" className={Styles.listGroupItem  }>Dashboard</a>
-        <a href="/admin/orders" className={Styles.listGroupItem }>Orders</a>
-        <a href="/admin/order" className={Styles.listGroupItem }>New order</a>
-        <a href="/admin/add-employee" className={Styles.listGroupItem}>Add employee</a>
-        <a href="/admin/employees" className={Styles.listGroupItem  }>Employees</a>
-        <a href="/admin/add-customer" className={Styles.listGroupItem}>Add customer</a>
-        <a href="/admin/customers" className={Styles.listGroupItem}>Customers</a>
-        <a href="/admin/services" className={Styles.listGroupItem}>Services</a>
+        <Link to="/admin/dashboard" className={Styles.listGroupItem  }>Dashboard</Link>
+        <Link to="/admin/orders" className={Styles.listGroupItem }>Orders</Link>
+        <Link to="/admin/order" className={Styles.listGroupItem }>New order</Link>
+        <Link to="/admin/add-employee" className={Styles.listGroupItem}>Add employee</Link>
+        <Link to="/admin/employees" className={Styles.listGroupItem  }>Employees</Link>
+        <Link to="/admin/add-customer" className={Styles.listGroupItem}>Add customer</Link>
+        <Link to="/admin/customers" className={Styles.listGroupItem}>Customers</Link>
+        <Link to="/admin/services" className={Styles.listGroupItem}>Services</Link>
       </div>
     </div>
   );

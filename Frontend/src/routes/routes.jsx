@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import PrivateAuthRoute from "../Auth/PrivateAuthRoute";
-import Home from "../pages/Home/Home";
+import Home from "../Pages/Home/Home";
 import Orders from "../pages/Orders/Orders";
 import Customers from "../pages/Customers/Customers";
 import AddEmployee from "../pages/AddEmployee/AddEmployee";
@@ -9,6 +9,7 @@ import Unauthorized from "../pages/Unauthorized/Unauthorized";
 import Login from "../Pages/Login/Login";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import ContactUs from "../Pages/ContactUs/ContactUs";
+import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
 
 const AppRoutes = () => (
   <Routes>
@@ -41,6 +42,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[3]}>
           <AddEmployee />
+        </PrivateAuthRoute>
+      }
+    />
+  <Route
+      path="/admin/dashboard"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <Dashboard />
         </PrivateAuthRoute>
       }
     />
