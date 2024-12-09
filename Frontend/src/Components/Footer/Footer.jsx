@@ -1,30 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Importing Link for React Router
+import { Link } from "react-router-dom";
 import styles from "./Footer.module.css";
-import "@fortawesome/fontawesome-free/css/all.css"; // Importing Font Awesome
 
 const Footer = () => {
     return (
-        <footer className={styles.footer}>
+        <div className={styles.footer}>
             {/* Footer Top Section */}
-            <div className={styles.contactDetails}>
-                <div>
+            <div className={`${styles.contactDetails} row`}>
+                <div className="col-md-4 col-sm-12">
                     <i className="fas fa-map-marker-alt"></i>
                     <p>
-                        548, Tailstoi Town 5238 MT,
+                        1234 Tailstoi Street
                         <br />
-                        La city, IA 522364
+                        Houston, TX 12345
                     </p>
                 </div>
-                <div>
+                <div className="col-md-4 col-sm-12">
                     <i className="fas fa-envelope"></i>
                     <p>
                         Email us:
                         <br />
-                        <a href="mailto:contact@autorex.com">contact@autorex.com</a>
+                        <a href="mailto:contact@autorex.com">contact@abe.com</a>
                     </p>
                 </div>
-                <div>
+                <div className="col-md-4 col-sm-12">
                     <i className="fas fa-phone"></i>
                     <p>
                         Call us: <br />
@@ -34,13 +33,11 @@ const Footer = () => {
             </div>
 
             {/* Footer Bottom Section */}
-            <div className={styles.footerBottom}>
-                <div className={styles.column}>
-                    Capitalize on low hanging fruit to identify a ballpark value-added
-                    activity to beta test. Override the digital divide additional
-                    clickthroughs.
+            <div className={`${styles.footerBottom} row`}>
+                <div className="d-none d-lg-block col-lg-4">
+                    we offer expert auto repair, maintenance, and customization services for all vehicles.<br /><strong>Your ride, our pride!</strong>
                 </div>
-                <div className={styles.column}>
+                <div className="col-5 col-md-3 col-lg-2">
                     <h4>Useful Links</h4>
                     <ul>
                         <li>
@@ -61,7 +58,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <div className={styles.column}>
+                <div className="col-7 col-md-4 col-lg-3">
                     <h4>Our Services</h4>
                     <ul>
                         <li>Performance Upgrade</li>
@@ -72,7 +69,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <div className={styles.column}>
+                <div className="col-sm-12 col-md-5 col-lg-3">
                     <h4>Newsletter</h4>
                     <p>Get the latest updates and offers.</p>
                     <div className={styles.socialMedia}>
@@ -91,7 +88,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-        </footer>
+        </div>
     );
 };
 

@@ -58,6 +58,7 @@
 }
 
 .signInButton {
+    text-decoration: none;
     background-color: #ff0000;
     color: white;
     border: none;
@@ -66,19 +67,6 @@
     font-size: clamp(.6em, 4vw, 1em);
 }
 
-.browseButton {
-    margin-left: em;
+.signInButton:hover {
+    background-color: #ec0d08;
 }
-
-
-@media screen and (max-width: 768px) {
-    
-    .tagline {
-        /* display: none; */
-    }
-
-    .topBar {    
-        /* font-size: .6em; */
-    }
-    
-} 
