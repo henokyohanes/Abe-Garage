@@ -1,42 +1,38 @@
-.container {
-    font-family: Arial, sans-serif;
-    color: #333;
-    line-height: 1.6;
-}
-
-/* Main Banner */
 .banner {
     background: url('../../assets/Images/banner.jpg') no-repeat center center/cover;
-    padding: 200px 200px;
+    padding: 8vw 12vw;
     color: white;
 }
 
-.bannerText {
-    font-size: 2.5rem;
+.banner span {
+    color: red;
+}
+
+.banner h1 {
+    font-size: clamp(.9em, 3vw, 2.6em);
+    margin: .3em 0 1em 0;
 }
 
 .bannerButtons {
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
 }
 
-.bannerButton {
-    padding: 10px 20px;
-    background-color: red;
-    color: white;
-    border: none;
-    margin: 0 10px;
-    cursor: pointer;
-}
-
-.bannerButtonAlt {
-    padding: 10px 20px;
-    background-color: white;
+.bannerButtons i {
+    font-size: clamp(2.4em, 10vw, 4em);
     color: red;
-    border: 1px solid red;
     cursor: pointer;
 }
 
-/* Experience Section */
+.banner p {
+    font-size: clamp(.6em, 3vw, 1em);
+    margin: 0;
+}
+
+.bannerButtons p {
+    margin: 0 2em;
+}
+
 .experience {
     display: flex;
     padding: 50px 20px;

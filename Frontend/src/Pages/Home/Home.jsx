@@ -9,18 +9,19 @@ const Home = () => {
         <div className={styles.container}>
             {/* Main Banner Section */}
             <section className={styles.banner}>
-                <h1 className={styles.bannerText}>Tuneup Your Car to Next Level</h1>
+                <p>Working since 1999 <span>______</span></p>
+                <h1>Tuneup Your Car to Next Level</h1>
                 <div className={styles.bannerButtons}>
-                    <button className={styles.bannerButton}>Watch Intro Video</button>
-                    <button className={styles.bannerButtonAlt}>About Us</button>
+                    <i className="fab fa-youtube"></i>
+                    <p>Watch Intro Video<br/>about us</p>
                 </div>
             </section>
 
             {/* Experience Section */}
-            <section className={styles.experience}>
+            {/* <section className={styles.experience}>
                 <div className={styles.experienceImages}>
                     <img src={image} alt="Left" />
-                    {/* <img src="/path-to-right-image.jpg" alt="Right" /> */}
+                    <img src="/path-to-right-image.jpg" alt="Right" /> 
                 </div>
                 <div className={styles.experienceContent}>
                     <h2>We have 24 years of experience</h2>
@@ -30,10 +31,10 @@ const Home = () => {
                     </p>
                     <button className={styles.aboutButton}>About Us</button>
                 </div>
-            </section>
+            </section> */}
 
             {/* Services Section */}
-            <section className={styles.services}>
+            {/* <section className={styles.services}>
                 <h2>Our Services</h2>
                 <div className={styles.servicesGrid}>
                     {[
@@ -51,19 +52,19 @@ const Home = () => {
                         </div>
                     ))}
                 </div>
-            </section>
+            </section> */}
 
             {/* Quality Service Section */}
-            <section className={styles.qualityService}>
+            {/* <section className={styles.qualityService}>
                 <h2>Quality Service and Customer Satisfaction</h2>
                 <p>
                     We prioritize delivering top-notch services to ensure your car's
                     optimal performance and your satisfaction.
                 </p>
-            </section>
+            </section> */}
 
             {/* Why Choose Us Section */}
-            <section className={styles.whyChooseUs}>
+            {/* <section className={styles.whyChooseUs}>
                 <h2>Why Choose Us?</h2>
                 <ul>
                     {[
@@ -77,10 +78,10 @@ const Home = () => {
                         </li>
                     ))}
                 </ul>
-            </section>
+            </section> */}
 
             {/* Additional Services Section */}
-            <section className={styles.additionalServices}>
+            {/* <section className={styles.additionalServices}>
                 <h2>Additional Services</h2>
                 <div className={styles.additionalGrid}>
                     {["Service 1", "Service 2", "Service 3", "Service 4"].map(
@@ -92,14 +93,14 @@ const Home = () => {
                         )
                     )}
                 </div>
-            </section>
+            </section> */}
 
             {/* Call to Action Section */}
-            <section className={styles.callToAction}>
+            {/* <section className={styles.callToAction}>
                 <h2>Schedule Your Appointment Today</h2>
                 <p>Call us at 1-800-456-7890</p>
                 <button className={styles.ctaButton}>Book Now</button>
-            </section>
+            </section>  */}
         </div>
         </Layout>
     );
