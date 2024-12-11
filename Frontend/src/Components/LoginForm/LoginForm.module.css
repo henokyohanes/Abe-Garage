@@ -68,7 +68,7 @@ input:focus {
   outline: none;
 }
 
-button {
+.formGroup button {
   width: 100%;
   padding: 12px 20px;
   background-color: #d82323;
@@ -81,7 +81,7 @@ button {
   transition: background-color 0.2s ease-in-out;
 }
 
-button:hover {
+.formGroup button:hover {
   background-color: #b81d1d;
 }
 
