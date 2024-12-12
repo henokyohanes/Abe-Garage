@@ -1,6 +1,7 @@
 import React from "react";
-import style from "./Home.module.css";
 import Layout from "../../Layout/Layout";
+import image from "../../assets/images/image1.jpg";
+import style from "./Home.module.css";
 
 const Home = () => {
     return (
@@ -17,9 +18,9 @@ const Home = () => {
                 </section>
 
                 {/* Experience Section */}
-                <section className={style.experience}>
-                        {/* <img className="" src={image} alt="Left" /> */}
-                    <div>
+                <section className={`${style.experience} row align-items-cente justify-content-center g-0`}>
+                        <img className="d-none d-lg-block m-3 col-lg-3" src={image} alt="Left" />
+                    <div className="m-3 col-11 col-lg-8 col-xxl-6">
                         <h2>We have 24 years of experience</h2>
                         <p>
                             At <strong>ABE GARAGE</strong>, our skilled technicians have provided top-quality repairs, maintenance, and customer service, building lasting relationships with drivers.From routine oil changes to complex engine diagnostics, we’ve consistently stayed ahead of industry advancements to ensure your vehicle performs at its best. Our commitment to excellence, honesty, and reliability has earned us the trust of countless customers throughout our 24-year journe. Visit us today, and let us keep you safely on the road for years to come.
