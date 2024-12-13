@@ -2,10 +2,11 @@
     background: url('../../assets/Images/banner.jpg') no-repeat center center/cover;
     padding: 8vw 12vw;
     color: white;
+    margin-bottom: 2vw;
 }
 
 .banner span {
-    color: red;
+    color:  #d82323;
 }
 
 .banner h1 {
@@ -20,7 +21,7 @@
 
 .bannerButtons i {
     font-size: clamp(2.4em, 10vw, 4em);
-    color: red;
+    color:  #d82323;
     cursor: pointer;
 }
 
@@ -34,31 +35,23 @@
 }
 
 /* Experience Section */
-.experience {
-    /* padding: 1vw 0; */
-    /* background: url('../../assets/Images/image1.jpg') no-repeat center center/cover; */
-    /* padding-left: 20vw; */
-    /* margin:1vw 10vw; */
-}
-
-.experience div {
-    /* width: 30%; */
-    /* border-radius: 1.5em; */
-    /* min-height: 100%; */
-}
 
 .experience p {
-    font-size: clamp(.1em, 3vw, 1.1em);
+    font-size: clamp(.1em, 3vw, 1em);
 }
 
 .experience h2 {
+    background-color: #07184A;
+    text-align: center;
+    color: white;
+    border-radius: .4em;
+    padding: .2em;
     font-size: clamp(1em, 3vw, 1.6em);
-    color: #d82323;
 }
 
 .aboutButton {
     width: 100%;
-    padding: .4em;
+    padding: .3em;
     background-color: #d82323;
     color: white;
     font-size: clamp(.1em, 3vw, .8em);
@@ -73,66 +66,138 @@
     background-color: #07184A;
 }
 
-/* Services Section */
-.services {
-    padding: 50px 20px;
+.experience span {
+    background-color: #07184A;
+    color: white;
     text-align: center;
+    border-radius: .4em;
+    padding: .3em;
+    margin-top: 1em;
+    font-size: 1.6em;
 }
 
-.servicesGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+/* Services Section */
+
+.services {
+    background-color: #e6e4e9;
+    padding: 3vw 7vw;
+    margin-top: 2vw;
+}
+
+.services h2 {
+    font-size: clamp(1em, 3vw, 1.8em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.services p {
+    font-size: clamp(.1em, 3vw, 1em);
+}
+
+.services h3 {
+    font-size: clamp(1em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.services span {
+    color:  #d82323;
 }
 
 .serviceCard {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    background-color: white;
     text-align: center;
+    padding: 1em;
+    border-radius: .5em;
+    border-bottom: .4em solid #d82323;
+}
+
+.serviceCard p {
+    color: #07184A;
+    margin-bottom: 0.2em;
 }
 
 .serviceIcon {
-    font-size: 2rem;
-    margin-bottom: 10px;
+    font-size: 2.4em;
+    margin-bottom: .3em;
 }
 
 .readMore {
-    color: red;
+    color: #d82323;
     text-decoration: none;
 }
 
+.readMore:hover {
+    color: #07184A;
+}
+
 /* Quality Service Section */
+
 .qualityService {
-    padding: 50px 20px;
-    background-color: #f9f9f9;
-    text-align: center;
+    margin-bottom: 2vw;
+}
+
+.qualityService div {
+    background-color: #d82323;
+    color: white;
+}
+
+.qualityService h2 {
+    font-size: clamp(1em, 3vw, 1.7em);
+    font-weight: bold;
+}
+
+.qualityService p {
+    font-size: clamp(.2em, 3vw, 1.1em);
 }
 
 /* Why Choose Us Section */
+
 .whyChooseUs {
-    padding: 50px 20px;
+    padding-left: 2.8em;
+}
+
+.whyChooseUs h2 {
+    font-size: clamp(1.1em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.whyChooseUs span {
+    color:  #d82323;
 }
 
 .benefit {
-    margin: 10px 0;
+    font-size: clamp(.8em, 3vw, 1em);
+    margin: .4em .8em;
 }
 
 /* Additional Services Section */
+
 .additionalServices {
-    padding: 50px 20px;
+    padding-left: 2.8em;
 }
 
-.additionalGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+.additionalServices h2 {
+    font-size: clamp(1.1em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
 }
 
-.additionalCard img {
-    width: 100%;
-    border-radius: 10px;
+.additionalServices span {
+    color:  #d82323;
 }
+
+.additionalServices li {
+    font-size: clamp(.8em, 3vw, 1em);
+    margin: .4em .8em;
+}
+
+.additionalServices li::before {
+    content: "✔";
+    color: #d82323;
+    margin-right: .8em;
+} 
 
 /* Call to Action Section */
 .callToAction {
