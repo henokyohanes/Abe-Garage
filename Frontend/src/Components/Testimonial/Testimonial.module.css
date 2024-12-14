@@ -1,0 +1,37 @@
+.testimonials {
+    background: url('../../assets/Images/tire.jpg') no-repeat center center/cover;
+    padding: 6vw;
+    color: white;
+    margin-top: 2vw;
+}
+
+.testimonials span {
+    color:  #d82323;
+}
+
+.testimonials h1 {
+    font-size: clamp(.9em, 3vw, 2.6em);
+    margin: .3em 0 1em 0;
+    font-weight: bold;
+}
+
+.testimonialsButtons {
+    display: flex;
+    align-items: center;
+}
+
+.testimonialsButtons i {
+    font-size: clamp(2.4em, 10vw, 4em);
+    color:  #d82323;
+    cursor: pointer;
+}
+
+.testimonials p {
+    font-size: clamp(.6em, 3vw, 1em);
+    margin: 0;
+    font-weight: bold;
+}
+
+.testimonialsButtons p {
+    margin: 0 2em;
+}

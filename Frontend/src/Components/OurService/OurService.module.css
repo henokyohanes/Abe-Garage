@@ -1,0 +1,52 @@
+.services {
+    background-color: #e6e4e9;
+    padding: 3vw 7vw;
+    margin-top: 2vw;
+}
+
+.services h2 {
+    font-size: clamp(1em, 3vw, 1.8em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.services p {
+    font-size: clamp(.1em, 3vw, 1em);
+}
+
+.services h3 {
+    font-size: clamp(1em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.services span {
+    color:  #d82323;
+}
+
+.serviceCard {
+    background-color: white;
+    text-align: center;
+    padding: 1em;
+    border-radius: .5em;
+    border-bottom: .4em solid #d82323;
+}
+
+.serviceCard p {
+    color: #07184A;
+    margin-bottom: 0.2em;
+}
+
+.serviceIcon {
+    font-size: 2.4em;
+    margin-bottom: .3em;
+}
+
+.readMore {
+    color: #d82323;
+    text-decoration: none;
+}
+
+.readMore:hover {
+    color: #07184A;
+}

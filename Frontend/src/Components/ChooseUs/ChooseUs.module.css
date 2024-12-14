@@ -1,0 +1,47 @@
+/* Why Choose Us Section */
+
+.whyChooseUs {
+    padding-left: 2.8em;
+}
+
+.whyChooseUs h2 {
+    font-size: clamp(1.1em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.whyChooseUs span {
+    color:  #d82323;
+}
+
+.benefit {
+    font-size: clamp(.8em, 3vw, 1em);
+    margin: .4em .8em;
+}
+
+/* Additional Services Section */
+
+.additionalServices {
+    padding-left: 2.8em;
+}
+
+.additionalServices h2 {
+    font-size: clamp(1.1em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.additionalServices span {
+    color:  #d82323;
+}
+
+.additionalServices li {
+    font-size: clamp(.8em, 3vw, 1em);
+    margin: .4em .8em;
+}
+
+.additionalServices li::before {
+    content: "✔";
+    color: #d82323;
+    margin-right: .8em;
+} 
