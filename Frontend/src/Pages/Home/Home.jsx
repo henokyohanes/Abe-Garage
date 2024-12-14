@@ -116,7 +116,7 @@ const Home = () => {
             <section className={style.testimonials}>
                 <p>Working since 2000 <span>______</span></p>
                 <h1>We are Leader in Car Mechanical Work</h1>
-                <div className={style.bannerButtons}>
+                <div className={style.testimonialsButtons}>
                     <i className="fab fa-youtube"></i>
                     <p>Watch Intro Video<br />about us</p>
                 </div>

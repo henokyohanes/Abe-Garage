@@ -12,6 +12,7 @@
 .banner h1 {
     font-size: clamp(.9em, 3vw, 2.6em);
     margin: .3em 0 1em 0;
+    font-weight: bold;
 }
 
 .bannerButtons {
@@ -28,6 +29,7 @@
 .banner p {
     font-size: clamp(.6em, 3vw, 1em);
     margin: 0;
+    font-weight: bold;
 }
 
 .bannerButtons p {
@@ -51,7 +53,7 @@
 
 .aboutButton {
     width: 100%;
-    padding: .3em;
+    padding: .4em;
     background-color: #d82323;
     color: white;
     font-size: clamp(.1em, 3vw, .8em);
@@ -72,7 +74,7 @@
     text-align: center;
     border-radius: .4em;
     padding: .3em;
-    margin-top: 1em;
+    margin-top: 1.4em;
     font-size: 1.6em;
 }
 
@@ -199,6 +201,46 @@
     margin-right: .8em;
 } 
 
+/* Testimonial Section */
+
+.testimonials {
+    background: url('../../assets/Images/tire.jpg') no-repeat center center/cover;
+    padding: 6vw;
+    color: white;
+    margin-top: 2vw;
+}
+
+.testimonials span {
+    color:  #d82323;
+}
+
+.testimonials h1 {
+    font-size: clamp(.9em, 3vw, 2.6em);
+    margin: .3em 0 1em 0;
+    font-weight: bold;
+}
+
+.testimonialsButtons {
+    display: flex;
+    align-items: center;
+}
+
+.testimonialsButtons i {
+    font-size: clamp(2.4em, 10vw, 4em);
+    color:  #d82323;
+    cursor: pointer;
+}
+
+.testimonials p {
+    font-size: clamp(.6em, 3vw, 1em);
+    margin: 0;
+    font-weight: bold;
+}
+
+.testimonialsButtons p {
+    margin: 0 2em;
+}
+
 /* Call to Action Section */
 
 .appointmentSection {
@@ -215,16 +257,14 @@
 .appointment h2 {
     font-size: clamp(1em, 3vw, 1.5em);
     font-weight: bold;
-    opacity: .7;
 }
 
 .appointment h3 {
     font-size: clamp(1em, 3vw, 1.5em);
     font-weight: bold;
-    opacity: .7;
 }
 
 .appointment h3:hover {
-    opacity: 1;
+    color: #07184A;
     cursor: pointer;
 } 
