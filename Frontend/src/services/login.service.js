@@ -25,7 +25,4 @@ export const logOut = () => {
 };
 
 // Export the functions
-export default {
-  logIn,
-  logOut,
-};
+export default { logIn, logOut };

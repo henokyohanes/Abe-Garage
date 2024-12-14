@@ -200,17 +200,31 @@
 } 
 
 /* Call to Action Section */
-.callToAction {
-    background-color: red;
+
+.appointmentSection {
+    background-color: #e6e4e9;
+    padding: 4vw 8vw;
+}
+.appointment {
+    background-color: #d82323;
     color: white;
     text-align: center;
-    padding: 50px 20px;
+    padding: 2vw;
 }
 
-.ctaButton {
-    padding: 10px 20px;
-    background-color: white;
-    color: red;
-    border: none;
-    cursor: pointer;
+.appointment h2 {
+    font-size: clamp(1em, 3vw, 1.5em);
+    font-weight: bold;
+    opacity: .7;
 }
+
+.appointment h3 {
+    font-size: clamp(1em, 3vw, 1.5em);
+    font-weight: bold;
+    opacity: .7;
+}
+
+.appointment h3:hover {
+    opacity: 1;
+    cursor: pointer;
+} 

@@ -1,8 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const sanitize = require("sanitize");
+const cors = require("cors");
 const port = process.env.PORT;
 const app = express();
+
+// middleware to allow cross-origin requests
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 // middleware to parse incoming JSON data
 app.use(express.json());
