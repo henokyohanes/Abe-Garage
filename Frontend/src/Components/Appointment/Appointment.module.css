@@ -10,16 +10,25 @@
 }
 
 .appointment h2 {
-    font-size: clamp(1em, 3vw, 1.5em);
+    font-size: clamp(.9em, 3vw, 1.3em);
     font-weight: bold;
+}
+
+.appointment p {
+    font-size: clamp(.2em, 2vw, .8em);
 }
 
 .appointment h3 {
-    font-size: clamp(1em, 3vw, 1.5em);
+    font-size: clamp(.4em, 3vw, 1em);
     font-weight: bold;
+    background-color: white;
+    color: #07184A;
+    border-radius: .4em;
+    padding: .2em;
+    margin: 1em 0;
 }
 
 .appointment h3:hover {
-    color: #07184A;
+    color: #d82323;
     cursor: pointer;
 } 
