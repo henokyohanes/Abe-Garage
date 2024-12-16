@@ -1,3 +1,7 @@
+.infoSection {
+    margin-bottom: 2vw;
+}
+
 .contactInfo div {
     display: flex;
     align-items: center;
@@ -5,18 +9,23 @@
 }
 
 .contactInfo i {
-    font-size: clamp(.5em, 6vw, 3em);
+    font-size: clamp(.4em, 5vw, 2em);
     color: #d82323;
 }
 
 .contactInfo h2 {
-    font-size: clamp(1.1em, 3vw, 1.6em);
+    font-size: clamp(1em, 3vw, 1.6em);
     font-weight: bold;
     color: #07184A;
 }
 
-.discription {
-    font-size: clamp(.1em, 3vw, 1em);
+.contactInfo span {
+    color:  #d82323;
+}
+
+.description {
+    font-size: clamp(.8em, 3vw, 1em);
+    margin-bottom: 1vw;
 }
 
 .contactInfo p {
@@ -24,6 +33,17 @@
 }
 
 .contactInfo strong {
-    font-size: clamp(.1em, 3vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     color: #07184A;
+}
+
+.address {
+    margin-left: 3vw;
+}
+
+@media screen and (min-width: 992px) {
+
+    .contactInfo {
+        padding-left: 6em;
+    }
 }
