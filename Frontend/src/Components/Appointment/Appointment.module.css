@@ -15,7 +15,7 @@
 }
 
 .appointment p {
-    font-size: clamp(.2em, 2vw, .8em);
+    font-size: clamp(.1em, 2vw, .7em);
 }
 
 .appointment h3 {

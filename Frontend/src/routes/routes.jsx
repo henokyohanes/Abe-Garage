@@ -11,6 +11,7 @@ import AboutUs from "../Pages/AboutUs/AboutUs";
 import ContactUs from "../Pages/ContactUs/ContactUs";
 import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
 import Employees from "../Pages/Admin/Employees/Employees";
+import AbeServices from "../Pages/AbeSevices/AbeServices";
 
 const AppRoutes = () => (
   <Routes>
@@ -20,6 +21,7 @@ const AppRoutes = () => (
     <Route path="/about-us" element={<AboutUs />} />
     <Route path="/unauthorized" element={<Unauthorized />} />
     <Route path="/contact-us" element={<ContactUs />} />
+    <Route path="/Services" element={<AbeServices />} />
 
     {/* Protected Routes */}
     <Route
