@@ -1,34 +1,31 @@
 .adminMenuContainer {
-  width: 250px;
-  background-color: #2a2d3e;
-  color: #ffffff;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
+  width: 100%;
+  background-color: #222A47;
+  color: #D6D7DE;
+  height: 103vh;
 }
 
-.adminMenuHeader h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #444a5d;
-  padding-bottom: 10px;
+.adminMenuTitle {
+  background-color: #1D2230;
+  padding: 1vw 2vw;
+}
+
+.adminMenuTitle h2 {
+  font-size: clamp(.8em, 3vw, 1.3em);
 }
 
 .listGroup {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  padding-left:  2vw;
 }
 
 .listGroupItem {
-  padding: 10px 15px;
+  padding: .8vw 0;
   text-decoration: none;
-  color: #ffffff;
-  font-size: 1rem;
-  border-radius: 5px;
+  color: #D6D7DE;
+  font-size: clamp(.6em, 2vw, .9em); 
+  border-bottom: 1px solid #3c415c;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

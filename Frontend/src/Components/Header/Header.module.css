@@ -13,7 +13,7 @@
 }
 
 .tagline {
-    background-color: #EC0D08;
+    background-color: #d82323;
     padding: 1em;
 }
 
@@ -44,7 +44,7 @@
 .navMenu ul {
     list-style: none;
     align-items: center;
-    gap: 2em;
+    gap: 2vw;
     margin-right: 2em;
     padding-right: 2em;
     border-right: 1px solid #ccc;
@@ -53,13 +53,13 @@
 
 .navMenu ul a {
     text-decoration: none;
-    font-size: clamp(.6em, 2.9vw, .9em);
+    font-size: clamp(.6em, 2.9vw, 1em);
     color: black;
 }
 
 .signInButton {
     text-decoration: none;
-    background-color: #ff0000;
+    background-color: #d82323;
     color: white;
     border: none;
     padding: .4em 1em;

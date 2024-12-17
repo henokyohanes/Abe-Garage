@@ -49,6 +49,7 @@ const Header = (props) => {
                     <NavDropdown.Item>About Us</NavDropdown.Item>
                     <NavDropdown.Item>Services</NavDropdown.Item>
                     <NavDropdown.Item>Contact Us</NavDropdown.Item>
+                    <NavDropdown.Item>Admin</NavDropdown.Item>
                 </NavDropdown>
                 <img src={logo} alt="ABE Garage Logo" />
                 <dir className={Style.navMenu}>
@@ -64,6 +65,9 @@ const Header = (props) => {
                         </li>
                         <li>
                             <a href="/contact-us">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="/admin/dashboard">Admin</a>
                         </li>
                     </ul>
                     <div>
