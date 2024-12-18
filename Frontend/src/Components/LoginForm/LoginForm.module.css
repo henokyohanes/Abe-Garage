@@ -71,10 +71,6 @@ input:focus {
   background-color: #b81d1d;
 }
 
-button span {
-  display: block;
-}
-
 .error {
   color: #d82323;
   font-size: clamp(.8em, 3vw, 1em);

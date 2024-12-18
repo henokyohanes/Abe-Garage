@@ -49,7 +49,7 @@ const LoginForm = () => {
         if (response.data.employee_token) {
           localStorage.setItem("employee", JSON.stringify(response.data));
         }
-        navigate("/admin");
+        navigate("/");
         window.location.reload();
       } else {
         setServerError(response.message || "Unexpected error. Please try again.");
@@ -83,7 +83,7 @@ const LoginForm = () => {
                       {passwordError && <div className={Styles.error} role="alert">{passwordError}</div>}
                     </div>
                     <div className={Styles.formGroup}>
-                      <button className="theme-btn btn-style-one" type="submit" data-loading-text="Please wait..." disabled={loading}>
+                      <button type="submit" data-loading-text="Please wait..." disabled={loading}>
                         {loading ? "Logging in..." : "Login"}
                       </button>
                     </div>

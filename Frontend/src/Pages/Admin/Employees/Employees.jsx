@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import employeeService from "../../../services/employees.service";
 import StyleS from "./Employees.module.css";
 
 const EmployeeList = () => {
@@ -15,11 +17,10 @@ const EmployeeList = () => {
 
     const fetchEmployeeData = async () => {
         try {
-            const response = await axios.get("api/employees");
+            const response = await employeeService.fetchEmployees();
             setEmployees(response.data);
-            console.log(response.data);
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to fetch data");
+            setError(err.message || "Failed to fetch data");
         } finally {
             setLoading(false);
         }
@@ -31,13 +32,14 @@ const EmployeeList = () => {
         );
         if (confirmDelete) {
             try {
-                await axios.delete(`/employees/${id}`);
+                await employeeService.deleteEmployee(id);
                 setEmployees(employees.filter((employee) => employee.id !== id));
             } catch (err) {
-                alert(err.response?.data?.message || "Failed to delete employee");
+                alert(err.message || "Failed to delete employee");
             }
         }
     };
+
 
     const handleEdit = (id) => {
         navigate(`/edit-employee/${id}`);
@@ -73,8 +75,8 @@ const EmployeeList = () => {
                             <td>{employee.addedDate}</td>
                             <td>{employee.role}</td>
                             <td>
-                                <button onClick={() => handleEdit(employee.id)}>✏</button>
-                                <button onClick={() => handleDelete(employee.id)}>🗑</button>
+                                <button onClick={() => handleEdit(employee.id)}><FaEdit /></button>
+                                <button onClick={() => handleDelete(employee.id)}><MdDelete /></button>
                             </td>
                         </tr>
                     ))}
