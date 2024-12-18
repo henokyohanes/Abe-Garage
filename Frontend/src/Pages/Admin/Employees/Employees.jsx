@@ -15,8 +15,9 @@ const EmployeeList = () => {
 
     const fetchEmployeeData = async () => {
         try {
-            const response = await axios.get("/employees");
+            const response = await axios.get("api/employees");
             setEmployees(response.data);
+            console.log(response.data);
         } catch (err) {
             setError(err.response?.data?.message || "Failed to fetch data");
         } finally {

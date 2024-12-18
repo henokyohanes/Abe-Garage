@@ -12,6 +12,7 @@ const LoginForm = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,61 +21,44 @@ const LoginForm = () => {
     let valid = true;
 
     // Email validation
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!employee_email) {
       setEmailError("Please enter your email address first");
       valid = false;
-    } else if (!employee_email.includes("@")) {
+    } else if (!regex.test(employee_email)) {
       setEmailError("Invalid email format");
+      valid = false;
     } else {
-      const regex = /^\S+@\S+\.\S+$/;
-      if (!regex.test(employee_email)) {
-        setEmailError("Invalid email format");
-        valid = false;
-      } else {
-        setEmailError("");
-      }
+      setEmailError("");
     }
-    if (!employee_password || employee_password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long");
+
+    if (!employee_password || employee_password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
       valid = false;
     } else {
       setPasswordError("");
     }
-    if (!valid) {
-      return;
-    }
+    if (!valid) return;
 
-    const formData = {
-      employee_email,
-      employee_password,
-    };
+    const formData = { employee_email, employee_password };
 
-    // Call the service
-    const loginEmployee = loginService.logIn(formData);
-    loginEmployee
-      .then((response) => {
-        if (response.status === "success") {
-          // Save the user in the local storage
-          if (response.data.employee_token) {
-            localStorage.setItem("employee", JSON.stringify(response.data));
-          }
-
-          // Redirect the user to the dashboard
-          navigate("/admin");
-          if (location.pathname === "/login") {
-            navigate("/admin");
-            window.location.replace("/");
-          } else {
-            window.location.reload();
-          }
-        } else {
-          setServerError(response.message);
+    try {
+      setLoading(true);
+      const response = await loginService.logIn(formData);
+      if (response.status === "success") {
+        if (response.data.employee_token) {
+          localStorage.setItem("employee", JSON.stringify(response.data));
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        setServerError("An error has occurred. Please try again later.");
-      });
+        navigate("/admin");
+        window.location.reload();
+      } else {
+        setServerError(response.message || "Unexpected error. Please try again.");
+      }
+    } catch (err) {
+      setServerError(err.message || "An error has occurred. Please try again later.");
+    } finally { 
+      setLoading(false);
+    }
   };
 
   return (
@@ -99,7 +83,9 @@ const LoginForm = () => {
                       {passwordError && <div className={Styles.error} role="alert">{passwordError}</div>}
                     </div>
                     <div className={Styles.formGroup}>
-                      <button className="theme-btn btn-style-one" type="submit" data-loading-text="Please wait...">Login</button>
+                      <button className="theme-btn btn-style-one" type="submit" data-loading-text="Please wait..." disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
+                      </button>
                     </div>
                   </div>
                 </form>
@@ -110,7 +96,7 @@ const LoginForm = () => {
       </div>
     </section>
   );
-}
+};
 
 export default LoginForm;
 
