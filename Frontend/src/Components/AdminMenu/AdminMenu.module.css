@@ -11,7 +11,7 @@
 }
 
 .adminMenuTitle h2 {
-  font-size: clamp(.8em, 3vw, 1.3em);
+  font-size: clamp(.4em, 2vw, 1.3em);
 }
 
 .listGroup {
@@ -24,7 +24,7 @@
   padding: .8vw 0;
   text-decoration: none;
   color: #D6D7DE;
-  font-size: clamp(.6em, 2vw, .9em); 
+  font-size: clamp(.4em, 2vw, 1em); 
   border-bottom: 1px solid #3c415c;
   transition: background-color 0.3s ease, color 0.3s ease;
 }

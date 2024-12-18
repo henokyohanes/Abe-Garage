@@ -1,18 +1,56 @@
+.container {
+  background-color: #E6E4E9;
+}
+
+.adminMenuContainer {
+  width: 100%;
+  background-color: #222A47;
+  color: #D6D7DE;
+}
+
+.adminMenuTitle {
+  background-color: #1D2230;
+  padding: 1vw 2vw;
+}
+
+.adminMenuTitle h2 {
+  font-size: clamp(.6em, 2vw, 1.3em);
+}
+
+.listGroup {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2vw;
+}
+
+.listGroupItem {
+  padding: .8vw 0;
+  text-decoration: none;
+  color: #D6D7DE;
+  font-size: clamp(.4em, 2vw, 1em); 
+  border-bottom: 1px solid #3c415c;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .employeeList {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding:3vw 0 0 5vw;
+  z-index: 2;
 }
 
 .employeeList h2 {
-  color: #1a1a1a;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: clamp(1em, 3vw, 1.6em);
+  font-weight: bold;
+  color: #07184A;
+}
+
+.employeeList span {
+  color: #d82323;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  margin: 1vw 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -23,13 +61,17 @@
 .table th,
 .table td {
   text-align: left;
-  padding: 10px;
+  padding: .5em;
   border-bottom: 1px solid #ddd;
 }
 
 .table th {
-  font-size: 14px;
+  font-size: clamp(.4em, 1vw, 1.2em);
   font-weight: bold;
+}
+
+.table td {
+  font-size: clamp(.4em, 1vw, 1.2em);
 }
 
 .table tbody tr:hover {
@@ -40,8 +82,6 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 18px;
-  padding: 5px;
 }
 
 .table button:hover {
