@@ -46,6 +46,11 @@ const EmployeeList = () => {
     };
 
     const handleEdit = (id) => {
+        console.log("Editing employee with id:", id);
+        if (!id) {
+            alert("Invalid employee ID");
+            return;
+        }
         navigate(`/edit-employee/${id}`);
     };
 
@@ -99,8 +104,8 @@ const EmployeeList = () => {
                                     <td>{employee.added_date.split("T")[0]}</td>
                                     <td>{employee.company_role_name}</td>
                                     <td>
-                                        <button onClick={() => handleEdit(employee.id)}><FaEdit /></button>
-                                        <button onClick={() => handleDelete(employee.id)}><MdDelete /></button>
+                                        <button onClick={() => handleEdit(employee.employee_id)}><FaEdit /></button>
+                                        <button onClick={() => handleDelete(employee.employee_id)}><MdDelete /></button>
                                     </td>
                                 </tr>
                             ))}

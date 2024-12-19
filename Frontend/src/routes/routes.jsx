@@ -12,6 +12,7 @@ import ContactUs from "../Pages/ContactUs/ContactUs";
 import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
 import Employees from "../Pages/Admin/Employees/Employees";
 import AbeServices from "../Pages/AbeSevices/AbeServices";
+import EmployeeUpdate from "../Pages/Admin/EmployeeUpdate/EmployeeUpdate";
 
 const AppRoutes = () => (
   <Routes>
@@ -61,6 +62,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[3]}>
           <Employees />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/edit-employee/:id"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <EmployeeUpdate />
         </PrivateAuthRoute>
       }
     />
