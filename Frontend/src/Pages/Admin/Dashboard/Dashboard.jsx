@@ -9,10 +9,10 @@ const Dashboard = () => {
         <Layout>
             <div className={`${styles.dashboard} row g-0`}>
                 {/* Sidebar Navigation */}
-                <div className="col-2">
+                <div className="col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.main} col-9`}>
+                <div className={`${styles.main} col-8`}>
                     <h1>Admin Dashboard <span>____</span></h1>
                     <p>
                         Delivering reliable, win-win solutions to keep your vehicle running smoothly. At the end of the day, our proactive approach ensures optimal performance and customer satisfaction. Moving forward, the next generation of automotive care is here, with advanced diagnostics and streamlined repair solutions to get you back on the road quickly and safely.

@@ -30,7 +30,7 @@
 .formControl {
   width: 100%;
   padding: .8em;
-  font-size: clamp(.6em, 3vw, 1.1em); 
+  font-size: clamp(.7em, 3vw, 1.1em); 
   border: 1px solid #ccc;
   border-radius: .4em;
   transition: border-color 0.2s ease-in-out;
@@ -43,7 +43,7 @@
 }
 
 .formControl::placeholder {  
-  font-size: clamp(.6em, 3vw, 1.1em);
+  font-size: clamp(.7em, 3vw, 1.1em);
 }
 
 .submitButton {
@@ -51,7 +51,7 @@
   padding: .8em;
   background-color: #d82323;
   color: white;
-  font-size: clamp(.6em, 3vw, 1.1em);
+  font-size: clamp(.7em, 3vw, 1.2em);
   font-weight: bold;
   border: none;
   border-radius: .4em;
@@ -62,18 +62,3 @@
 .submitButton:hover {
   background-color: #07184A;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

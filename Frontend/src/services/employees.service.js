@@ -46,7 +46,7 @@ export const deleteEmployee = async (id) => {
 export const updateEmployee = async (id, updatedData) => {
     try {
         const response = await axios.put(
-            `${api_url}/api/employees/${id}`,
+            `${api_url}/api/employee/${id}`,
             updatedData,
             getAuthHeaders()
         );

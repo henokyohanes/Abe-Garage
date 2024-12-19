@@ -1,63 +1,89 @@
 .updateSection {
-  padding: 20px;
+  background-color: #E6E4E9;
 }
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 40em;
+  padding:3vw 0 0 5vw;
 }
 
-h2 {
-  color: #1f3c88;
-  margin-bottom: 10px;
+.container h2 {
+  font-size: clamp(.9em, 3vw, 1.6em);
+  font-weight: bold;
+  color: #07184A;
 }
 
-p {
-  margin-bottom: 20px;
+.container span {
+  color: #d82323; 
+}
+
+.container h6 {
+  font-size: clamp(.8em, 2vw, 1.2em);
+  margin-bottom: 1em;
+}
+
+.successMessage {
+  font-size: clamp(.8em, 3vw, 1.2em);
+  color: green;
+}
+
+.formContainer {
+  padding: 2vw 0 0 2vw;
 }
 
 .form {
   display: flex;
   flex-direction: column;
+  gap: 1vw;
 }
 
-.formGroup {
-  margin-bottom: 15px;
-}
-
-input, select {
+.formControl {
   width: 100%;
-  padding: 10px;
+  padding: .8em;
+  font-size: clamp(.7em, 3vw, 1.2em); 
   border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-label {
-  display: flex;
-  align-items: center;
-}
-
-label input {
-  margin-right: 10px;
-}
-
-.submitButton {
-  padding: 10px 20px;
-  background-color: #e63946;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  border-radius: .4em;
+  transition: border-color 0.2s ease-in-out;
   cursor: pointer;
 }
 
-.submitButton:hover {
-  background-color: #d62839;
+.formControl:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
-.successMessage {
-  color: green;
+.formControl::placeholder {  
+  font-size: clamp(.7em, 3vw, 1.2em);
 }
 
-.errorMessage {
-  color: red;
+.label {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+
+.label input {
+  cursor: pointer;
+}
+
+.label div {
+  font-size: clamp(.6em, 3vw, 1em);
+}
+
+.updateButton {
+  width: 100%;
+  padding: .8em;
+  margin-top: 1em;
+  background-color: #d82323;
+  color: white;
+  font-size: clamp(.7em, 3vw, 1.2em);
+  font-weight: bold;
+  border: none;
+  border-radius: .4em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.updateButton:hover {
+  background-color: #07184A;
 }

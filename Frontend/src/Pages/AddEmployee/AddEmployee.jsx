@@ -92,10 +92,10 @@ const AddEmployee = () => {
   return (
     <Layout>
       <div className={`${styles.contactSection} row g-0`}>
-        <div className="col-2">
+        <div className="col-3">
           <AdminMenu />
         </div>
-        <div className="col-9">
+        <div className="col-8">
           <div className={styles.container}>
             <h2>Add a new employee <span>____</span></h2>
             <div className={styles.contactForm}>
