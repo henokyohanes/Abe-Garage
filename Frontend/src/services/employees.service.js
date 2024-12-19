@@ -5,7 +5,7 @@ const api_url = import.meta.env.VITE_API_URL;
 const getAuthHeaders = () => {
     const storedToken = JSON.parse(localStorage.getItem("employee"));
     const token = storedToken?.employee_token;
-    console.log(token);
+    // console.log(token);
     return {
         headers: {
             "Content-Type": "application/json",
@@ -61,14 +61,14 @@ export const updateEmployee = async (id, updatedData) => {
 export const addEmployee = async (employeeData) => {
     try {
         const response = await axios.post(
-            `${api_url}/api/employees`,
+            `${api_url}/api/employee`,
             employeeData,
             getAuthHeaders()
         );
         return response.data;
     } catch (error) {
         console.error("Error adding employee:", error);
-        throw error.response?.data?.message || "Failed to add employee";
+        throw error.response?.data?.error || "Failed to add employee";
     }
 };
 

@@ -28,13 +28,11 @@
   text-decoration: none;
   color: #D6D7DE;
   font-size: clamp(.4em, 2vw, 1em); 
-  border-bottom: 1px solid #3c415c;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .employeeList {
-  padding:3vw 0 0 5vw;
-  z-index: 2;
+  padding:3vw 1vw 0 2vw;
 }
 
 .employeeList h2 {
@@ -62,16 +60,16 @@
 .table td {
   text-align: left;
   padding: .5em;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #d6cfcf;
 }
 
 .table th {
-  font-size: clamp(.4em, 1vw, 1.2em);
+  font-size: clamp(.1em, 1.9vw, 1em);
   font-weight: bold;
 }
 
 .table td {
-  font-size: clamp(.4em, 1vw, 1.2em);
+  font-size: clamp(.1em, 1.8vw, 1em);
 }
 
 .table tbody tr:hover {

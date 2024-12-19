@@ -17,7 +17,7 @@ const OurService = () => {
                     { icon: "🛞", title: "Tire & Wheels" },
                     { icon: "🎨", title: "Denting & Painting" },
                 ].map((service, index) => (
-                    <div className="col-md-6 col-xl-4">
+                    <div key={index} className="col-md-6 col-xl-4">
                         <div key={index} className={`${style.serviceCard} `}>
                             <p>Service and Repairs</p>
                             <h3>{service.title}</h3>

@@ -4,7 +4,7 @@ import PrivateAuthRoute from "../Auth/PrivateAuthRoute";
 import Home from "../Pages/Home/Home";
 import Orders from "../pages/Orders/Orders";
 import Customers from "../pages/Customers/Customers";
-import AddEmployee from "../pages/AddEmployee/AddEmployee";
+import AddEmployee from "../Pages/AddEmployee/AddEmployee";
 import Unauthorized from "../pages/Unauthorized/Unauthorized";
 import Login from "../Pages/Login/Login";
 import AboutUs from "../Pages/AboutUs/AboutUs";

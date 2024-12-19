@@ -28,7 +28,7 @@ const Dashboard = () => {
                             { icon: "🚗💨", title: "Break Service", sub:"Service And Repairs" },
                             { icon: "🛞", title: "Tire & Wheels", sub:"Service And Repairs" },
                         ].map((service, index) => (
-                            <div className="col-6 col-lg-4">
+                            <div key={index} className="col-6 col-lg-4">
                                 <div key={index} className={`${styles.dashboardCard} `}>
                                     <p>{service.sub}</p>
                                     <h3>{service.title}</h3>

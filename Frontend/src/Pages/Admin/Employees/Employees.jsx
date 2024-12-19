@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import employeeService from "../../../services/employees.service";
-import styles from "./Employees.module.css";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import Layout from "../../../Layout/Layout";
+import styles from "./Employees.module.css";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
@@ -21,8 +21,10 @@ const EmployeeList = () => {
     const fetchEmployeeData = async () => {
         try {
             const response = await employeeService.fetchEmployees();
+            console.log(response.data);
             setEmployees(response.data);
         } catch (err) {
+            console.error(err);
             setError(err.message || "Failed to fetch data");
         } finally {
             setLoading(false);
@@ -87,15 +89,15 @@ const EmployeeList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {employees.map((employee) => (
-                                <tr key={employee.id}>
-                                    <td>{employee.active ? "Yes" : "No"}</td>
-                                    <td>{employee.firstName}</td>
-                                    <td>{employee.lastName}</td>
-                                    <td>{employee.email}</td>
-                                    <td>{employee.phone}</td>
-                                    <td>{employee.addedDate}</td>
-                                    <td>{employee.role}</td>
+                            {employees.map((employee, index) => (
+                                <tr key={employee.id || index}>
+                                    <td>{employee.active_employee ? "Yes" : "No"}</td>
+                                    <td>{employee.employee_first_name}</td>
+                                    <td>{employee.employee_last_name}</td>
+                                    <td>{employee.employee_email}</td>
+                                    <td>{employee.employee_phone}</td>
+                                    <td>{employee.added_date.split("T")[0]}</td>
+                                    <td>{employee.company_role_name}</td>
                                     <td>
                                         <button onClick={() => handleEdit(employee.id)}><FaEdit /></button>
                                         <button onClick={() => handleDelete(employee.id)}><MdDelete /></button>
