@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import customerservice from "../../../services/customers.service";
 import Styles from "./NewOrder.module.css";
 
 const NewOrder = () => {
@@ -17,10 +17,11 @@ const NewOrder = () => {
 
     const fetchCustomers = async () => {
         try {
-            const response = await axios.get("/customers");
+            const response = customerservice.fetchCustomers();
             setCustomers(response.data);
             setFilteredCustomers(response.data);
         } catch (err) {
+            console.error(err);
             setError("Failed to load customer data.");
         } finally {
             setLoading(false);
@@ -73,7 +74,7 @@ const NewOrder = () => {
                 </div>
             </div>
             <div className={Styles.results}>
-                {filteredCustomers.length > 0 ? (
+                {filteredCustomers?.length > 0 ? (
                     <table className={Styles.customerTable}>
                         <thead>
                             <tr>

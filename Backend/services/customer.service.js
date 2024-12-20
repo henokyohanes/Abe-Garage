@@ -2,14 +2,14 @@ const db = require("../config/db.config");
 
 // Find customer by email
 const findCustomerByEmail = async (email) => {
-  const [rows] = await db.execute('SELECT * FROM customers WHERE customer_email = ?', [email]);
+  const [rows] = await db.query('SELECT * FROM customers WHERE customer_email = ?', [email]);
   return rows.length ? rows[0] : null;
 };
 
 // Create a new customer
 const createCustomer = async (customerData) => {
   const { customer_email, customer_phone_number, customer_first_name, customer_last_name } = customerData;
-  await db.execute(
+  await db.query(
     'INSERT INTO customers (customer_email, customer_phone_number, customer_first_name, customer_last_name) VALUES (?, ?, ?, ?)',
     [customer_email, customer_phone_number, customer_first_name, customer_last_name]
   );
@@ -18,14 +18,14 @@ const createCustomer = async (customerData) => {
 // Get all customers
 const getAllCustomers = async () => {
   // Query to fetch all customers
-  const [rows] = await db.execute('SELECT * FROM customers');
+  const [rows] = await db.query('SELECT customer_info.customer_first_name, customer_info.customer_last_name, customer_identifier.customer_email, customer_identifier.customer_phone_number FROM customer_info INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id');
   return rows;
 };
 
 // Get a customer by ID
 const getCustomerById = async (id) => {
   // Query to fetch the customer by ID
-  const [rows] = await db.execute('SELECT * FROM customers WHERE id = ?', [id]);
+  const [rows] = await db.query('SELECT * FROM customers WHERE id = ?', [id]);
   return rows[0]; // Return the first row if found
 };
 
@@ -52,7 +52,7 @@ const updateCustomer = async (id, customerData) => {
 
   // Update query
   const query = `UPDATE customers SET ${fields.join(", ")} WHERE id = ?`;
-  const [result] = await db.execute(query, values);
+  const [result] = await db.query(query, values);
 
   // Return updated rows
   return result.affectedRows > 0;

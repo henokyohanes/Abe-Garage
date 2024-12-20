@@ -6,6 +6,7 @@ const api_url = import.meta.env.VITE_API_URL;
 const getAuthHeaders = () => {
     const storedToken = JSON.parse(localStorage.getItem("employee"));
     const token = storedToken?.employee_token;
+    console.log(token);
     return {
         headers: {
             "Content-Type": "application/json",
@@ -32,7 +33,7 @@ export const fetchCustomers = async () => {
 export const fetchCustomerById = async (id) => {
     try {
         const response = await axios.get(
-            `${api_url}/api/customers/${id}`,
+            `${api_url}/api/customer/${id}`,
             getAuthHeaders()
         );
         return response.data;
@@ -46,7 +47,7 @@ export const fetchCustomerById = async (id) => {
 export const addCustomer = async (customerData) => {
     try {
         const response = await axios.post(
-            `${api_url}/api/customers`,
+            `${api_url}/api/add-customer`,
             customerData,
             getAuthHeaders()
         );
@@ -61,7 +62,7 @@ export const addCustomer = async (customerData) => {
 export const updateCustomer = async (id, updatedData) => {
     try {
         const response = await axios.put(
-            `${api_url}/api/customers/${id}`,
+            `${api_url}/api/update-customer/${id}`,
             updatedData,
             getAuthHeaders()
         );
