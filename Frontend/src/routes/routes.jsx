@@ -13,6 +13,7 @@ import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
 import Employees from "../Pages/Admin/Employees/Employees";
 import AbeServices from "../Pages/AbeSevices/AbeServices";
 import EmployeeUpdate from "../Pages/Admin/EmployeeUpdate/EmployeeUpdate";
+import NewOrder from "../Pages/Admin/NewOrder/NewOrder";
 
 const AppRoutes = () => (
   <Routes>
@@ -70,6 +71,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[3]}>
           <EmployeeUpdate />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/admin/new-order"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <NewOrder />
         </PrivateAuthRoute>
       }
     />

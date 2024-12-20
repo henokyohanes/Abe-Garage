@@ -11,7 +11,7 @@ function AdminMenu() {
       <div className={Styles.listGroup}>
         <Link to="/admin/dashboard" className={Styles.listGroupItem}>Dashboard</Link>
         <Link to="/admin/orders" className={Styles.listGroupItem}>Orders</Link>
-        <Link to="/admin/order" className={Styles.listGroupItem}>New order</Link>
+        <Link to="/admin/new-order" className={Styles.listGroupItem}>New order</Link>
         <Link to="/admin/add-employee" className={Styles.listGroupItem}>Add employee</Link>
         <Link to="/admin/employees" className={Styles.listGroupItem}>Employees</Link>
         <Link to="/admin/add-customer" className={Styles.listGroupItem}>Add customer</Link>
