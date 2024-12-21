@@ -49,14 +49,16 @@ const createCustomer = async (req, res) => {
     customer_phone_number,
     customer_first_name,
     customer_last_name,
+    active_customer_status,
+    customer_hash
   } = req.body;
-
   try {
     // Check for duplicate email
     const existingCustomer = await customerService.findCustomerByEmail(
       customer_email
     );
     if (existingCustomer) {
+      console.log("Customer with this email already exists");
       return res
         .status(409)
         .json({
@@ -71,12 +73,15 @@ const createCustomer = async (req, res) => {
       customer_phone_number,
       customer_first_name,
       customer_last_name,
+      active_customer_status,
+      customer_hash
     });
 
     return res
       .status(201)
       .json({ status: "success", message: "Customer created successfully" });
   } catch (err) {
+    console.error("Error creating customer:", err.message);
     return res
       .status(500)
       .json({

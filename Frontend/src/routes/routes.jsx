@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import PrivateAuthRoute from "../Auth/PrivateAuthRoute";
 import Home from "../Pages/Home/Home";
 import Orders from "../pages/Orders/Orders";
-import Customers from "../pages/Customers/Customers";
+import Customers from "../Pages/Customers/Customers";
 import AddEmployee from "../Pages/AddEmployee/AddEmployee";
 import Unauthorized from "../pages/Unauthorized/Unauthorized";
 import Login from "../Pages/Login/Login";
@@ -14,6 +14,7 @@ import Employees from "../Pages/Admin/Employees/Employees";
 import AbeServices from "../Pages/AbeSevices/AbeServices";
 import EmployeeUpdate from "../Pages/Admin/EmployeeUpdate/EmployeeUpdate";
 import NewOrder from "../Pages/Admin/NewOrder/NewOrder";
+import AddCustomer from "../Pages/AddCustomer/AddCustomer";
 
 const AppRoutes = () => (
   <Routes>
@@ -39,6 +40,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[2, 3]}>
           <Customers />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/admin/add-customer"
+      element={
+        <PrivateAuthRoute roles={[2, 3]}>
+          <AddCustomer />
         </PrivateAuthRoute>
       }
     />

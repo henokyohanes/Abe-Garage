@@ -12,6 +12,7 @@
 
 .services p {
     font-size: clamp(.1em, 3vw, 1em);
+    margin-bottom: 2em;
 }
 
 .services h3 {

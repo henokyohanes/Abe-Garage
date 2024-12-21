@@ -5,7 +5,7 @@ const customerController = require("../controllers/customer.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
 // Routes for customer management
-router.post("/api/add-customer", [authMiddleware.verifyToken, authMiddleware.isAdmin], customerController.createCustomer);
+router.post('/api/add-customer', [authMiddleware.verifyToken, authMiddleware.isAdmin], customerController.createCustomer);
 
 // Route to get all customers (admin-only access)
 router.get('/api/customers', [authMiddleware.verifyToken, authMiddleware.isAdmin], customerController.getAllCustomers);
