@@ -58,7 +58,6 @@ const createCustomer = async (req, res) => {
       customer_email
     );
     if (existingCustomer) {
-      console.log("Customer with this email already exists");
       return res
         .status(409)
         .json({
@@ -101,7 +100,6 @@ const getAllCustomers = async (req, res) => {
     // Successful response with the list of customers
     return res.status(200).json({ status: 'success', data: customers });
   } catch (err) {
-    // Log the error and return an internal server error response
     console.error('Error retrieving customers:', err.message);
     return res.status(500).json({
       status: 'fail',

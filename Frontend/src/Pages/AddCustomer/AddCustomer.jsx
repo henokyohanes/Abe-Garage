@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
+import Layout from "../../Layout/Layout";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import customerService from "../../services/customers.service";
 import styles from "./AddCustomer.module.css";
-import CryptoJS from "crypto-js";
 
 const AddCustomer = () => {
     const [formData, setFormData] = useState({
@@ -80,72 +82,85 @@ const AddCustomer = () => {
     };
 
     return (
-        <div className={styles.container}>
-            <h1>Add a New Customer</h1>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="customer_first_name"
-                    placeholder="Customer first name"
-                    value={formData.customer_first_name}
-                    onChange={handleInputChange}
-                    className={styles.input}
-                />
-                {error.customer_first_name && (
-                    <p className={styles.error}>{error.customer_first_name}</p>
-                )}
+        <Layout>
+            <div className={`${styles.background} row g-0`}>
+                <div className="col-3">
+                    <AdminMenu />
+                </div>
+                <div className="col-8">
+                    <div className={styles.container}>
+                        <h2>Add a New Customer <span>____</span></h2>
+                        <div className={styles.formContainer}>
+                        <form onSubmit={handleSubmit}>
+                            <div className={styles.formGroupContainer}>
+                            <input
+                                type="text"
+                                name="customer_first_name"
+                                placeholder="Customer first name"
+                                value={formData.customer_first_name}
+                                onChange={handleInputChange}
+                                className={styles.formControl}
+                            />
+                            {error.customer_first_name && (
+                                <p className={styles.error}>{error.customer_first_name}</p>
+                            )}
 
-                <input
-                    type="text"
-                    name="customer_last_name"
-                    placeholder="Customer last name"
-                    value={formData.customer_last_name}
-                    onChange={handleInputChange}
-                    className={styles.input}
-                />
-                {error.customer_last_name && (
-                    <p className={styles.error}>{error.customer_last_name}</p>
-                )}
+                            <input
+                                type="text"
+                                name="customer_last_name"
+                                placeholder="Customer last name"
+                                value={formData.customer_last_name}
+                                onChange={handleInputChange}
+                                className={styles.formControl}
+                            />
+                            {error.customer_last_name && (
+                                <p className={styles.error}>{error.customer_last_name}</p>
+                            )}
 
-                <input
-                    type="email"
-                    name="customer_email"
-                    placeholder="Customer email"
-                    value={formData.customer_email}
-                    onChange={handleInputChange}
-                    className={styles.input}
-                />
-                {error.customer_email && (
-                    <p className={styles.error}>{error.customer_email}</p>
-                )}
+                            <input
+                                type="email"
+                                name="customer_email"
+                                placeholder="Customer email"
+                                value={formData.customer_email}
+                                onChange={handleInputChange}
+                                className={styles.formControl}
+                            />
+                            {error.customer_email && (
+                                <p className={styles.error}>{error.customer_email}</p>
+                            )}
 
-                <input
-                    type="text"
-                    name="customer_phone_number"
-                    placeholder="Customer phone (555) 555-5555"
-                    value={formData.customer_phone_number}
-                    onChange={handleInputChange}
-                    className={styles.input}
-                />
-                {error.customer_phone_number && (
-                    <p className={styles.error}>{error.customer_phone_number}</p>
-                )}
+                            <input
+                                type="text"
+                                name="customer_phone_number"
+                                placeholder="Customer phone (555) 555-5555"
+                                value={formData.customer_phone_number}
+                                onChange={handleInputChange}
+                                className={styles.formControl}
+                            />
+                            {error.customer_phone_number && (
+                                <p className={styles.error}>{error.customer_phone_number}</p>
+                            )}
 
-                <label className={styles.checkbox}>
-                    <input
-                        type="checkbox"
-                        name="active_customer_status"
-                        checked={formData.active_customer_status === 1}
-                        onChange={handleInputChange}
-                    />
-                    Active Status
-                </label>
+                            <label className={styles.checkbox}>
+                                <input
+                                    type="checkbox"
+                                    name="active_customer_status"
+                                    checked={formData.active_customer_status === 1}
+                                    onChange={handleInputChange}
+                                />
+                                <div>Active Status</div>
+                            </label>
 
-                <button type="submit" className={styles.submitButton}>
-                    ADD CUSTOMER
-                </button>
-            </form>
-        </div>
+                            <button type="submit" className={styles.submitButton}>
+                                ADD CUSTOMER
+                            </button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Layout>
     );
 };
 
