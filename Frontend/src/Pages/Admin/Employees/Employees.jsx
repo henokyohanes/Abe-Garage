@@ -70,7 +70,7 @@ const EmployeeList = () => {
                     <div className={styles.listGroup}>
                         <Link to="/admin/dashboard" className={styles.listGroupItem}>Dashboard</Link>
                         <Link to="/admin/orders" className={styles.listGroupItem}>Orders</Link>
-                        <Link to="/admin/order" className={styles.listGroupItem}>New order</Link>
+                        <Link to="/admin/new-order" className={styles.listGroupItem}>New order</Link>
                         <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>
                         <Link to="/admin/employees" className={styles.listGroupItem}>Employees</Link>
                         <Link to="/admin/add-customer" className={styles.listGroupItem}>Add customer</Link>
