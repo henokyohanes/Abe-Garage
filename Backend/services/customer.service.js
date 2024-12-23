@@ -66,11 +66,11 @@ const createCustomer = async (customerData) => {
 // Get all customers
 const getAllCustomers = async () => {
   const rows = await db.query(
-    `SELECT customer_info.customer_first_name, customer_info.customer_last_name, 
-       customer_identifier.customer_email, customer_identifier.customer_phone_number 
-FROM customer_info 
-INNER JOIN customer_identifier 
-ON customer_info.customer_id = customer_identifier.customer_id;`
+    `SELECT customer_info.customer_id, customer_info.customer_first_name, customer_info.customer_last_name, 
+    customer_info.active_customer_status, customer_identifier.customer_email, customer_identifier.customer_phone_number, customer_identifier.customer_added_date 
+    FROM customer_info 
+    INNER JOIN customer_identifier 
+    ON customer_info.customer_id = customer_identifier.customer_id;`
   );
   return rows;
 };

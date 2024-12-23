@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { PiHandPointingLight } from "react-icons/pi";
+import { FaHandPointUp } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import customerservice from "../../../services/customers.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
@@ -23,6 +23,7 @@ const NewOrder = () => {
     const fetchCustomers = async () => {
         try {
             const response = await customerservice.fetchCustomers();
+            console.log(response.data);
             setCustomers(response.data);
             setFilteredCustomers(response.data);
         } catch (err) {
@@ -54,7 +55,7 @@ const NewOrder = () => {
     };
 
     const handleAddCustomer = () => {
-        navigate("/add-customer");
+        navigate("/admin/add-customer");
     };
 
     const handleSelectCustomer = (customerId) => {
@@ -136,7 +137,7 @@ const NewOrder = () => {
                                                     onClick={() => handleSelectCustomer(customer.id)}
                                                     className={styles.selectButton}
                                                 >
-                                                    <PiHandPointingLight />
+                                                    <FaHandPointUp />
                                                 </button>
                                             </td>
                                         </tr>
