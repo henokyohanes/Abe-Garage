@@ -146,7 +146,7 @@ const NewOrder = () => {
                             </table>
                         ) : searchTerm !== "" ? (
                             <p className={styles.noResults}>
-                                No customers match your search.
+                                No customers matched your search.
                             </p>
                         ) : null}
                     </div>

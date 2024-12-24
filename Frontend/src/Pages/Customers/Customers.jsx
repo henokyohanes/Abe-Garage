@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import customerService from "../../services/customers.service";
-import Layout from "../../Layout/Layout";
+import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import customerService from "../../services/customers.service";
+import Layout from "../../Layout/Layout";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import styles from "./Customers.module.css";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -59,78 +62,100 @@ const Customers = () => {
 
   return (
     <Layout>
-      <div className="customer-list">
-        <h1>
-          Customers <span>____</span>
-        </h1>
-        <div>
-          <input
-            type="text"
-            placeholder="Search for a customer using first name, last name, email address or phone number"
-            value={searchQuery}
-            onChange={handleSearch}
-          />
-          <span>
-            <FaSearch />
-          </span>
+      <div className={`${styles.container} row g-0`}>
+        <div className=" d-none d-lg-block col-2">
+          <AdminMenu />
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Added Date</th>
-              <th>Active</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedCustomers.length > 0 ? (
-              displayedCustomers.map((customer) => (
-                <tr key={customer.customer_id}>
-                  <td>{customer.customer_id}</td>
-                  <td>{customer.customer_first_name}</td>
-                  <td>{customer.customer_last_name}</td>
-                  <td>{customer.customer_email}</td>
-                  <td>{customer.customer_phone_number}</td>
-                  <td>{customer.customer_added_date.split("T")[0]}</td>
-                  <td>{customer.active_customer_status ? "Yes" : "No"}</td>
-                  <td>
-                    <button onClick={() => handleEdit(employee.employee_id)}>
-                      <FaEdit />
-                    </button>
-                    <button onClick={() => handleDelete(employee.employee_id)}>
-                      <MdDelete />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+          <div className={styles.adminMenuTitle}>
+            <h2>Admin Menu</h2>
+          </div>
+          <div className={styles.listGroup}>
+            <Link to="/admin/dashboard" className={styles.listGroupItem}>Dashboard</Link>
+            <Link to="/admin/orders" className={styles.listGroupItem}>Orders</Link>
+            <Link to="/admin/new-order" className={styles.listGroupItem}>New order</Link>
+            <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>
+            <Link to="/admin/employees" className={styles.listGroupItem}>Employees</Link>
+            <Link to="/admin/add-customer" className={styles.listGroupItem}>Add customer</Link>
+            <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
+            <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
+          </div>
+        </div>
+        <div className={`${styles.customerList} col-12 col-lg-10`}>
+          <div className={styles.header}>
+            <h2>
+              Customers <span>____</span>
+            </h2>
+            <div className={styles.searchBar}>
+              <input
+                type="text"
+                placeholder="Search for a customer by name, email or phone number"
+                value={searchQuery}
+                onChange={handleSearch}
+              />
+              <span>
+                <FaSearch />
+              </span>
+            </div>
+          </div>
+          <table className={styles.customerTable}>
+            <thead>
               <tr>
-                <td colSpan="8">No customers found</td>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Added Date</th>
+                <th>Active</th>
+                <th>Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-        <div className="pagination">
-          <button
-            onClick={() => handlePageChange("prev")}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange("next")}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
+            </thead>
+            <tbody>
+              {displayedCustomers.length > 0 ? (
+                displayedCustomers.map((customer) => (
+                  <tr key={customer.customer_id}>
+                    <td>{customer.customer_id}</td>
+                    <td>{customer.customer_first_name}</td>
+                    <td>{customer.customer_last_name}</td>
+                    <td>{customer.customer_email}</td>
+                    <td>{customer.customer_phone_number}</td>
+                    <td>{customer.customer_added_date.split("T")[0]}</td>
+                    <td>{customer.active_customer_status ? "Yes" : "No"}</td>
+                    <td>
+                      <button onClick={() => handleEdit(employee.employee_id)}>
+                        <FaEdit />
+                      </button>
+                      <button onClick={() => handleDelete(employee.employee_id)}>
+                        <MdDelete />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr className={styles.noResults}>
+                  <td colSpan="8">No customers matched your search</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div className={styles.pagination}>
+            <button
+              onClick={() => handlePageChange("prev")}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange("next")}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </Layout>

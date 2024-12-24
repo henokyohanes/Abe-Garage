@@ -136,3 +136,10 @@
 .customerTable button:hover {
   color: #d82323;
 }
+
+.noResults {
+  padding : 2vw;
+  font-size: clamp(.8em, 3vw, 1.2em);
+  font-weight: bold;
+  color: #d82323;
+}
