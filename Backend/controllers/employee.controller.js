@@ -52,6 +52,48 @@ async function getAllEmployees(req, res, next) {
   }
 }
 
+// Controller for getting an employee by ID
+const getEmployeeById = async (req, res) => {
+  const { id } = req.params;
+
+  // Validate the ID
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      status: "fail",
+      error: "Bad Request",
+      message: "The employee ID provided is invalid or missing",
+    });
+  }
+
+  try {
+    // Fetch the employee by ID
+    const employee = await employeeService.getEmployeeById(id);
+
+    // If no employee is found
+    if (!employee) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Employee not found",
+        message: "The employee ID provided does not exist",
+      });
+    }
+
+    // Return the employee data
+    return res.status(200).json({
+      status: "success",
+      data: employee,
+    });
+  } catch (err) {
+    // Log the error and return an internal server error response
+    console.error("Error retrieving employee:", err.message);
+    return res.status(500).json({
+      status: "fail",
+      message: "Failed to retrieve employee",
+      error: err.message,
+    });
+  }
+};
+
 // Controller for updating an employee
 async function updateEmployee(req, res, next) {
   const employeeId = req.params.id;
@@ -90,4 +132,4 @@ async function deleteEmployee(req, res, next) {
   }
 }
 
-module.exports = { createEmployee, getAllEmployees, updateEmployee, deleteEmployee };
+module.exports = { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee };

@@ -13,6 +13,7 @@ import Dashboard from "../Pages/Admin/Dashboard/Dashboard";
 import Employees from "../Pages/Admin/Employees/Employees";
 import AbeServices from "../Pages/AbeSevices/AbeServices";
 import EmployeeUpdate from "../Pages/Admin/EmployeeUpdate/EmployeeUpdate";
+import CustomerUpdate from "../Pages/Admin/CustomerUpdate/CustomerUpdate";
 import NewOrder from "../Pages/Admin/NewOrder/NewOrder";
 import AddCustomer from "../Pages/AddCustomer/AddCustomer";
 
@@ -80,6 +81,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[3]}>
           <EmployeeUpdate />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/edit-customer/:id"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <CustomerUpdate />
         </PrivateAuthRoute>
       }
     />

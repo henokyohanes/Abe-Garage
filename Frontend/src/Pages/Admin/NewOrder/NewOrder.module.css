@@ -81,7 +81,7 @@
 
 .addButton {
   width: 100%;
-  padding: .8em;
+  padding: .7em;
   background-color: #d82323;
   color: white;
   font-size: clamp(.7em, 3vw, 1.2em);

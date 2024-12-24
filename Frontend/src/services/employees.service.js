@@ -29,6 +29,20 @@ export const fetchEmployees = async () => {
     }
 };
 
+// Function to fetch a single employee by ID
+export const fetchEmployeeById = async (id) => {
+    try {
+        const response = await axios.get(
+            `${api_url}/api/employee/${id}`,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching customer:", error);
+        throw error.response?.data?.message || "Failed to fetch customer";
+    }
+};
+
 // Function to delete an employee by ID
 export const deleteEmployee = async (id) => {
     try {
@@ -74,6 +88,6 @@ export const addEmployee = async (employeeData) => {
 };
 
 // Export the functions as a default object
-const employeeService = {fetchEmployees, deleteEmployee, updateEmployee, addEmployee};
+const employeeService = {fetchEmployees, fetchEmployeeById, deleteEmployee, updateEmployee, addEmployee};
 
 export default employeeService;

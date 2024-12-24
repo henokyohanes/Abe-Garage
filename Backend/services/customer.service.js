@@ -3,7 +3,7 @@ const db = require("../config/db.config");
 // Find customer by email
 const findCustomerByEmail = async (email) => {
   try {
-    const [rows] = await db.query(
+    const rows = await db.query(
       `SELECT * FROM customer_info 
        INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id
        WHERE customer_identifier.customer_email = ?`,
@@ -77,7 +77,7 @@ const getAllCustomers = async () => {
 
 // Get a customer by ID
 const getCustomerById = async (id) => {
-  const [rows] = await db.query(
+  const rows = await db.query(
     `SELECT customer_info.*, customer_identifier.* 
      FROM customer_info 
      INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id

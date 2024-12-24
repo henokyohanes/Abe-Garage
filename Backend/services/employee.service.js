@@ -1,5 +1,6 @@
 const db = require("../config/db.config");
 const bcrypt = require("bcrypt");
+// const { get } = require("../routes/employee.routes");
 
 // A function to check if employee exists in the database
 async function checkIfEmployeeExists(email) {
@@ -62,9 +63,10 @@ async function createEmployee(employee) {
   } catch (err) {
     console.log(err);
   }
-  // Return the employee object
+
   return createdEmployee;
 }
+
 // A function to get employee by email
 async function getEmployeeByEmail(employee_email) {
   const query =
@@ -72,6 +74,7 @@ async function getEmployeeByEmail(employee_email) {
   const rows = await db.query(query, [employee_email]);
   return rows;
 }
+
 // A function to get all employees
 async function getAllEmployees() {
   const query =
@@ -79,6 +82,38 @@ async function getAllEmployees() {
   const rows = await db.query(query);
   return rows;
 }
+
+// A function to get an employee by ID
+const getEmployeeById = async (id) => {
+  const rows = await db.query(
+    `
+    SELECT 
+      employee.*, 
+      employee_info.*, 
+      employee_role.*, 
+      company_roles.*
+    FROM 
+      employee
+    INNER JOIN 
+      employee_info 
+    ON 
+      employee.employee_id = employee_info.employee_id
+    INNER JOIN 
+      employee_role 
+    ON 
+      employee.employee_id = employee_role.employee_id
+    INNER JOIN 
+      company_roles 
+    ON 
+      employee_role.company_role_id = company_roles.company_role_id
+    WHERE 
+      employee.employee_id = ?
+  `,
+    [id]
+  );
+  return rows[0]; // Return the first row if found
+};
+
 // A function to update an employee
 async function updateEmployee(employeeId, employeeData) {
   try {
@@ -170,4 +205,4 @@ async function deleteEmployee(employeeId) {
   return result.affectedRows === 1; // Return true if deletion was successful
 }
 
-module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getAllEmployees, updateEmployee, deleteEmployee};
+module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getEmployeeById, getAllEmployees, updateEmployee, deleteEmployee};

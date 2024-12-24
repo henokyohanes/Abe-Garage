@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
@@ -10,9 +11,13 @@ import styles from "./Customers.module.css";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +26,9 @@ const Customers = () => {
         setCustomers(response.data);
       } catch (error) {
         console.error("Error fetching customers:", error);
+            setError(err.message || "Failed to fetch data");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -59,6 +67,33 @@ const Customers = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this customer?"
+    );
+    if (confirmDelete) {
+      try {
+        await customerService.deleteCustomer(id);
+        setCustomers(customers.filter((customer) => customer.id !== id));
+      } catch (err) {
+        alert(err.message || "Failed to delete customer");
+      }
+    }
+  };
+
+  const handleEdit = (id) => {
+    console.log("Editing customer with id:", id);
+    if (!id) {
+      alert("Invalid customer ID");
+      return;
+    }
+    navigate(`/edit-customer/${id}`);
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
 
   return (
     <Layout>
@@ -123,10 +158,10 @@ const Customers = () => {
                     <td>{customer.customer_added_date.split("T")[0]}</td>
                     <td>{customer.active_customer_status ? "Yes" : "No"}</td>
                     <td>
-                      <button onClick={() => handleEdit(employee.employee_id)}>
+                      <button onClick={() => handleEdit(customer.customer_id)}>
                         <FaEdit />
                       </button>
-                      <button onClick={() => handleDelete(employee.employee_id)}>
+                      <button onClick={() => handleDelete(customer.customer_id)}>
                         <MdDelete />
                       </button>
                     </td>

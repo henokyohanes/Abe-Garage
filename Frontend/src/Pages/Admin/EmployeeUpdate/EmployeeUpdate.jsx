@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import employeeService from "../../../services/employees.service";
-import styles from "./EmployeeUpdate.module.css";
 import Layout from "../../../Layout/Layout";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
+import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {
     const { id } = useParams();
-    const [employee, setEmployee] = useState({firstName: "", lastName: "", phone: "", role: "Employee",  active: false});
+    const [employee, setEmployee] = useState({employee_first_name: "", employee_last_name: "", employee_email: "", employee_phone: "", employee_role_name: "Employee",  active_employee: false});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -19,18 +19,10 @@ const EmployeeUpdate = () => {
 
     const fetchEmployeeData = async () => {
         try {
-            const response = await employeeService.fetchEmployees();
-            const employeeData = response.data.find(employee => employee.employee_id === parseInt(id));
-            if (!employeeData) throw new Error("Employee not found.");
-            console.log(employeeData);
-            setEmployee({
-                firstName: employeeData.employee_first_name,
-                lastName: employeeData.employee_last_name,
-                email: employeeData.employee_email,
-                phone: employeeData.employee_phone,
-                role: employeeData.company_role_name,
-                active: employeeData.active_employee
-            });
+            const response = await employeeService.fetchEmployeeById(parseInt(id));
+            if (!response) throw new Error("Employee not found.");
+            console.log(response);
+            setEmployee(response.data);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch employee data.");
@@ -51,12 +43,12 @@ const EmployeeUpdate = () => {
         e.preventDefault();
         try {
             await employeeService.updateEmployee(id, {...employee,
-                employee_first_name: employee.firstName,
-                employee_last_name: employee.lastName,
-                employee_email: employee.email,
-                employee_phone: employee.phone,
-                company_role_name: employee.role,
-                active_employee: employee.active
+                employee_first_name,
+                employee_last_name,
+                employee_email,
+                employee_phone,
+                company_role_name,
+                active_employee
             });
             setSuccess(true);
             setTimeout(() => navigate("/admin/employees"), 1000);
@@ -76,22 +68,22 @@ const EmployeeUpdate = () => {
                     <AdminMenu />
                 </div>
                 <div className={`${styles.container} col-8`}>
-                    <h2>Edit: {`${employee.firstName} ${employee.lastName}`} <span>____</span></h2>
+                    <h2>Edit: {`${employee.employee_first_name} ${employee.employee_last_name}`} <span>____</span></h2>
                     <div className={styles.formContainer}>
-                        <h6>Employee email: <strong>{employee.email}</strong></h6>
+                        <h6>Employee email: <strong>{employee.employee_email}</strong></h6>
                         {success && (<p className={styles.successMessage}>Employee updated successfully!</p>)}
                         <form onSubmit={handleSubmit} className={styles.form}>
                             <div className={styles.formGroup}>
-                                <input className={styles.formControl} type="text" name="firstName" value={employee.firstName} onChange={handleChange} placeholder="First Name" required />
+                                <input className={styles.formControl} type="text" name="employee_first_name" value={employee.employee_first_name} onChange={handleChange} placeholder="First Name" required />
                             </div>
                             <div className={styles.formGroup}>
-                                <input className={styles.formControl} type="text" name="lastName" value={employee.lastName} onChange={handleChange} placeholder="Last Name" required />
+                                <input className={styles.formControl} type="text" name="employee_last_name" value={employee.employee_last_name} onChange={handleChange} placeholder="Last Name" required />
                             </div>
                             <div className={styles.formGroup}>
-                                <input className={styles.formControl} type="text" name="phone" value={employee.phone} onChange={handleChange} placeholder="Phone Number" required />
+                                <input className={styles.formControl} type="text" name="employee_phone" value={employee.employee_phone} onChange={handleChange} placeholder="Phone Number" required />
                             </div>
                             <div className={styles.formGroup}>
-                                <select name="role" value={employee.role} onChange={handleChange} className={styles.formControl} >
+                                <select name="employee_role" value={employee.employee_role} onChange={handleChange} className={styles.formControl} >
                                     <option value="Employee">Employee</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Admin">Admin</option>
@@ -99,7 +91,7 @@ const EmployeeUpdate = () => {
                             </div>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>
-                                    <input type="checkbox" name="active" checked={employee.active} onChange={handleChange} />
+                                    <input type="checkbox" name="active_employee" checked={employee.active_employee} onChange={handleChange} />
                                     <div className={styles.checkmark}>Is active employee</div>
                                 </label>
                             </div>
