@@ -41,13 +41,9 @@ const CustomerUpdate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(customer);
         try {
-            await customerService.updateCustomer(id, {...customer,
-                customer_first_name ,
-                customer_last_name,
-                customer_phone_number,
-                active_customer_status
-            });
+            await customerService.updateCustomer(id, customer);
             setSuccess(true);
             setTimeout(() => navigate("/admin/customers"), 1000);
         } catch (err) {
@@ -69,7 +65,7 @@ const CustomerUpdate = () => {
                     <h2>Edit: {`${customer.customer_first_name} ${customer.customer_last_name}`} <span>____</span></h2>
                     <div className={styles.formContainer}>
                         <h6>Customer email: <strong>{customer.customer_email}</strong></h6>
-                        {success && (<p className={styles.successMessage}>Employee updated successfully!</p>)}
+                        {success && (<p className={styles.successMessage}>Customer updated successfully!</p>)}
                         <form onSubmit={handleSubmit} className={styles.form}>
                             <div className={styles.formGroup}>
                                 <input className={styles.formControl} type="text" name="customer_first_name" value={customer.customer_first_name} onChange={handleChange} placeholder="First Name" required />
