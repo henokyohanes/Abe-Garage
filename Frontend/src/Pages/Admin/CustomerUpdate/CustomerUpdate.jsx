@@ -41,7 +41,6 @@ const CustomerUpdate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(customer);
         try {
             await customerService.updateCustomer(id, customer);
             setSuccess(true);

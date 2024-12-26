@@ -61,6 +61,7 @@ export const addCustomer = async (customerData) => {
 
 // Function to update a customer
 export const updateCustomer = async (id, updatedData) => {
+    console.log("updatedData", updatedData);
     try {
         const response = await axios.put(
             `${api_url}/api/update-customer/${id}`,

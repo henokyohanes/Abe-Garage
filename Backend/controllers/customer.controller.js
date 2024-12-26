@@ -154,7 +154,7 @@ const getCustomerById = async (req, res) => {
 // Update customer information
 const updateCustomer = async (req, res) => {
   const { id } = req.params;
-  const { customer_phone_number, customer_first_name, customer_last_name } =
+  const { customer_phone_number, customer_first_name, customer_last_name, active_customer_status } =
     req.body;
 
   // Validate ID
@@ -182,6 +182,7 @@ const updateCustomer = async (req, res) => {
       customer_phone_number,
       customer_first_name,
       customer_last_name,
+      active_customer_status,
     });
 
     // Send success response

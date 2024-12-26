@@ -89,28 +89,72 @@ const getCustomerById = async (id) => {
 
 // Update customer information
 const updateCustomer = async (id, customerData) => {
-  const fields = [];
+  console.log("Updating customer with id:", id, customerData);
+
+  // Destructure the required fields from customerData
+  const {
+    customer_first_name,
+    customer_last_name,
+    customer_phone_number,
+    active_customer_status,
+  } = customerData;
+
+  const fieldsInfo = [];
+  const fieldsIdentifier = [];
   const values = [];
 
-  for (const [key, value] of Object.entries(customerData)) {
-    if (value) {
-      fields.push(`${key} = ?`);
-      values.push(value);
-    }
+  // Map fields to their respective tables
+  if (customer_first_name) {
+    fieldsInfo.push("customer_info.customer_first_name = ?");
+    values.push(customer_first_name);
+  }
+  if (customer_last_name) {
+    fieldsInfo.push("customer_info.customer_last_name = ?");
+    values.push(customer_last_name);
+  }
+  if (active_customer_status !== undefined && active_customer_status !== null) {
+    fieldsInfo.push("customer_info.active_customer_status = ?");
+    values.push(active_customer_status);
+  }
+  if (customer_phone_number) {
+    fieldsIdentifier.push("customer_identifier.customer_phone_number = ?");
+    values.push(customer_phone_number);
   }
 
-  if (fields.length === 0) {
+  if (fieldsInfo.length === 0 && fieldsIdentifier.length === 0) {
     throw new Error("No fields provided for update");
   }
 
-  values.push(id);
+  // Construct the SQL query
+  const query = `
+    UPDATE customer_info, customer_identifier
+    SET ${fieldsInfo.join(", ")}${
+    fieldsInfo.length > 0 && fieldsIdentifier.length > 0 ? "," : ""
+  }
+        ${fieldsIdentifier.join(", ")}
+    WHERE customer_info.customer_id = ?
+      AND customer_identifier.customer_id = ?
+  `;
 
-  const query = `UPDATE customer_info SET ${fields.join(
-    ", "
-  )} WHERE customer_id = ?`;
-  const [result] = await db.query(query, values);
+  // Add the customer_id to the values array
+  values.push(id, id);
 
-  return result.affectedRows > 0;
+  try {
+    const result = await db.query(query, values);
+
+    if (result.affectedRows === 0) {
+      console.log("No rows were updated.");
+      return false;
+    }
+
+    console.log("Customer updated successfully.");
+    return true;
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    throw new Error("Failed to update customer information");
+  }
 };
+
+
 
 module.exports = {findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById, updateCustomer,};
