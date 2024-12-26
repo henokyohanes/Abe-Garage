@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
-import customerService from "../../services/customers.service";
+import customerService from "../../services/customer.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import styles from "./Customers.module.css";
@@ -82,13 +82,12 @@ const Customers = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    console.log("Editing customer with id:", id);
+  const handleProfile = (id) => {
     if (!id) {
       alert("Invalid customer ID");
       return;
     }
-    navigate(`/edit-customer/${id}`);
+    navigate(`/customer-profile/${id}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -158,8 +157,8 @@ const Customers = () => {
                     <td>{customer.customer_added_date.split("T")[0]}</td>
                     <td>{customer.active_customer_status ? "Yes" : "No"}</td>
                     <td>
-                      <button onClick={() => handleEdit(customer.customer_id)}>
-                        <FaEdit />
+                      <button onClick={() => handleProfile(customer.customer_id)}>
+                        <CgProfile />
                       </button>
                       <button onClick={() => handleDelete(customer.customer_id)}>
                         <MdDelete />

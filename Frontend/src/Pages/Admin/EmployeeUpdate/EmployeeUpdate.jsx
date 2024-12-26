@@ -1,6 +1,6 @@
 import React, { useState, useEffect, act } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import employeeService from "../../../services/employees.service";
+import employeeService from "../../../services/employee.service";
 import Layout from "../../../Layout/Layout";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import styles from "./EmployeeUpdate.module.css";

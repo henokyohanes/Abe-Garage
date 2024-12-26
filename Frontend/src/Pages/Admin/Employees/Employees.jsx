@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import employeeService from "../../../services/employees.service";
+import employeeService from "../../../services/employee.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import Layout from "../../../Layout/Layout";
 import styles from "./Employees.module.css";

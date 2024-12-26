@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaHandPointUp } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
-import customerservice from "../../../services/customers.service";
+import customerservice from "../../../services/customer.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import Layout from "../../../Layout/Layout";
 import styles from "./NewOrder.module.css";

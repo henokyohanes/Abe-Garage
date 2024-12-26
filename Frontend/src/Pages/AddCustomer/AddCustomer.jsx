@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
-import customerService from "../../services/customers.service";
+import customerService from "../../services/customer.service";
 import styles from "./AddCustomer.module.css";
 
 const AddCustomer = () => {

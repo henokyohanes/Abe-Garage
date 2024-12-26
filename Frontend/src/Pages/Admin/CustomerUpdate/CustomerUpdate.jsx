@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import customerService from "../../../services/customers.service";
+import customerService from "../../../services/customer.service";
 import Layout from "../../../Layout/Layout";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import styles from "./CustomerUpdate.module.css";

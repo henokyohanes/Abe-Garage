@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import employeeService from '../../services/employees.service';
 import { useAuth } from '../../Contexts/AuthContext';
+import employeeService from '../../services/employee.service';
 import AdminMenu from '../../Components/AdminMenu/AdminMenu';
 import Layout from '../../Layout/Layout';
 import styles from "./AddEmployee.module.css";
