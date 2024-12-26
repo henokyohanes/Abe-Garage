@@ -5,31 +5,15 @@ const orderController = require("../controllers/order.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
 // Create order endpoint
-router.post(
-  '/api/order',
-  [authMiddleware.verifyToken, authMiddleware.isAdmin],
-  orderController.createOrder
-);
+router.post('/api/order', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.createOrder);
 
 // Get all orders endpoint
-router.get(
-  '/api/orders',
-  [authMiddleware.verifyToken, authMiddleware.isAdmin],
-  orderController.getAllOrders
-);
+router.get('/api/orders', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.getAllOrders);
 
 // Get single order endpoint
-router.get(
-  '/api/order/:id',
-  [authMiddleware.verifyToken, authMiddleware.isAdmin],
-  orderController.getOrderById
-);
+router.get('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.getOrderById);
 
 // Update order endpoint
-router.put(
-  '/api/order/:id',
-  [authMiddleware.verifyToken, authMiddleware.isAdmin],
-  orderController.updateOrder
-);
+router.put('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.updateOrder);
 
 module.exports = router;
