@@ -32,6 +32,12 @@ const customerRoutes = require("./routes/customer.routes");
 // customer routes middleware
 app.use(customerRoutes);
 
+// vehicle routes middleware file
+const vehicleRoutes = require("./routes/vehicle.routes");
+
+// vehicle routes middleware
+app.use(vehicleRoutes);
+
 // order routes middleware file
 const orderRoutes = require("./routes/order.routes");
 

@@ -35,7 +35,7 @@ const findVehicleByLicensePlate = async (vehicleTag) => {
 const getVehiclesByCustomerId = async (customerId) => {
     try {
         const query = "SELECT * FROM customer_vehicle_info WHERE customer_id = ?";
-        const [vehicles] = await db.execute(query, [customerId]);
+        const [vehicles] = await db.query(query, [customerId]);
         return vehicles;
     } catch (error) {
         console.error("Error retrieving vehicles by customer ID:", error.message);
@@ -75,4 +75,16 @@ const updateVehicle = async (vehicle_id, vehicleData) => {
     }
 };
 
-module.exports = {createVehicle, findVehicleByLicensePlate, getVehiclesByCustomerId, getVehicleById, updateVehicle};
+// Delete a vehicle by its ID
+const deleteVehicle = async (vehicleId) => {
+    try {
+        const query = "DELETE FROM customer_vehicle_info WHERE vehicle_id = ?";
+        const [result] = await db.execute(query, [vehicleId]);
+        return result; // Return the result from the deletion
+    } catch (error) {
+        console.error("Error deleting vehicle:", error.message);
+        throw new Error("Failed to delete vehicle");
+    }
+};
+
+module.exports = {createVehicle, findVehicleByLicensePlate, getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle};

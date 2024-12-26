@@ -21,7 +21,6 @@ const EmployeeUpdate = () => {
         try {
             const response = await employeeService.fetchEmployeeById(parseInt(id));
             if (!response) throw new Error("Employee not found.");
-            console.log(response);
             setEmployee(response.data);
         } catch (err) {
             console.error(err);

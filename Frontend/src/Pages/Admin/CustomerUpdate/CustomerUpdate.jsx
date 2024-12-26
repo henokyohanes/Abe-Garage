@@ -6,6 +6,7 @@ import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import styles from "./CustomerUpdate.module.css";
 
 const CustomerUpdate = () => {
+    
     const { id } = useParams();
     const [customer, setCustomer] = useState({customer_first_name: "", customer_last_name: "", customer_phone_number: "", active_customer_status: false});
     const [loading, setLoading] = useState(true);
@@ -21,7 +22,6 @@ const CustomerUpdate = () => {
         try {
             const response = await customerService.fetchCustomerById(parseInt(id));
             if (!response) throw new Error("Customer not found.");
-            console.log(response.data);
             setCustomer(response.data);
         } catch (err) {
             console.error(err);
