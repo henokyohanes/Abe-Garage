@@ -25,6 +25,20 @@ export const fetchOrders = async () => {
     }
 };
 
+// function to fetch orders for a specific customer
+export const fetchCustomerOrders = async (customerId) => {
+    try {
+        const response = await axios.get(
+            `${api_url}/api/orders/customer/${customerId}`,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching orders for customer:", error);
+        throw error.response?.data?.message || "Failed to fetch orders for customer";
+    }
+};
+
 // function to fetch an order by ID
 export const fetchOrderById = async (id) => {
     try {
@@ -83,6 +97,6 @@ export const deleteOrder = async (id) => {
     }
 };
 
-const orderService = {fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder};
+const orderService = {fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders};
 
 export default orderService;
