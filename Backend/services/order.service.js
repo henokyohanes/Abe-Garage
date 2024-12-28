@@ -95,6 +95,44 @@ const getAllOrders = async () => {
   }
 };
 
+// Get all orders for a specific customer
+const getOrdersByCustomerId = async (customerId) => {
+  try {
+    // Query to fetch orders for a specific customer along with their services
+    const [orders] = await db.execute(
+      `
+      SELECT 
+        o.id AS order_id,
+        o.employee_id,
+        o.customer_id,
+        o.vehicle_id,
+        o.order_description,
+        o.order_date,
+        o.estimated_completion_date,
+        o.completion_date,
+        o.order_completed,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'service_id', os.service_id,
+            'service_description', os.service_description,
+            'service_cost', os.service_cost
+          )
+        ) AS order_services
+      FROM orders o
+      LEFT JOIN order_services os ON o.id = os.order_id
+      WHERE o.customer_id = ?
+      GROUP BY o.id
+      ORDER BY o.order_date DESC
+    `,
+      [customerId]
+    );
+
+    return orders; // Return list of orders
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Get a single order by ID
 const getOrderById = async (id) => {
   try {
@@ -206,4 +244,43 @@ const updateOrder = async (
   }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, updateOrder};
+// Delete an order by ID
+const deleteOrder = async (id) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // Delete associated services first
+    await connection.execute(
+      `
+      DELETE FROM order_services WHERE order_id = ?
+    `,
+      [id]
+    );
+
+    // Delete the order
+    const [result] = await connection.execute(
+      `
+      DELETE FROM orders WHERE id = ?
+    `,
+      [id]
+    );
+
+    // Handle case where no rows were deleted
+    if (result.affectedRows === 0) {
+      await connection.rollback();
+      return null; // Indicates no order with the given ID
+    }
+
+    // Commit transaction
+    await connection.commit();
+    return true; // Indicates successful deletion
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId};

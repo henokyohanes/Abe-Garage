@@ -79,6 +79,39 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+// Get all orders for a specific customer
+const getOrdersByCustomerId = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+
+    // Validate customer ID
+    if (!customerId || isNaN(customerId)) {
+      return res.status(400).json({
+        status: "fail",
+        error: "Bad Request",
+        message: "The customer ID provided is invalid or missing.",
+      });
+    }
+
+    // Fetch orders for the customer
+    const orders = await orderService.getOrdersByCustomerId(customerId);
+
+    // Return success response
+    return res.status(200).json({
+      status: "success",
+      data: orders,
+    });
+  } catch (error) {
+    console.error("Error retrieving orders for customer:", error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message:
+        "There was an issue retrieving the orders for the customer. Please try again later.",
+    });
+  }
+};
+
 // Get single order by ID
 const getOrderById = async (req, res) => {
   try {
@@ -187,4 +220,46 @@ const updateOrder = async (req, res) => {
   }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, updateOrder};
+// Delete order by ID
+const deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate order ID
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        status: "fail",
+        error: "Bad Request",
+        message: "The order ID provided is invalid or missing.",
+      });
+    }
+
+    // Validate that the order exists
+    const orderExists = await orderService.getOrderById(id);
+    if (!orderExists) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Not Found",
+        message: "The order ID provided does not exist.",
+      });
+    }
+
+    // Delete the order
+    await orderService.deleteOrder(id);
+
+    // Return success response
+    return res.status(200).json({
+      status: "success",
+      message: "Order deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting order:", error.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message: "There was an issue deleting the order. Please try again later.",
+    });
+  }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId};
