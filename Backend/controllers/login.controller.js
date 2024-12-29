@@ -5,7 +5,6 @@ const jwtSecret = process.env.JWT_SECRET;
 // Handle employee login 
 async function logIn(req, res, next) {
   try {
-    console.log(req.body);
     const employeeData = req.body;
 
     // Call the logIn method from the login service 

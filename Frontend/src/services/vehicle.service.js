@@ -16,10 +16,9 @@ const getAuthHeaders = () => {
 
 // Function to fetch all vehicles for a specific customer
 export const fetchVehiclesByCustomerId = async (customerId) => {
-    console.log("customerId", customerId);
     try {
         const response = await axios.get(
-            `${api_url}/api/customer/${customerId}/cars`,
+            `${api_url}/api/vehicles/${customerId}`,
             getAuthHeaders()
         );
         console.log("response.data", response.data);
@@ -46,9 +45,10 @@ export const fetchVehicleById = async (vehicleId) => {
 
 // Function to add a new vehicle for a specific customer
 export const addVehicle = async (customerId, vehicleData) => {
+    console.log("vehicleData from addVehicle", customerId, vehicleData);
     try {
         const response = await axios.post(
-            `${api_url}/api/customer/${customerId}/car`,
+            `${api_url}/api/vehicle/${customerId}`,
             vehicleData,
             getAuthHeaders()
         );

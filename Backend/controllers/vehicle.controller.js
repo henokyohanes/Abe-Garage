@@ -1,15 +1,16 @@
 const { validationResult, checkSchema } = require("express-validator");
 const vehicleService = require("../services/vehicle.service");
+const e = require("express");
 
 // Validation schema for vehicle creation
 const vehicleValidationSchema = checkSchema({
-    vehicle_license_plate: {
+    vehicle_tag: {
         notEmpty: {
-            errorMessage: "License plate is required",
+            errorMessage: "vehicle tag is required",
         },
         isLength: {
             options: { min: 6 },
-            errorMessage: "License plate must be at least 6 characters long",
+            errorMessage: "vehicle tag must be at least 6 characters long",
         },
     },
     vehicle_make: {
@@ -40,6 +41,7 @@ const validateVehicle = async (req, res, next) => {
     );
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array());  
         return res.status(400).json({ status: "fail", errors: errors.array() });
     }
     next();
@@ -47,12 +49,13 @@ const validateVehicle = async (req, res, next) => {
 
 // Create vehicle
 const createVehicle = async (req, res) => {
-    const {customer_id, vehicle_license_plate, vehicle_make, vehicle_model, vehicle_year} = req.body;
+    const {vehicle_make, vehicle_model, vehicle_year, vehicle_type, vehicle_mileage, vehicle_tag, vehicle_serial, vehicle_color} = req.body;
+    const { customer_id } = req.params;
 
     try {
         // Check for duplicate license plate
-        const existingVehicle = await vehicleService.findVehicleByLicensePlate(
-            vehicle_license_plate
+        const existingVehicle = await vehicleService.findVehicleByTag(
+            vehicle_tag
         );
         if (existingVehicle) {
             return res.status(409).json({
@@ -62,7 +65,7 @@ const createVehicle = async (req, res) => {
         }
 
         // Create new vehicle
-        await vehicleService.createVehicle({customer_id, vehicle_license_plate, vehicle_make, vehicle_model, vehicle_year});
+        await vehicleService.createVehicle({customer_id, vehicle_make, vehicle_model, vehicle_year, vehicle_type, vehicle_mileage, vehicle_tag, vehicle_serial, vehicle_color});
 
         return res
             .status(201)

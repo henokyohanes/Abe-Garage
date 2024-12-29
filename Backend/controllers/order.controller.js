@@ -82,10 +82,10 @@ const getAllOrders = async (req, res) => {
 // Get all orders for a specific customer
 const getOrdersByCustomerId = async (req, res) => {
   try {
-    const { customerId } = req.params;
+    const { customer_id } = req.params;
 
     // Validate customer ID
-    if (!customerId || isNaN(customerId)) {
+    if (!customer_id || isNaN(customer_id)) {
       return res.status(400).json({
         status: "fail",
         error: "Bad Request",
@@ -94,7 +94,7 @@ const getOrdersByCustomerId = async (req, res) => {
     }
 
     // Fetch orders for the customer
-    const orders = await orderService.getOrdersByCustomerId(customerId);
+    const orders = await orderService.getOrdersByCustomerId(customer_id);
 
     // Return success response
     return res.status(200).json({

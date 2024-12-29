@@ -9,10 +9,10 @@ const CustomerProfile = () => {
 
     const { id } = useParams();
     const [customer, setCustomer] = useState(null);
-    const [vehicles, setVehicles] = useState([]);
+    const [vehicles, setVehicles] = useState({});
     const [orders, setOrders] = useState([]);
     const [showform, setShowform] = useState(false);
-    const [newVehicle, setNewVehicle] = useState({ make: "", model: "", year: "", licensePlate: "", vin: "" });
+    const [newVehicle, setNewVehicle] = useState({ vehicle_make: "", vehicle_model  : "", vehicle_year: "", vehicle_type    : "", vehicle_color: "", vehicle_mileage: "", vehicle_tag: "", vehicle_serial: "" });
 
     useEffect(() => {
         fetchCustomerData();
@@ -35,8 +35,11 @@ const CustomerProfile = () => {
     const fetchVehicles = async () => {
         try {
             const vehicleData = await vehicleService.fetchVehiclesByCustomerId(parseInt(id));
-            setVehicles(vehicleData);
+            setVehicles(vehicleData.data);
+            console.log("vehicleData", vehicleData.data);
+            console.log(vehicles);
         } catch (error) {
+            console.log("Error fetching vehicles:", error);
             console.error("Error fetching vehicles:", error);
         }
     };
@@ -45,6 +48,7 @@ const CustomerProfile = () => {
     const fetchOrders = async () => {
         try {
             const orderData = await orderService.fetchCustomerOrders(parseInt(id));
+            console.log("orderData", orderData);
             setOrders(orderData);
         } catch (error) {
             console.error("Error fetching orders:", error);
@@ -53,9 +57,10 @@ const CustomerProfile = () => {
 
     // Add a new vehicle using vehicleService
     const handleAddVehicle = async () => {
+        console.log("newVehicle", parseInt(id), newVehicle);
         try {
             await vehicleService.addVehicle(parseInt(id), newVehicle);
-            setShowModal(false);
+            setShowform(false);
             fetchVehicles();
             alert("Vehicle added successfully!");
         } catch (error) {
@@ -89,12 +94,12 @@ const CustomerProfile = () => {
             <div className="vehicles">
                 <div>Cars</div>
                 <div>
-                    <h3>Vehicles of {customer?.name}</h3>
-                    {vehicles.length > 0 ? (
-                        vehicles.map((vehicle, index) => (
+                    <h3>Vehicles of {customer?.customer_first_name}</h3>
+                    {vehicles && Object.keys(vehicles).length > 0 ? (
+                        Object.values(vehicles).map((vehicle, index) => (
                             <div key={index} className="vehicle">
                                 <p>
-                                    {vehicle.make} {vehicle.model} ({vehicle.year})
+                                    {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
                                 </p>
                                 <p>License Plate: {vehicle.licensePlate}</p>
                                 <p>VIN: {vehicle.vin}</p>
@@ -103,56 +108,77 @@ const CustomerProfile = () => {
                     ) : (
                         <p>No vehicles found</p>
                     )}
+
                     <button onClick={() => setShowform(true)}>Add New Vehicle</button>
 
                     {/* vehicle form */}
                     {showform && (
-                        <div className="modal">
+                        <div className="">
                             <div className="modal-content">
                                 <h3>Add New Vehicle</h3>
                                 <input
                                     type="text"
-                                    name="make"
-                                    placeholder="Make"
-                                    value={newVehicle.make}
+                                    name="vehicle_year"
+                                    placeholder="Vehicle year"
+                                    value={newVehicle.vehicle_year}
                                     onChange={handleInputChange}
                                 />
                                 <input
                                     type="text"
-                                    name="model"
-                                    placeholder="Model"
-                                    value={newVehicle.model}
+                                    name="vehicle_make"
+                                    placeholder="Vehicle make"
+                                    value={newVehicle.vehicle_make} 
                                     onChange={handleInputChange}
                                 />
                                 <input
                                     type="text"
-                                    name="year"
-                                    placeholder="Year"
-                                    value={newVehicle.year}
+                                    name="vehicle_model"    
+                                    placeholder="Vehicle model"
+                                    value={newVehicle.vehicle_model}
                                     onChange={handleInputChange}
                                 />
                                 <input
                                     type="text"
-                                    name="licensePlate"
-                                    placeholder="License Plate"
-                                    value={newVehicle.licensePlate}
+                                    name="vehicle_type"
+                                    placeholder="Vehicle type"
+                                    value={newVehicle.vehicle_type}
                                     onChange={handleInputChange}
                                 />
                                 <input
                                     type="text"
-                                    name="vin"
-                                    placeholder="VIN"
-                                    value={newVehicle.vin}
+                                    name="vehicle_color"
+                                    placeholder="Vehicle color"
+                                    value={newVehicle.vehicle_color}
+                                    onChange={handleInputChange}
+                                />
+                                <input
+                                    type="text"
+                                    name="vehicle_mileage"
+                                    placeholder="Vehicle mileage"
+                                    value={newVehicle.vehicle_mileage}
+                                    onChange={handleInputChange}
+                                />
+                                <input
+                                    type="text"
+                                    name="vehicle_tag"
+                                    placeholder="Vehicle tag"
+                                    value={newVehicle.vehicle_tag}
+                                    onChange={handleInputChange}
+                                />
+                                <input
+                                    type="text"
+                                    name="vehicle_serial"
+                                    placeholder="VIN Number"
+                                    value={newVehicle.vehicle_serial}    
                                     onChange={handleInputChange}
                                 />
                                 <button onClick={handleAddVehicle}>Submit</button>
-                                <button onClick={() => setShowModal(false)}>Cancel</button>
+                                <button onClick={() => setShowform(false)}>Cancel</button>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-
             {/* Orders Section */}
             <div className="orders">
                 <div>Orders</div>

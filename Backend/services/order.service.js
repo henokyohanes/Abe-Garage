@@ -96,42 +96,46 @@ const getAllOrders = async () => {
 };
 
 // Get all orders for a specific customer
-const getOrdersByCustomerId = async (customerId) => {
+const getOrdersByCustomerId = async (customer_id) => {
   try {
-    // Query to fetch orders for a specific customer along with their services
-    const [orders] = await db.execute(
+    const [orders] = await db.query(
       `
       SELECT 
-        o.id AS order_id,
-        o.employee_id,
-        o.customer_id,
-        o.vehicle_id,
-        o.order_description,
-        o.order_date,
-        o.estimated_completion_date,
-        o.completion_date,
-        o.order_completed,
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'service_id', os.service_id,
-            'service_description', os.service_description,
-            'service_cost', os.service_cost
-          )
-        ) AS order_services
-      FROM orders o
-      LEFT JOIN order_services os ON o.id = os.order_id
-      WHERE o.customer_id = ?
-      GROUP BY o.id
-      ORDER BY o.order_date DESC
-    `,
-      [customerId]
+    o.order_id,
+    MAX(o.employee_id) AS employee_id,
+    MAX(o.customer_id) AS customer_id,
+    MAX(o.vehicle_id) AS vehicle_id,
+    MAX(COALESCE(oi.additional_request, '')) AS order_description,
+    MAX(o.order_date) AS order_date,
+    MAX(COALESCE(oi.estimated_completion_date, '')) AS estimated_completion_date,
+    MAX(COALESCE(oi.completion_date, '')) AS completion_date,
+    MAX(COALESCE(os.order_status, 0)) AS order_completed,
+    JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'service_id', COALESCE(osv.service_id, 0),
+            'service_description', COALESCE(cs.service_description, '')
+        )
+    ) AS order_services
+FROM orders o
+LEFT JOIN order_info oi ON o.order_id = oi.order_id
+LEFT JOIN order_status os ON o.order_id = os.order_id
+LEFT JOIN order_services osv ON o.order_id = osv.order_id
+LEFT JOIN common_services cs ON osv.service_id = cs.service_id
+WHERE o.customer_id = ?
+GROUP BY o.order_id
+ORDER BY o.order_date DESC;
+
+      `,
+      [customer_id]
     );
 
-    return orders; // Return list of orders
+    return orders; // Return the list of orders
   } catch (error) {
+    console.error("Error retrieving orders for customer:", error);
     throw error;
   }
 };
+
 
 // Get a single order by ID
 const getOrderById = async (id) => {

@@ -11,8 +11,8 @@ const createVehicle = async (vehicleData) => {
 
         const values = [customer_id, vehicle_year, vehicle_make, vehicle_model, vehicle_type, vehicle_mileage, vehicle_tag, vehicle_serial, vehicle_color];
 
-        const [result] = await db.execute(query, values);
-        return result; // Return the result from the insertion
+        const result = await db.query(query, values);
+        return result;
     } catch (error) {
         console.error("Error creating vehicle:", error.message);
         throw new Error("Failed to create vehicle");
@@ -20,10 +20,10 @@ const createVehicle = async (vehicleData) => {
 };
 
 // Find a vehicle by its license plate
-const findVehicleByLicensePlate = async (vehicleTag) => {
+const findVehicleByTag = async (vehicle_tag) => {
     try {
         const query = "SELECT * FROM customer_vehicle_info WHERE vehicle_tag = ?";
-        const [vehicle] = await db.execute(query, [vehicleTag]);
+        const vehicle = await db.query(query, [vehicle_tag]);
         return vehicle[0];
     } catch (error) {
         console.error("Error finding vehicle by tag:", error.message);
@@ -35,7 +35,7 @@ const findVehicleByLicensePlate = async (vehicleTag) => {
 const getVehiclesByCustomerId = async (customerId) => {
     try {
         const query = "SELECT * FROM customer_vehicle_info WHERE customer_id = ?";
-        const [vehicles] = await db.query(query, [customerId]);
+        const vehicles = await db.query(query, [customerId]);
         return vehicles;
     } catch (error) {
         console.error("Error retrieving vehicles by customer ID:", error.message);
@@ -87,4 +87,4 @@ const deleteVehicle = async (vehicleId) => {
     }
 };
 
-module.exports = {createVehicle, findVehicleByLicensePlate, getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle};
+module.exports = {createVehicle, findVehicleByTag, getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle};
