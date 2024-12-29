@@ -3,10 +3,10 @@ const serviceService = require("../services/service.service");
 // Add a new service
 const addService = async (req, res) => {
   try {
-    const { service_name, service_description, service_cost } = req.body;
+    const { service_name, service_description} = req.body;
 
     // Validate required fields
-    if (!service_name || !service_description || !service_cost) {
+    if (!service_name || !service_description) {
       return res.status(400).json({
         status: "fail",
         error: "Bad Request",

@@ -17,6 +17,7 @@ import CustomerUpdate from "../Pages/Admin/CustomerUpdate/CustomerUpdate";
 import NewOrder from "../Pages/Admin/NewOrder/NewOrder";
 import AddCustomer from "../Pages/AddCustomer/AddCustomer";
 import CustomerProfile from "../Pages/CustomerProfile/CustomerProfile";
+import ProvideServices from "../Pages/ProvideServices/ProvideServices";
 
 
 const AppRoutes = () => (
@@ -107,6 +108,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[3]}>
           <NewOrder />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/admin/services"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <ProvideServices />
         </PrivateAuthRoute>
       }
     />

@@ -57,7 +57,6 @@ const CustomerProfile = () => {
 
     // Add a new vehicle using vehicleService
     const handleAddVehicle = async () => {
-        console.log("newVehicle", parseInt(id), newVehicle);
         try {
             await vehicleService.addVehicle(parseInt(id), newVehicle);
             setShowform(false);
