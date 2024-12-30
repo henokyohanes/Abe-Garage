@@ -59,12 +59,12 @@ const ServiceUpdate = () => {
 
     return (
         <Layout>
-            <div className={`${styles.container} row`}>
+            <div className={`${styles.container} row g-0`}>
                 <div className="col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.form} col-9`}>
-                    <h2>Update Service <span>___</span></h2>
+                <div className={`${styles.content} col-9`}>
+                    <h1>Update Service <span>___</span></h1>
                         {success && (<p className={styles.successMessage}>Employee updated successfully!</p>)}
                     <form onSubmit={handleAddService}>
                         <input

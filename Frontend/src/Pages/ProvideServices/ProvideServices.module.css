@@ -62,7 +62,7 @@
 
 .form input {
     width: 70%;
-    padding: 1vw 2vw;
+    padding: .5vw 1vw;
     margin-top: 1.5vw;
     font-size: clamp(.7em, 2vw, 1.1em);
     border: 1px solid #ccc;
@@ -81,7 +81,7 @@
 
 .form textarea {
     width: 70%;
-    padding: 1vw 2vw;
+    padding: .5vw 1vw;
     margin: 1.5vw 0;
     font-size: clamp(.7em, 2vw, 1.1em);
     border: 1px solid #ccc;
