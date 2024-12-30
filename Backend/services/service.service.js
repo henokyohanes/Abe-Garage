@@ -34,7 +34,6 @@ const fetchAllServices = async () => {
         common_services
       `
     );
-    console.log(rows);
     return rows;
   } catch (error) {
     console.error('Error fetching all services:', error.message);
@@ -45,21 +44,19 @@ const fetchAllServices = async () => {
 // Fetch a single service by ID
 const fetchServiceById = async (id) => {
   try {
-    const [rows] = await db.execute(
+    const rows = await db.query(
       `
       SELECT
         service_id,
         service_name,
         service_description
       FROM
-        services
+        common_services
       WHERE
-        id = ?
+        service_id = ?
       `,
       [id]
     );
-
-    // Return the service if found, or null otherwise
     return rows.length > 0 ? rows[0] : null;
   } catch (error) {
     console.error('Error fetching service by ID:', error.message);
@@ -70,11 +67,11 @@ const fetchServiceById = async (id) => {
 // Update a service by ID
 const updateServiceById = async (id, service_name, service_description) => {
   try {
-    const [result] = await db.execute(
+    const result = await db.query(
       `
-      UPDATE services
+      UPDATE common_services
       SET service_name = ?, service_description = ?
-      WHERE id = ?
+      WHERE service_id = ?
       `,
       [service_name, service_description, id]
     );

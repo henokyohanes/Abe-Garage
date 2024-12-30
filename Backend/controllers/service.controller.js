@@ -65,7 +65,6 @@ const getAllServices = async (req, res) => {
 // Get a single service by ID
 const getServiceById = async (req, res) => {
   const { id } = req.params;
-
   try {
     // Fetch service details by ID
     const service = await serviceService.fetchServiceById(id);

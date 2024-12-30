@@ -21,7 +21,7 @@
 }
 
 .container p {
-    font-size: clamp(.5em, 2vw, 1em);
+    font-size: clamp(.5em, 2vw, .9em);
     margin-bottom: .2vw;
 }
 
