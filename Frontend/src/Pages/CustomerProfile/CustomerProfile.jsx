@@ -36,10 +36,7 @@ const CustomerProfile = () => {
         try {
             const vehicleData = await vehicleService.fetchVehiclesByCustomerId(parseInt(id));
             setVehicles(vehicleData.data);
-            console.log("vehicleData", vehicleData.data);
-            console.log(vehicles);
         } catch (error) {
-            console.log("Error fetching vehicles:", error);
             console.error("Error fetching vehicles:", error);
         }
     };

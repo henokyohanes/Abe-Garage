@@ -3,7 +3,7 @@ const serviceService = require("../services/service.service");
 // Add a new service
 const addService = async (req, res) => {
   try {
-    const { service_name, service_description} = req.body;
+    const {service_name, service_description} = req.body;
 
     // Validate required fields
     if (!service_name || !service_description) {
@@ -17,8 +17,7 @@ const addService = async (req, res) => {
     // Insert the service into the database
     const newService = await serviceService.createService({
       service_name,
-      service_description,
-      service_cost,
+      service_description
     });
 
     if (!newService) {
@@ -47,10 +46,8 @@ const addService = async (req, res) => {
 // Get all services
 const getAllServices = async (req, res) => {
   try {
-    // Fetch all services from the database
     const services = await serviceService.fetchAllServices();
 
-    // Successful response
     return res.status(200).json({
       status: 'success',
       services,

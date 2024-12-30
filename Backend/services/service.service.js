@@ -3,16 +3,15 @@ const db = require("../config/db.config");
 // Create a new service
 const createService = async ({
   service_name,
-  service_description,
-  service_cost,
+  service_description
 }) => {
   try {
-    const [result] = await db.execute(
+    const result = await db.query(
       `
-      INSERT INTO services (service_name, service_description, service_cost)
-      VALUES (?, ?, ?)
+      INSERT INTO common_services (service_name, service_description)
+      VALUES (?, ?)
     `,
-      [service_name, service_description, service_cost]
+      [service_name, service_description]
     );
 
     return result.insertId;
@@ -25,16 +24,17 @@ const createService = async ({
 // Fetch all services
 const fetchAllServices = async () => {
   try {
-    const [rows] = await db.execute(
+    const rows = await db.query(
       `
       SELECT
-        id AS service_id,
+        service_id,
         service_name,
         service_description
       FROM
-        services
+        common_services
       `
     );
+    console.log(rows);
     return rows;
   } catch (error) {
     console.error('Error fetching all services:', error.message);
@@ -48,7 +48,7 @@ const fetchServiceById = async (id) => {
     const [rows] = await db.execute(
       `
       SELECT
-        id AS service_id,
+        service_id,
         service_name,
         service_description
       FROM

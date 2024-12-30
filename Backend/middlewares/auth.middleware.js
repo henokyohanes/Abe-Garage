@@ -39,8 +39,10 @@ const isAdmin = async (req, res, next) => {
 }
 
 // Middleware to check admin or manager role
-const isAdminOrManager = (req, res, next) => {
-  const { role_id } = req.user;
+const isAdminOrManager = async (req, res, next) => {
+  const employee_email = req.employee_email;
+  const employee = await employeeService.getEmployeeByEmail(employee_email);
+  const role_id = employee[0].company_role_id;
 
   if (![2, 3].includes(role_id)) {
     return res.status(403).json({

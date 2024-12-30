@@ -16,8 +16,9 @@ const getAuthHeaders = () => {
 
 // function to add a service
 export const addService = async (serviceData) => {
+    console.log("serviceData", serviceData);
     try {
-        const response = await axios.post(`${api_url}/services`, serviceData, getAuthHeaders());
+        const response = await axios.post(`${api_url}/api/service`, serviceData, getAuthHeaders());
         return response.data;
     } catch (error) {
         console.error("Error adding service:", error);
@@ -28,7 +29,8 @@ export const addService = async (serviceData) => {
 // function to fetch all services
 export const getAllServices = async () => {
     try {
-        const response = await axios.get(`${api_url}/services`, getAuthHeaders());
+        const response = await axios.get(`${api_url}/api/services`, getAuthHeaders());
+        console.log(response.data.services);
         return response.data.services;
     } catch (error) {
         console.error("Error fetching services:", error);
