@@ -44,7 +44,7 @@ const CustomerUpdate = () => {
         try {
             await customerService.updateCustomer(id, customer);
             setSuccess(true);
-            setTimeout(() => navigate("/admin/customers"), 1000);
+            setTimeout(() => navigate(`/customer-profile/${id}`), 1000);
         } catch (err) {
             console.error(err);
             setError("Failed to update employee. Please try again.");

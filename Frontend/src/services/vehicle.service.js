@@ -32,7 +32,7 @@ export const fetchVehiclesByCustomerId = async (customerId) => {
 export const fetchVehicleById = async (vehicleId) => {
     try {
         const response = await axios.get(
-            `${api_url}/api/vehicles/${vehicleId}`,
+            `${api_url}/api/vehicle/${vehicleId}`,
             getAuthHeaders()
         );
         return response.data;

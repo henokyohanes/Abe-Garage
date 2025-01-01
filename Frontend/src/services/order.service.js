@@ -55,6 +55,7 @@ export const fetchOrderById = async (id) => {
 
 // function to add a new order
 export const addOrder = async (orderData) => {
+    console.log("orderData from addOrder", orderData);
     try {
         const response = await axios.post(
             `${api_url}/api/orders`,

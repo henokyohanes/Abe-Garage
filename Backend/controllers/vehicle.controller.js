@@ -137,7 +137,6 @@ const getVehicleById = async (req, res) => {
     try {
         // Fetch the vehicle by ID
         const vehicle = await vehicleService.getVehicleById(id);
-
         // If no vehicle is found
         if (!vehicle) {
             return res.status(404).json({

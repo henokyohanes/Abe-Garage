@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { FaHandPointUp } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
+import CryptoJS from "crypto-js";
 import customerservice from "../../../services/customer.service";
 import vehicleService from "../../../services/vehicle.service";
+import serviceService from "../../../services/service.service";
+import orderService from "../../../services/order.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import Layout from "../../../Layout/Layout";
 import styles from "./NewOrder.module.css";
@@ -15,7 +18,10 @@ const NewOrder = () => {
     const [customer, setCustomer] = useState({});
     const [customers, setCustomers] = useState([]);
     const [filteredCustomers, setFilteredCustomers] = useState([]);
-    const [vehicles, setVehicles] = useState([]);
+    const [vehicles, setVehicles] = useState();
+    const [vehicle, setVehicle] = useState();
+    const [services, setServices] = useState(); 
+    const [order, setOrder] = useState({additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, services: []});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showSearch, setShowSearch] = useState(true);
@@ -65,6 +71,37 @@ const NewOrder = () => {
         }
     };
 
+    const fetchVehiclesById = async (vehicleId) => {
+        try {    
+            const response = await vehicleService.fetchVehicleById(vehicleId);    
+            setVehicle(response.data);
+        } catch (err) { 
+            console.error(err);
+            setError("Failed to load vehicle data.");    
+        } finally {
+            setLoading(false);  
+        }
+    };
+
+    const fetchAllServices = async () => {
+        try {
+            const response = await serviceService.getAllServices();
+            setServices(response);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to load service data.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const generateorderHash = () => {
+        const dataToHash =
+            order.additional_request +
+            order.order_total_price;
+        return CryptoJS.SHA256(dataToHash).toString(CryptoJS.enc.Base64);
+    };
+
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
         setSearchTerm(term);
@@ -95,6 +132,51 @@ const NewOrder = () => {
         fetchVehiclesByCustomerId(customerId);
         setShowSearch(false);
         setShowCustomer(true);
+    };
+
+    const handleSelectVehicle = (vehicleId) => {        
+        // navigate(`/admin/new-order/${vehicleId}`);
+        fetchVehiclesById(vehicleId);
+        fetchAllServices();
+        setVehicles(null);
+    };
+
+    const handleAddData = (e, service) => {
+        const { checked } = e.target;
+        const { service_id, service_name, service_description } = service;
+
+        setOrder((prevOrder) => {
+            const updatedServices = checked
+                ? [
+                    ...(prevOrder.services || []),
+                    { service_id, service_name, service_description },
+                ]
+                : (prevOrder.services || []).filter(
+                    (s) => s.service_id !== service_id
+                );
+
+            return { ...prevOrder, services: updatedServices };
+        });
+    };
+
+    const handleCreateOrder = async () => {
+        const orderHash = generateorderHash();
+
+        const orderWithHash = {
+            ...order,
+            order_hash: orderHash,
+        };
+
+        try {
+            const response = await orderService.addOrder(orderWithHash);
+            console.log(response);
+            setOrder(response.data);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to create order.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (loading) return <p>Loading customers...</p>;
@@ -224,7 +306,7 @@ const NewOrder = () => {
                                             <td>{vehicle.vehicle_serial}</td>
                                             <td>
                                                 <button
-                                                    onClick={() => handleSelectCustomer(customer.customer_id)}
+                                                    onClick={() => handleSelectVehicle(vehicle.vehicle_id)}
                                                     className={styles.selectButton}
                                                 >
                                                     <FaHandPointUp />
@@ -237,6 +319,36 @@ const NewOrder = () => {
                         </div>}
                     </div>
                     }
+                    {vehicle && <div>
+                        <div className={styles.vehicleInfo}>
+                            <div>
+                                <div>{vehicle.vehicle_make} {vehicle.vehicle_model}</div>
+                                <div>Year: {vehicle.vehicle_year}</div>
+                                <div>Color: {vehicle.vehicle_color}</div>
+                                <div>Mileage: {vehicle.vehicle_mileage}</div>
+                                <div>Tag: {vehicle.vehicle_tag}</div>
+                                <div>Serial: {vehicle.vehicle_serial}</div>
+                                <div>Edit Vehicle Info: <FaEdit /></div>
+                            </div>
+                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setShowVehicle(false)}}>x</button>
+                        </div>
+                    </div>}
+                    {services && <div>
+                        <h2>Choose Services</h2>
+                        {services.map((service) => (
+                            <div key={service.service_id} className={styles.serviceInfo}>
+                                <div>
+                                    <div>{service.service_name}</div>
+                                    <div>{service.service_description}</div>
+                                </div>
+                                <input type="checkbox" onChange={(e) => handleAddData(e, service)}/>
+                            </div>))}
+                        <div>
+                            <textarea type="text" value={order.additional_request} placeholder="Service description" onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} />
+                            <input type="number" value={order.order_total_price} placeholder="Price" onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} />
+                            <button onClick={handleCreateOrder}>Submit Order</button>
+                        </div>
+                    </div>}
                 </div>
             </div>
         </Layout>

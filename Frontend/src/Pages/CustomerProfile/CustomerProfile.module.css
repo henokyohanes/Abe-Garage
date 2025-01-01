@@ -1,0 +1,38 @@
+.customerProfile {
+    background-color: #E6E4E9;
+}
+
+.container {
+    display: flex;
+    gap: 3vw;
+    padding: 3vw;
+}
+
+.title {
+    font-size: clamp(.8em, 3vw, 1.6em);
+    font-weight: bold;  
+    background-color: #D82323;
+    width: 5em;
+    height: 5em;
+    color: white;
+    text-align: center;
+    align-content: center;
+    border-radius: 50%;
+}
+
+.container h2 {
+    font-size: clamp(.8em, 3vw, 1.6em);
+    font-weight: bold;
+    color: #07184A;
+    margin-bottom: .2vw;    
+}
+
+.container p {
+    font-size: clamp(.5em, 2vw, .9em);
+    margin-bottom: .2vw;
+}
+
+.container span {    
+    color: #d82323;
+}
+

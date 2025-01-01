@@ -47,7 +47,7 @@ const getVehiclesByCustomerId = async (customerId) => {
 const getVehicleById = async (vehicleId) => {
     try {
         const query = "SELECT * FROM customer_vehicle_info WHERE vehicle_id = ?";
-        const [vehicle] = await db.execute(query, [vehicleId]);
+        const vehicle = await db.query(query, [vehicleId]);
         return vehicle[0];
     } catch (error) {
         console.error("Error retrieving vehicle by ID:", error.message);

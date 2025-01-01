@@ -6,11 +6,14 @@ const createOrder = async (orderData) => {
     employee_id,
     customer_id,
     vehicle_id,
-    order_description,
-    estimated_completion_date,
-    completion_date,
-    order_completed,
-    order_services,
+    service_id,
+    active_order,
+    order_hash,
+    order_total_price,
+    additional_request,
+    additional_requests_completed,
+    service_completed,
+    order_status,
   } = orderData;
 
   try {

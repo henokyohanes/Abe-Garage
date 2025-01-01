@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
+import Layout from "../../Layout/Layout";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import vehicleService from "../../services/vehicle.service";
 import customerService from "../../services/customer.service";
 import orderService from "../../services/order.service";
-// import styles from "./CustomerProfile.module.css";
+import styles from "./CustomerProfile.module.css";
 
 const CustomerProfile = () => {
 
@@ -12,7 +15,8 @@ const CustomerProfile = () => {
     const [vehicles, setVehicles] = useState({});
     const [orders, setOrders] = useState([]);
     const [showform, setShowform] = useState(false);
-    const [newVehicle, setNewVehicle] = useState({ vehicle_make: "", vehicle_model  : "", vehicle_year: "", vehicle_type    : "", vehicle_color: "", vehicle_mileage: "", vehicle_tag: "", vehicle_serial: "" });
+    const [newVehicle, setNewVehicle] = useState({ vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_type: "", vehicle_color: "", vehicle_mileage: "", vehicle_tag: "", vehicle_serial: "" });
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchCustomerData();
@@ -72,46 +76,55 @@ const CustomerProfile = () => {
     };
 
     return (
-        <div className="customer-profile">
-
-            {/* Info Section */}
-            {customer ? (<div className="info">
-                <div>Info</div>
-                <div>
-                    <h2>Customer: {customer.customer_first_name} {customer.customer_last_name}</h2>
-                    <p>Email: {customer.customer_email}</p>
-                    <p>Phone Number: {customer.customer_phone_number}</p>
-                    <p>Active Customer: {customer.active_customer_status ? "Yes" : "No"}</p>
-                    <p>Edit Customer Info <span>__</span></p>
+        <Layout>
+            <div className={`${styles.customerProfile} row g-0`}>
+                <div className="col-3">
+                    <AdminMenu />
                 </div>
-            </div>) : (<p>Loading customer data...</p>)}
+                <div className={`${styles.customerContainer} col-9`}>
 
-            {/* Vehicles Section */}
-            <div className="vehicles">
-                <div>Cars</div>
-                <div>
-                    <h3>Vehicles of {customer?.customer_first_name}</h3>
-                    {vehicles && Object.keys(vehicles).length > 0 ? (
-                        Object.values(vehicles).map((vehicle, index) => (
-                            <div key={index} className="vehicle">
-                                <p>
-                                    {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
-                                </p>
-                                <p>License Plate: {vehicle.licensePlate}</p>
-                                <p>VIN: {vehicle.vin}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No vehicles found</p>
-                    )}
+                    {/* Info Section */}
+                    <div className={styles.container}>
+                        <div className={styles.title}>Info</div>
+                        <div>
+                            <h2>Customer: {customer?.customer_first_name} {customer?.customer_last_name}</h2>
+                            {customer ? (<div className={styles.customerInfo}>
+                                <p><strong>Email:</strong> {customer.customer_email}</p>
+                                <p><strong>Phone Number:</strong> {customer.customer_phone_number}</p>
+                                <p><strong>Active Customer:</strong> {customer.active_customer_status ? "Yes" : "No"}</p>
+                                <p><strong>Edit Customer Info:</strong> <span onClick={() => navigate(`/edit-customer/${customer.customer_id}`)}><FaEdit /></span></p>
+                            </div>) : (<p>Loading customer data...</p>)}
+                        </div>
+                    </div>
 
-                    <button onClick={() => setShowform(true)}>Add New Vehicle</button>
+                    {/* Vehicles Section */}
+                    <div className={styles.container}>
+                        <div className={styles.title}>Cars</div>
+                        <div>
+                            <h2>Vehicles of {customer?.customer_first_name}</h2>
+                            {vehicles && Object.keys(vehicles).length > 0 ? (
+                                Object.values(vehicles).map((vehicle, index) => (
+                                    <div key={index} className={styles.vehicleInfo}>
+                                        <p>
+                                            <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
+                                        </p>
+                                        <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
+                                        <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
+                                        <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No vehicles found</p>
+                            )}
+                            <button onClick={() => setShowform(true)}>Add New Vehicle</button>
+                        </div>
+                    </div>
 
                     {/* vehicle form */}
                     {showform && (
                         <div className="">
                             <div className="modal-content">
-                                <h3>Add New Vehicle</h3>
+                                <h2>Add New Vehicle</h2>
                                 <input
                                     type="text"
                                     name="vehicle_year"
@@ -123,12 +136,12 @@ const CustomerProfile = () => {
                                     type="text"
                                     name="vehicle_make"
                                     placeholder="Vehicle make"
-                                    value={newVehicle.vehicle_make} 
+                                    value={newVehicle.vehicle_make}
                                     onChange={handleInputChange}
                                 />
                                 <input
                                     type="text"
-                                    name="vehicle_model"    
+                                    name="vehicle_model"
                                     placeholder="Vehicle model"
                                     value={newVehicle.vehicle_model}
                                     onChange={handleInputChange}
@@ -165,7 +178,7 @@ const CustomerProfile = () => {
                                     type="text"
                                     name="vehicle_serial"
                                     placeholder="VIN Number"
-                                    value={newVehicle.vehicle_serial}    
+                                    value={newVehicle.vehicle_serial}
                                     onChange={handleInputChange}
                                 />
                                 <button onClick={handleAddVehicle}>Submit</button>
@@ -173,28 +186,29 @@ const CustomerProfile = () => {
                             </div>
                         </div>
                     )}
+
+                    {/* Orders Section */}
+                    <div className={styles.container}>
+                        <div className={styles.title}>Orders</div>
+                        <div>
+                            <h2>Orders of {customer?.customer_first_name}</h2>
+                            {orders.length > 0 ? (
+                                orders.map((order, index) => (
+                                    <div key={index} className="order">
+                                        <p>Order #{order.orderNumber}</p>
+                                        <p>Date: {order.date}</p>
+                                        <p>Status: {order.status}</p>
+                                        <p>Total: ${order.totalAmount}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No orders found</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
-            {/* Orders Section */}
-            <div className="orders">
-                <div>Orders</div>
-                <div>
-                    <h3>Orders of {customer?.name}</h3>
-                    {orders.length > 0 ? (
-                        orders.map((order, index) => (
-                            <div key={index} className="order">
-                                <p>Order #{order.orderNumber}</p>
-                                <p>Date: {order.date}</p>
-                                <p>Status: {order.status}</p>
-                                <p>Total: ${order.totalAmount}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No orders found</p>
-                    )}
-                </div>
-            </div>
-        </div>
+        </Layout>
     );
 };
 
