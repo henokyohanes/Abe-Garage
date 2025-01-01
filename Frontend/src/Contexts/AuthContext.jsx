@@ -1,44 +1,65 @@
-import React, { useState, useEffect, useContext, createContext } from "react";
-import getAuth from '../util/auth';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  useMemo,
+} from "react";
+import getAuth from "../util/auth";
 
-// Create a context object  
+// Create a context object
 const AuthContext = createContext();
 
 // Create a custom hook to use the context
 export const useAuth = () => {
   return useContext(AuthContext);
-}
-// Create a provider component  
+};
+
+// Create a provider component
 export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [employee, setEmployee] = useState(null);
-
-  const value = { isLogged, isAdmin, setIsAdmin, setIsLogged, employee };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Retrieve the logged in user from local storage
-    const loggedInEmployee = getAuth();
+    const fetchAuth = async () => {
+      try {
+        const loggedInEmployee = await getAuth();
+        if (loggedInEmployee?.employee_token) {
+          setIsLogged(true);
 
-    // console.log(loggedInEmployee);
-    loggedInEmployee.then((response) => {
+          // Check if the employee is an admin
+          if (loggedInEmployee.employee_role === 3) {
+            setIsAdmin(true);
+          }
 
-      // console.log(response);
-      if (response.employee_token) {
-        setIsLogged(true);
-        
-        // 3 is the employee_role for admin
-        if (response.employee_role === 3) {
-          setIsAdmin(true);
+          // Set the employee object
+          setEmployee(loggedInEmployee);
         }
-        setEmployee(response);
+      } catch (error) {
+        console.error("Error fetching authentication details:", error);
+      } finally {
+        setLoading(false);
       }
-    });
-  }, []);
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+    };
 
+    fetchAuth();
+  }, []);
+
+  // Memoize the context value to avoid unnecessary re-renders
+  const value = useMemo(
+    () => ({
+      isLogged,
+      isAdmin,
+      setIsAdmin,
+      setIsLogged,
+      employee,
+      loading,
+      employeeId: employee?.employee_id, // Add employee_id to the context value
+    }),
+    [isLogged, isAdmin, employee, loading]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

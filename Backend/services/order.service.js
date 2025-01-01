@@ -2,6 +2,7 @@ const db = require("../config/db.config");
 
 // Create a new order
 const createOrder = async (orderData) => {
+  console.log("orderData from createOrder", orderData);
   const {
     employee_id,
     customer_id,
@@ -16,50 +17,60 @@ const createOrder = async (orderData) => {
     order_status,
   } = orderData;
 
+  const connection = await db.getConnection(); // Get a connection from the pool
+
   try {
     // Start a transaction
-    await db.beginTransaction();
+    await connection.beginTransaction();
 
     // Insert the order into the orders table
-    const [orderResult] = await db.execute(
-      `INSERT INTO orders (employee_id, customer_id, vehicle_id, order_description, 
-        estimated_completion_date, completion_date, order_completed)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [
-        employee_id,
-        customer_id,
-        vehicle_id,
-        order_description,
-        estimated_completion_date,
-        completion_date,
-        order_completed,
-      ]
+    const [orderResult] = await connection.query(
+      `INSERT INTO orders (employee_id, customer_id, vehicle_id, order_hash, active_order) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [employee_id, customer_id, vehicle_id, order_hash, active_order]
     );
 
     const order_id = orderResult.insertId;
 
     // Insert associated order_services into the order_services table
-    for (const service of order_services) {
-      await db.execute(
-        `INSERT INTO order_services (order_id, service_id, service_description, service_cost)
-         VALUES (?, ?, ?, ?)`,
-        [
-          order_id,
-          service.service_id,
-          service.service_description,
-          service.service_cost,
-        ]
-      );
-    }
+    await connection.query(
+      `INSERT INTO order_info (order_id, order_total_price, additional_request, additional_requests_completed)
+       VALUES (?, ?, ?, ?)`,
+      [
+        order_id,
+        order_total_price,
+        additional_request,
+        additional_requests_completed,
+      ]
+    );
+
+    // Insert order services into the `order_services` table
+    await connection.query(
+      `INSERT INTO order_services (order_id, service_id, service_completed)
+       VALUES (?, ?, ?)`,
+      [order_id, service_id, service_completed]
+    );
+
+    // Insert order status into the `order_status` table
+    await connection.query(
+      `INSERT INTO order_status (order_id, order_status)
+       VALUES (?, ?)`,
+      [order_id, order_status]
+    );
 
     // Commit the transaction
-    await db.commit();
+    await connection.commit();
+
+    // Release the connection back to the pool
+    connection.release();
 
     // Return the newly created order ID
+    console.log("order_id", order_id);
     return { order_id };
   } catch (error) {
     // Rollback the transaction on error
-    await db.rollback();
+    await connection.rollback();
+    connection.release(); // Ensure connection is released in case of an error
     throw error;
   }
 };

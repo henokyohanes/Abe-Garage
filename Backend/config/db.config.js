@@ -1,4 +1,6 @@
 const mysql = require('mysql2/promise');
+
+// Database configuration
 const dbConfig = {
   connectionLimit: 10,
   user: process.env.DB_USER,
@@ -6,6 +8,7 @@ const dbConfig = {
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
 }
+
 // Create the connection pool  
 const pool = mysql.createPool(dbConfig);
 
@@ -15,4 +18,8 @@ async function query(sql, params) {
   return rows;
 }
 
-module.exports = { query };
+async function getConnection() {
+  return await pool.getConnection();
+}
+
+module.exports = { getConnection, query };

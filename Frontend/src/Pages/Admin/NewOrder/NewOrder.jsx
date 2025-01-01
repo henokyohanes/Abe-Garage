@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../Contexts/AuthContext";
 import { FaHandPointUp } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
@@ -18,14 +19,15 @@ const NewOrder = () => {
     const [customer, setCustomer] = useState({});
     const [customers, setCustomers] = useState([]);
     const [filteredCustomers, setFilteredCustomers] = useState([]);
-    const [vehicles, setVehicles] = useState();
+    const [vehicles, setVehicles] = useState([]);
     const [vehicle, setVehicle] = useState();
     const [services, setServices] = useState(); 
-    const [order, setOrder] = useState({additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, services: []});
+    const [order, setOrder] = useState({additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, service_id: "", customer_id: "", vehicle_id: "", employee_id: ""});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showSearch, setShowSearch] = useState(true);
     const [showCustomer, setShowCustomer] = useState(false);
+    const {employeeId} = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,6 +51,7 @@ const NewOrder = () => {
         try {
             const response = await customerservice.fetchCustomerById(customerId);
             setCustomer(response.data);
+            setOrder({...order, customer_id: customerId});
         } catch (err) {
             console.error(err);
             setError("Failed to load customer data.");
@@ -75,6 +78,7 @@ const NewOrder = () => {
         try {    
             const response = await vehicleService.fetchVehicleById(vehicleId);    
             setVehicle(response.data);
+            setOrder({...order, vehicle_id: vehicleId, employee_id: employeeId});
         } catch (err) { 
             console.error(err);
             setError("Failed to load vehicle data.");    
@@ -109,15 +113,14 @@ const NewOrder = () => {
         if (term === "") {
             setFilteredCustomers(customers);
         } else {
-            const results = Object.fromEntries(
-                Object.entries(customers).filter(
-                    ([key, customer]) =>
-                        customer.customer_first_name?.toLowerCase().includes(term) ||
-                        customer.customer_last_name?.toLowerCase().includes(term) ||
-                        customer.customer_email?.toLowerCase().includes(term) ||
-                        customer.customer_phone_number?.includes(term)
-                )
+            const results = customers.filter(
+              (customer) =>
+                customer.customer_first_name?.toLowerCase().includes(term) ||
+                customer.customer_last_name?.toLowerCase().includes(term) ||
+                customer.customer_email?.toLowerCase().includes(term) ||
+                customer.customer_phone_number?.includes(term)
             );
+
             setFilteredCustomers(results);
         }
     };
@@ -143,19 +146,21 @@ const NewOrder = () => {
 
     const handleAddData = (e, service) => {
         const { checked } = e.target;
-        const { service_id, service_name, service_description } = service;
+        const { service_id } = service;
+        console.log(service);
+        console.log(service_id);
 
         setOrder((prevOrder) => {
             const updatedServices = checked
                 ? [
                     ...(prevOrder.services || []),
-                    { service_id, service_name, service_description },
+                    service_id
                 ]
                 : (prevOrder.services || []).filter(
                     (s) => s.service_id !== service_id
                 );
-
-            return { ...prevOrder, services: updatedServices };
+                console.log("updatedServices", updatedServices);
+            return { ...prevOrder, service_id: updatedServices[0] };
         });
     };
 
@@ -169,7 +174,6 @@ const NewOrder = () => {
 
         try {
             const response = await orderService.addOrder(orderWithHash);
-            console.log(response);
             setOrder(response.data);
         } catch (err) {
             console.error(err);
@@ -344,8 +348,8 @@ const NewOrder = () => {
                                 <input type="checkbox" onChange={(e) => handleAddData(e, service)}/>
                             </div>))}
                         <div>
-                            <textarea type="text" value={order.additional_request} placeholder="Service description" onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} />
-                            <input type="number" value={order.order_total_price} placeholder="Price" onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} />
+                            <textarea type="text" value={order.additional_request || ""} placeholder="Service description" onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} />
+                            <input type="number" value={order.order_total_price || ""} placeholder="Price" onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} />
                             <button onClick={handleCreateOrder}>Submit Order</button>
                         </div>
                     </div>}

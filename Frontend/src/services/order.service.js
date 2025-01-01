@@ -58,7 +58,7 @@ export const addOrder = async (orderData) => {
     console.log("orderData from addOrder", orderData);
     try {
         const response = await axios.post(
-            `${api_url}/api/orders`,
+            `${api_url}/api/order`,
             orderData,
             getAuthHeaders()
         );
