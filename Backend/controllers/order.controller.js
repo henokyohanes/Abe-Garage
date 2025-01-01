@@ -2,12 +2,11 @@ const orderService = require("../services/order.service");
 
 // Create a new order
 const createOrder = async (req, res) => {
-  console.log("req.body", req.body);
   const {
     employee_id,
     customer_id,
     vehicle_id,
-    service_id,
+    service_ids,
     additional_request,
     additional_requests_completed,
     active_order,
@@ -17,34 +16,13 @@ const createOrder = async (req, res) => {
     service_completed,
   } = req.body;
 
-  // Validate required fields
-  // if (
-  //   !employee_id ||
-  //   !customer_id ||
-  //   !vehicle_id ||
-  //   !service_id ||
-  //   !order_hash ||    
-  //   !order_total_price ||
-  //   !service_completed ||
-  //   !active_order ||
-  //   !order_status ||
-  //   !additional_request ||
-  //   !additional_requests_completed
-  // ) {
-  //   return res.status(400).json({
-  //     status: "fail",
-  //     error: "Bad Request",
-  //     message: "Missing or invalid required fields",
-  //   });
-  // }
-
   try {
     // Create order in the database
     const newOrder = await orderService.createOrder({
       employee_id,
       customer_id,
       vehicle_id,
-      service_id,
+      service_ids,
       additional_request,
       additional_requests_completed,
       active_order,
@@ -53,8 +31,6 @@ const createOrder = async (req, res) => {
       order_total_price,
       service_completed,
     });
-
-    console.log("New order created:", newOrder);
 
     // Return success response
     return res.status(201).json({

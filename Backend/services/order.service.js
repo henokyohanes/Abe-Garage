@@ -2,12 +2,11 @@ const db = require("../config/db.config");
 
 // Create a new order
 const createOrder = async (orderData) => {
-  console.log("orderData from createOrder", orderData);
   const {
     employee_id,
     customer_id,
     vehicle_id,
-    service_id,
+    service_ids,
     active_order,
     order_hash,
     order_total_price,
@@ -44,11 +43,18 @@ const createOrder = async (orderData) => {
       ]
     );
 
-    // Insert order services into the `order_services` table
+    const placeholders = service_ids.map(() => "(?, ?, ?)").join(", ");
+    const values = service_ids.flatMap((service_id) => [
+      order_id,
+      service_id,
+      service_completed,
+    ]);
+
+    // Execute the query
     await connection.query(
       `INSERT INTO order_services (order_id, service_id, service_completed)
-       VALUES (?, ?, ?)`,
-      [order_id, service_id, service_completed]
+     VALUES ${placeholders}`,
+      values
     );
 
     // Insert order status into the `order_status` table
@@ -65,7 +71,6 @@ const createOrder = async (orderData) => {
     connection.release();
 
     // Return the newly created order ID
-    console.log("order_id", order_id);
     return { order_id };
   } catch (error) {
     // Rollback the transaction on error

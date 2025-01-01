@@ -22,7 +22,7 @@ const NewOrder = () => {
     const [vehicles, setVehicles] = useState([]);
     const [vehicle, setVehicle] = useState();
     const [services, setServices] = useState(); 
-    const [order, setOrder] = useState({additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, service_id: "", customer_id: "", vehicle_id: "", employee_id: ""});
+    const [order, setOrder] = useState({additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, service_ids: [], customer_id: "", vehicle_id: "", employee_id: ""});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showSearch, setShowSearch] = useState(true);
@@ -147,22 +147,16 @@ const NewOrder = () => {
     const handleAddData = (e, service) => {
         const { checked } = e.target;
         const { service_id } = service;
-        console.log(service);
-        console.log(service_id);
 
         setOrder((prevOrder) => {
             const updatedServices = checked
-                ? [
-                    ...(prevOrder.services || []),
-                    service_id
-                ]
-                : (prevOrder.services || []).filter(
-                    (s) => s.service_id !== service_id
-                );
-                console.log("updatedServices", updatedServices);
-            return { ...prevOrder, service_id: updatedServices[0] };
+                ? [...prevOrder.service_ids, service_id]
+                : prevOrder.service_ids.filter((id) => id !== service_id);
+
+            return { ...prevOrder, service_ids: updatedServices };
         });
     };
+
 
     const handleCreateOrder = async () => {
         const orderHash = generateorderHash();
