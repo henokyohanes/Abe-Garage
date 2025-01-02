@@ -1,0 +1,274 @@
+.container {
+  background-color: #E6E4E9;
+}
+
+.adminMenuContainer {
+  width: 100%;
+  background-color: #222A47;
+  color: #D6D7DE;
+}
+
+.adminMenuTitle {
+  background-color: #1D2230;
+  padding: 1vw 2vw;
+}
+
+.adminMenuTitle h2 {
+  font-size: clamp(.7em, 2vw, 1.3em);
+}
+
+.listGroup {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2vw;
+}
+
+.listGroupItem {
+  padding: .8vw 0;
+  text-decoration: none;
+  color: #D6D7DE;
+  font-size: clamp(.5em, 2vw, 1em); 
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.orderList {
+  padding: 3vw;
+}
+
+.orderList h2 {
+  font-size: clamp(.8em, 3vw, 1.6em);
+  font-weight: bold;
+  color: #07184A;
+}
+
+.orderList span {
+  color: #d82323;
+}
+
+.searchBar {
+  max-width: 40em;
+  padding: 1vw 0 0 2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2vw;
+}
+
+.searchIcon {
+  background-color: #FFFFFF;
+  display: flex;
+  border-radius: .4em;
+}
+
+.searchBar input {
+  width: 100%;  
+  border: none;
+  padding: .5em 1em;
+  font-size: clamp(.8em, 3vw, 1em);
+  border-top-left-radius: .4em;
+  border-bottom-left-radius: .4em;
+}
+
+.searchBar input:focus {
+  outline: none;
+}
+
+.searchBar input::placeholder {
+  font-size: clamp(.8em, 3vw, 1em);
+}
+
+.searchBar span {
+  background-color: #d82323;
+  color: #FFFFFF;
+  padding: .4em 1em;
+  font-size: clamp(.9em, 3vw, 1.2em);
+  border-top-right-radius: .4em;
+  border-bottom-right-radius: .4em;
+}
+
+.addButton {
+  width: 100%;
+  padding: .7em;
+  background-color: #d82323;
+  color: white;
+  font-size: clamp(.7em, 3vw, 1.2em);
+  font-weight: bold;
+  border: none;
+  border-radius: .4em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.addButton:hover {
+  background-color: #07184A;
+}
+
+.customerTable, .vehicleTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2vw 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customerTable thead, .vehicleTable thead {
+  background-color: #f7f8fa;
+}
+
+.customerTable th, .customerTable td, .vehicleTable th, .vehicleTable td {
+  text-align: left;
+  padding: .5em;
+  border: 1px solid #d6cfcf;
+}
+
+.customerTable th {
+  font-size: clamp(.5em, 2.4vw, 1em);
+  font-weight: bold;
+}
+
+.customerTable td {
+  font-size: clamp(.5em, 2.4vw, 1em);
+}
+
+.customerTable tbody tr:hover, .vehicleTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.customerTable button, .vehicleTable button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.customerTable button:hover, .vehicleTable button:hover { 
+  color: #d82323;
+}
+
+.noResults {
+  padding : 2vw;
+  font-size: clamp(.8em, 3vw, 1.2em);
+  font-weight: bold;
+  color: #d82323;
+}
+
+.customerInfo, .vehicleInfo, .serviceInfo {
+  background-color: #FFFFFF ;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vw;
+  margin: 1vw 0;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customerDetails, .vehicleDetails { 
+  margin-left: 1em;  
+}
+
+.customerInfo h3, .vehicleInfo h3, .serviceInfo h3 {
+  font-size: clamp(.7em, 3vw, 1.3em);
+  font-weight: bold;
+  color: #07184A;
+  margin-bottom: .2em;
+}
+
+.customerInfo strong, .vehicleInfo strong {
+  font-size: clamp(.5em, 2.6vw, 1em);
+  color: #07184A;
+}
+
+.customerInfo p, .vehicleInfo p, .serviceInfo p {
+  font-size: clamp(.4em, 2.6vw, 1em);
+  margin-bottom: .01em;
+}
+
+.customerInfo button, .vehicleInfo button {
+  background-color: #d82323;
+  color: #FFFFFF;
+  padding: 0 .6em;
+  font-size: clamp(.4em, 3vw, 1.2em);
+  border: none;
+  border-radius: .4em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.customerInfo button:hover, .vehicleInfo button:hover {
+  background-color: #07184A;
+}
+
+.vehicleTable th {
+  font-size: clamp(.5em, 2vw, 1em);
+  font-weight: bold;
+}
+
+.vehicleTable td {
+  font-size: clamp(.4em, 2vw, 1em);
+}
+
+.services, .orderForm {
+  background-color: #FFFFFF;
+  padding: 2vw;
+  margin-bottom: 1vw;
+}
+
+.serviceInfo input {
+  transform: scale(clamp(.8em, 3vw, 1.2em));
+  margin-left: 1em;
+}
+
+.orderFor {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center;   */
+}
+
+.orderForm input {
+    width: 70%;
+    padding: .5vw 1vw;
+    margin-bottom: 1.5vw;
+    font-size: clamp(.7em, 2vw, 1.1em);
+    border: 1px solid #ccc;
+    border-radius: .4em;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.orderForm input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.orderForm input::placeholder, .orderForm textarea::placeholder {
+    font-size: clamp(.7em, 2vw, 1.1em);
+}
+
+.orderForm textarea {
+    width: 70%;
+    height: 6em;
+    padding: .5vw 1vw;
+    margin: 1.5vw 0;
+    font-size: clamp(.7em, 2vw, 1.1em);
+    border: 1px solid #ccc;
+    border-radius: .4em;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.orderForm textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.orderForm button {
+    width: 70%;
+    padding: .6em;
+    background-color: #d82323;
+    color: white;
+    font-size: clamp(.6em, 3vw, 1.2em);
+    font-weight: bold;
+    border: none;
+    border-radius: .4em;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.orderForm button:hover {
+    background-color: #07184A;
+}
