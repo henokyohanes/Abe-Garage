@@ -117,33 +117,22 @@ const getAllOrders = async () => {
 // Get all orders for a specific customer
 const getOrdersByCustomerId = async (customer_id) => {
   try {
-    const [orders] = await db.query(
+    const orders = await db.query(
       `
       SELECT 
-    o.order_id,
-    MAX(o.employee_id) AS employee_id,
-    MAX(o.customer_id) AS customer_id,
-    MAX(o.vehicle_id) AS vehicle_id,
-    MAX(COALESCE(oi.additional_request, '')) AS order_description,
-    MAX(o.order_date) AS order_date,
-    MAX(COALESCE(oi.estimated_completion_date, '')) AS estimated_completion_date,
-    MAX(COALESCE(oi.completion_date, '')) AS completion_date,
-    MAX(COALESCE(os.order_status, 0)) AS order_completed,
-    JSON_ARRAYAGG(
-        JSON_OBJECT(
-            'service_id', COALESCE(osv.service_id, 0),
-            'service_description', COALESCE(cs.service_description, '')
-        )
-    ) AS order_services
-FROM orders o
-LEFT JOIN order_info oi ON o.order_id = oi.order_id
-LEFT JOIN order_status os ON o.order_id = os.order_id
-LEFT JOIN order_services osv ON o.order_id = osv.order_id
-LEFT JOIN common_services cs ON osv.service_id = cs.service_id
-WHERE o.customer_id = ?
-GROUP BY o.order_id
-ORDER BY o.order_date DESC;
-
+        o.order_id,
+        o.order_date,
+        os.order_status,
+        oi.order_total_price,
+        cvi.vehicle_year,
+        cvi.vehicle_make,
+        cvi.vehicle_model
+      FROM orders o
+      LEFT JOIN order_status os ON o.order_id = os.order_id
+      LEFT JOIN order_info oi ON o.order_id = oi.order_id
+      LEFT JOIN customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+      WHERE o.customer_id = ?
+      ORDER BY o.order_date DESC;
       `,
       [customer_id]
     );
@@ -154,7 +143,6 @@ ORDER BY o.order_date DESC;
     throw error;
   }
 };
-
 
 // Get a single order by ID
 const getOrderById = async (id) => {

@@ -49,8 +49,7 @@ const CustomerProfile = () => {
     const fetchOrders = async () => {
         try {
             const orderData = await orderService.fetchCustomerOrders(parseInt(id));
-            console.log("orderData", orderData);
-            setOrders(orderData);
+            setOrders(orderData.data);
         } catch (error) {
             console.error("Error fetching orders:", error);
         }
@@ -73,6 +72,13 @@ const CustomerProfile = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewVehicle((prev) => ({ ...prev, [name]: value }));
+    };
+
+    function getOrderStatus(status) {
+        if (status === 0) return "Received";
+        if (status === 1) return "In Progress";
+        if (status === 2) return "Completed";
+        return "Pending";
     };
 
     return (
@@ -192,13 +198,14 @@ const CustomerProfile = () => {
                         <div className={styles.title}>Orders</div>
                         <div>
                             <h2>Orders of {customer?.customer_first_name}</h2>
-                            {orders.length > 0 ? (
+                            {orders ? (
                                 orders.map((order, index) => (
                                     <div key={index} className="order">
-                                        <p>Order #{order.orderNumber}</p>
-                                        <p>Date: {order.date}</p>
-                                        <p>Status: {order.status}</p>
-                                        <p>Total: ${order.totalAmount}</p>
+                                        <p>Order #{order.order_id}</p>
+                                        <p>Vehicle: {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}</p>
+                                        <p>Date: {order.order_date.split("T")[0]}</p>
+                                        <p>Status: {getOrderStatus(order.order_status)}</p>
+                                        <p>Total: ${order.order_total_price}</p>
                                     </div>
                                 ))
                             ) : (

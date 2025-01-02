@@ -17,7 +17,7 @@ const Dashboard = () => {
                     <p>
                         Delivering reliable, win-win solutions to keep your vehicle running smoothly. At the end of the day, our proactive approach ensures optimal performance and customer satisfaction. Moving forward, the next generation of automotive care is here, with advanced diagnostics and streamlined repair solutions to get you back on the road quickly and safely.
                     </p>
-                    <div className="row g-3">
+                    <div className="row g-3 g-lg-4">
                         {[
                             { icon: "📦", title: "All Orders", sub:"Open For All" },
                             { icon: "🆕", title: "New Orders", sub:"Open For Leads" },

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Contexts/AuthContext";
 import { FaHandPointUp } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
@@ -269,17 +268,19 @@ const NewOrder = () => {
                     {showCustomer && <div>
                         <div className={styles.customerInfo}>
                             <div>
-                                <div>{customer.customer_first_name} {customer.customer_last_name}</div>
-                                <div>Email: {customer.customer_email}</div>
-                                <div>Phone Number: {customer.customer_phone_number}</div>
-                                <div>Active Customer: {customer.active_customer_status ? "Yes" : "No"}</div>
-                                <div>Edit Customer Info: <FaEdit /></div>
+                                <h3>{customer.customer_first_name} {customer.customer_last_name}</h3>
+                                <div className={styles.customerDetails}>
+                                    <p><strong>Email:</strong> {customer.customer_email}</p>
+                                    <p><strong>Phone Number:</strong> {customer.customer_phone_number}</p>
+                                    <p><strong>Customer:</strong> {customer.active_customer_status ? "Yes" : "No"}</p>
+                                    <p><strong>Edit Customer Info:</strong> <span><FaEdit /></span></p>
+                                </div>
                             </div>
-                            <button onClick={() => { setShowSearch(true); setShowCustomer(false)}}>x</button>
+                            <button onClick={() => { setShowSearch(true); setShowCustomer(false) }}>x</button>
                         </div>
                         {vehicles && <div>
                             <h2>Choose a Vehicle</h2>
-                            <table className={styles.customerTable}>
+                            <table className={styles.vehicleTable}>
                                 <thead>
                                     <tr>
                                         <th>Year</th>
@@ -320,28 +321,33 @@ const NewOrder = () => {
                     {vehicle && <div>
                         <div className={styles.vehicleInfo}>
                             <div>
-                                <div>{vehicle.vehicle_make} {vehicle.vehicle_model}</div>
-                                <div>Year: {vehicle.vehicle_year}</div>
-                                <div>Color: {vehicle.vehicle_color}</div>
-                                <div>Mileage: {vehicle.vehicle_mileage}</div>
-                                <div>Tag: {vehicle.vehicle_tag}</div>
-                                <div>Serial: {vehicle.vehicle_serial}</div>
-                                <div>Edit Vehicle Info: <FaEdit /></div>
+                                <h3>{vehicle.vehicle_make} {vehicle.vehicle_model}</h3>
+                                <div className={styles.vehicleDetails}>
+                                    <p><strong>Year:</strong> {vehicle.vehicle_year}</p>
+                                    <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
+                                    <p><strong>Mileage:</strong> {vehicle.vehicle_mileage}</p>
+                                    <p><strong>Tag:</strong> {vehicle.vehicle_tag}</p>
+                                    <p><strong>Serial:</strong> {vehicle.vehicle_serial}</p>
+                                    <p><strong>Edit Vehicle Info:</strong> <span><FaEdit /></span></p>
+                                </div>
                             </div>
-                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setShowVehicle(false)}}>x</button>
+                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setShowVehicle(false) }}>x</button>
                         </div>
                     </div>}
                     {services && <div>
-                        <h2>Choose Services</h2>
-                        {services.map((service) => (
-                            <div key={service.service_id} className={styles.serviceInfo}>
-                                <div>
-                                    <div>{service.service_name}</div>
-                                    <div>{service.service_description}</div>
-                                </div>
-                                <input type="checkbox" onChange={(e) => handleAddData(e, service)}/>
-                            </div>))}
-                        <div>
+                        <div className={styles.services}>
+                            <h2>Choose Services</h2>
+                            {services.map((service) => (
+                                <div key={service.service_id} className={styles.serviceInfo}>
+                                    <div>
+                                        <h3>{service.service_name}</h3>
+                                        <p>{service.service_description}</p>
+                                    </div>
+                                    <input type="checkbox" onChange={(e) => handleAddData(e, service)} />
+                                </div>))}
+                        </div>
+                        <div className={styles.orderForm}>
+                            <h2>Additional requests <span>____</span></h2>
                             <textarea type="text" value={order.additional_request || ""} placeholder="Service description" onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} />
                             <input type="number" value={order.order_total_price || ""} placeholder="Price" onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} />
                             <button onClick={handleCreateOrder}>Submit Order</button>
