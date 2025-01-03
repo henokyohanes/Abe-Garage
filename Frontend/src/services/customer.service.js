@@ -45,7 +45,6 @@ export const fetchCustomerById = async (id) => {
 
 // Function to add a new customer
 export const addCustomer = async (customerData) => {
-    // console.log(customerData);
     try {
         const response = await axios.post(
             `${api_url}/api/add-customer`,

@@ -18,7 +18,6 @@ const Customers = () => {
   const itemsPerPage = 10;
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {

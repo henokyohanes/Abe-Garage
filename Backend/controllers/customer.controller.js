@@ -57,7 +57,7 @@ const createCustomer = async (req, res) => {
     const existingCustomer = await customerService.findCustomerByEmail(
       customer_email
     );
-    if (existingCustomer) {
+    if (existingCustomer.length > 0) {
       return res
         .status(409)
         .json({

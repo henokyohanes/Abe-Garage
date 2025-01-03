@@ -58,6 +58,12 @@
     border: none;
     padding: .5em 1em;
     font-size: clamp(.8em, 3vw, 1em);
+    border-top-left-radius: .4em;
+    border-bottom-left-radius: .4em;
+}
+
+.searchBar input:focus {
+    outline: none;
 }
 
 .searchBar input::placeholder {

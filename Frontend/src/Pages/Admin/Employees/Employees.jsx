@@ -12,6 +12,8 @@ const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,7 +23,6 @@ const EmployeeList = () => {
     const fetchEmployeeData = async () => {
         try {
             const response = await employeeService.fetchEmployees();
-            console.log(response.data);
             setEmployees(response.data);
         } catch (err) {
             console.error(err);
@@ -46,12 +47,25 @@ const EmployeeList = () => {
     };
 
     const handleEdit = (id) => {
-        console.log("Editing employee with id:", id);
         if (!id) {
             alert("Invalid employee ID");
             return;
         }
         navigate(`/edit-employee/${id}`);
+    };
+
+    const totalPages = Math.ceil(employees.length / itemsPerPage);
+    const displayedEmployees = employees.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handlePageChange = (direction) => {
+        if (direction === "next" && currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        } else if (direction === "prev" && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
     };
 
     if (loading) return <p>Loading...</p>;
@@ -94,23 +108,46 @@ const EmployeeList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {employees.map((employee, index) => (
-                                <tr key={employee.id || index}>
-                                    <td>{employee.active_employee ? "Yes" : "No"}</td>
-                                    <td>{employee.employee_first_name}</td>
-                                    <td>{employee.employee_last_name}</td>
-                                    <td>{employee.employee_email}</td>
-                                    <td>{employee.employee_phone}</td>
-                                    <td>{employee.added_date.split("T")[0]}</td>
-                                    <td>{employee.company_role_name}</td>
-                                    <td>
-                                        <button onClick={() => handleEdit(employee.employee_id)}><FaEdit /></button>
-                                        <button onClick={() => handleDelete(employee.employee_id)}><MdDelete /></button>
-                                    </td>
+                            {displayedEmployees.length > 0 ? (
+                                displayedEmployees.map((employee) => (
+                                    <tr key={employee.employee_id}>
+                                        <td>{employee.active_employee ? "Yes" : "No"}</td>
+                                        <td>{employee.employee_first_name}</td>
+                                        <td>{employee.employee_last_name}</td>
+                                        <td>{employee.employee_email}</td>
+                                        <td>{employee.employee_phone}</td>
+                                        <td>{employee.added_date.split("T")[0]}</td>
+                                        <td>{employee.company_role_name}</td>
+                                        <td>
+                                            <button onClick={() => handleEdit(employee.employee_id)}><FaEdit /></button>
+                                            <button onClick={() => handleDelete(employee.employee_id)}><MdDelete /></button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8">No employees found</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
+                    <div className={styles.pagination}>
+                        <button
+                            onClick={() => handlePageChange("prev")}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <span>
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                            onClick={() => handlePageChange("next")}
+                            disabled={currentPage === totalPages}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
             </div>
         </Layout>
