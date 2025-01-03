@@ -108,29 +108,32 @@ const CustomerProfile = () => {
                         <div className={styles.title}>Cars</div>
                         <div>
                             <h2>Vehicles of {customer?.customer_first_name}</h2>
-                            {vehicles && Object.keys(vehicles).length > 0 ? (
-                                Object.values(vehicles).map((vehicle, index) => (
-                                    <div key={index} className={styles.vehicleInfo}>
-                                        <p>
-                                            <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
-                                        </p>
-                                        <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
-                                        <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
-                                        <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No vehicles found</p>
-                            )}
-                            <button onClick={() => setShowform(true)}>Add New Vehicle</button>
+                            <div className={styles.vehicleInfo}>
+                                {vehicles && Object.keys(vehicles).length > 0 ? (
+                                    Object.values(vehicles).map((vehicle, index) => (
+                                        <div key={index} className={styles.vehicleCard}>
+                                            <p>
+                                                <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
+                                            </p>
+                                            <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
+                                            <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
+                                            <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className={styles.noMessage}>No vehicles found</p>
+                                )}
+                                {!showform && <button onClick={() => setShowform(true)}>Add New Vehicle</button>}
+                            </div>
                         </div>
                     </div>
 
                     {/* vehicle form */}
                     {showform && (
-                        <div className="">
-                            <div className="modal-content">
-                                <h2>Add New Vehicle</h2>
+                        <div className={styles.vehicleForm}>
+                            <div className={styles.closeBtn} onClick={() => setShowform(false)}>X</div>
+                            <div className={styles.vehicleFormContainer}>
+                                <h2>Add a New Vehicle <span>____</span></h2>
                                 <input
                                     type="text"
                                     name="vehicle_year"
@@ -187,8 +190,7 @@ const CustomerProfile = () => {
                                     value={newVehicle.vehicle_serial}
                                     onChange={handleInputChange}
                                 />
-                                <button onClick={handleAddVehicle}>Submit</button>
-                                <button onClick={() => setShowform(false)}>Cancel</button>
+                                <button onClick={handleAddVehicle}>Add Vehicle</button>
                             </div>
                         </div>
                     )}
@@ -198,19 +200,21 @@ const CustomerProfile = () => {
                         <div className={styles.title}>Orders</div>
                         <div>
                             <h2>Orders of {customer?.customer_first_name}</h2>
-                            {orders ? (
-                                orders.map((order, index) => (
-                                    <div key={index} className="order">
-                                        <p>Order #{order.order_id}</p>
-                                        <p>Vehicle: {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}</p>
-                                        <p>Date: {order.order_date.split("T")[0]}</p>
-                                        <p>Status: {getOrderStatus(order.order_status)}</p>
-                                        <p>Total: ${order.order_total_price}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No orders found</p>
-                            )}
+                            <div className={styles.orderInfo}>
+                                {orders && orders.length > 0 ? (
+                                    orders.map((order, index) => (
+                                        <div key={index} className={styles.orderCard}>
+                                            <p><strong>Order #: </strong>{order.order_id}</p>
+                                            <p><strong>Vehicle: </strong>{order.vehicle_year} {order.vehicle_make} {order.vehicle_model}</p>
+                                            <p><strong>Date: </strong>{order.order_date.split("T")[0]}</p>
+                                            <p><strong>Status: </strong>{getOrderStatus(order.order_status)}</p>
+                                            <p><strong>Total: </strong>${order.order_total_price}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className={styles.noMessage}>No orders found</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
