@@ -28,6 +28,8 @@ const NewOrder = () => {
     const [showCustomer, setShowCustomer] = useState(false);
     const [showVehicle, setShowVehicle] = useState(false);
     const [showVehicles, setShowVehicles] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const { employeeId } = useAuth();
     const navigate = useNavigate();
 
@@ -69,7 +71,6 @@ const NewOrder = () => {
             setVehicles(response.data);
         } catch (err) {
             console.error(err);
-            // setError("Failed to load vehicle data.");
         } finally {
             setLoading(false);
         }
@@ -121,9 +122,23 @@ const NewOrder = () => {
                     customer.customer_email?.toLowerCase().includes(term) ||
                     customer.customer_phone_number?.includes(term)
             );
-
             setFilteredCustomers(results);
         }
+    };
+
+    const paginatedCustomers = filteredCustomers.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+
+    const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+
+    const handlePageChange = (direction) => {
+      if (direction === "prev" && currentPage > 1) {
+        setCurrentPage((prevPage) => prevPage - 1);
+      } else if (direction === "next" && currentPage < totalPages) {
+        setCurrentPage((prevPage) => prevPage + 1);
+      }
     };
 
     const handleAddCustomer = () => {
@@ -131,8 +146,6 @@ const NewOrder = () => {
     };
 
     const handleSelectCustomer = (customerId) => {
-        // console.log(customerId);
-        // navigate(`/customer/${customerId}/select-vehicle`);
         fetchCustomerById(customerId);
         fetchVehiclesByCustomerId(customerId);
         setShowSearch(false);
@@ -140,10 +153,8 @@ const NewOrder = () => {
     };
 
     const handleSelectVehicle = (vehicleId) => {
-        // navigate(`/admin/new-order/${vehicleId}`);
         fetchVehiclesById(vehicleId);
         fetchAllServices();
-        // setVehicles(null);
     };
 
     const handleAddData = (e, service) => {
@@ -154,20 +165,16 @@ const NewOrder = () => {
             const updatedServices = checked
                 ? [...prevOrder.service_ids, service_id]
                 : prevOrder.service_ids.filter((id) => id !== service_id);
-
             return { ...prevOrder, service_ids: updatedServices };
         });
     };
 
-
     const handleCreateOrder = async () => {
         const orderHash = generateorderHash();
-
         const orderWithHash = {
             ...order,
             order_hash: orderHash,
         };
-
         try {
             const response = await orderService.addOrder(orderWithHash);
             setOrder(response.data);
@@ -239,35 +246,55 @@ const NewOrder = () => {
                     </div>
                     {showSearch && <div className={styles.results}>
                         {searchTerm !== "" && Object.keys(filteredCustomers).length > 0 ? (
-                            <table className={styles.customerTable}>
-                                <thead>
-                                    <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {Object.entries(filteredCustomers).map(([id, customer]) => (
-                                        <tr key={id}>
-                                            <td>{customer.customer_first_name}</td>
-                                            <td>{customer.customer_last_name}</td>
-                                            <td>{customer.customer_email}</td>
-                                            <td>{customer.customer_phone_number}</td>
-                                            <td>
-                                                <button
-                                                    onClick={() => {handleSelectCustomer(customer.customer_id); setShowVehicles(true);}}
-                                                    className={styles.selectButton}
-                                                >
-                                                    <FaHandPointUp />
-                                                </button>
-                                            </td>
+                            <div>
+                                <table className={styles.customerTable}>
+                                    <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Action</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {/* {Object.entries(filteredCustomers).map(([id, customer]) => ( */}
+                                        {paginatedCustomers.map((customer) => (
+                                            <tr key={customer.customer_id}>
+                                                <td>{customer.customer_first_name}</td>
+                                                <td>{customer.customer_last_name}</td>
+                                                <td>{customer.customer_email}</td>
+                                                <td>{customer.customer_phone_number}</td>
+                                                <td>
+                                                    <button
+                                                        onClick={() => { handleSelectCustomer(customer.customer_id); setShowVehicles(true); }}
+                                                        className={styles.selectButton}
+                                                    >
+                                                        <FaHandPointUp />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <div className={styles.pagination}>
+                                    <button
+                                        onClick={() => handlePageChange("prev")}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Previous
+                                    </button>
+                                    <span>
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => handlePageChange("next")}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
                         ) : searchTerm !== "" ? (
                             <p className={styles.noResults}>
                                 No customers matched your search.
@@ -326,7 +353,7 @@ const NewOrder = () => {
                                         ))}
                                     </tbody>
                                 </table>
-                            </div>) : (<div className={styles.noVehicles}>
+                            </div>) : (<div className={styles.noResults}>
                                 <p>No vehicles found for this customer.</p>
                                 <button onClick={() => { handleAddVehicle(customer.customer_id); }}>Add New Vehicle</button>
                             </div>)}

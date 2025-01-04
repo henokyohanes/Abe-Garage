@@ -256,7 +256,7 @@
     outline: none;
 }
 
-.orderForm button {
+.orderForm button, .noResults button {
     width: 70%;
     padding: .6em;
     background-color: #d82323;
@@ -269,6 +269,39 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.orderForm button:hover {
+.orderForm button:hover, .noResults button:hover {
     background-color: #07184A;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 0;
+}
+
+.pagination button{
+    width: 7em;
+    font-size: clamp(.5em, 2vw, 1.2em);
+    border: none;
+    border-radius: .4em;
+    background-color: #d82323;
+    color: #FFFFFF;
+    padding: .3em 1em;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #07184A;
+}
+
+.pagination button:disabled {
+    background-color: #d6cfcf;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    color: #1D2230;
+    font-size: clamp(.5em, 2vw, 1.2em);
+    margin: 0 1em;
 }
