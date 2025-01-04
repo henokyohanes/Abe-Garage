@@ -74,7 +74,7 @@ const EmployeeList = () => {
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
-                <div className={`${styles.adminMenu} d-none d-lg-block col-2`}>
+                <div className="d-none d-lg-block col-2">
                     <AdminMenu />
                 </div>
                 <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>

@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import PrivateAuthRoute from "../Auth/PrivateAuthRoute";
 import Home from "../Pages/Home/Home";
-import Orders from "../pages/Orders/Orders";
+import Orders from "../Pages/Orders/Orders";
 import Customers from "../Pages/Customers/Customers";
 import AddEmployee from "../Pages/AddEmployee/AddEmployee";
 import Unauthorized from "../pages/Unauthorized/Unauthorized";

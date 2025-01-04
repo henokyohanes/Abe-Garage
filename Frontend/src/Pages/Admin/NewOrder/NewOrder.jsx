@@ -19,14 +19,16 @@ const NewOrder = () => {
     const [customers, setCustomers] = useState([]);
     const [filteredCustomers, setFilteredCustomers] = useState([]);
     const [vehicles, setVehicles] = useState([]);
-    const [vehicle, setVehicle] = useState();
-    const [services, setServices] = useState(); 
-    const [order, setOrder] = useState({additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, service_ids: [], customer_id: "", vehicle_id: "", employee_id: ""});
+    const [vehicle, setVehicle] = useState([]);
+    const [services, setServices] = useState(null);
+    const [order, setOrder] = useState({ additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, service_ids: [], customer_id: "", vehicle_id: "", employee_id: "" });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showSearch, setShowSearch] = useState(true);
     const [showCustomer, setShowCustomer] = useState(false);
-    const {employeeId} = useAuth();
+    const [showVehicle, setShowVehicle] = useState(false);
+    const [showVehicles, setShowVehicles] = useState(true);
+    const { employeeId } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,7 +52,7 @@ const NewOrder = () => {
         try {
             const response = await customerservice.fetchCustomerById(customerId);
             setCustomer(response.data);
-            setOrder({...order, customer_id: customerId});
+            setOrder({ ...order, customer_id: customerId });
         } catch (err) {
             console.error(err);
             setError("Failed to load customer data.");
@@ -67,22 +69,22 @@ const NewOrder = () => {
             setVehicles(response.data);
         } catch (err) {
             console.error(err);
-            setError("Failed to load vehicle data.");
+            // setError("Failed to load vehicle data.");
         } finally {
             setLoading(false);
         }
     };
 
     const fetchVehiclesById = async (vehicleId) => {
-        try {    
-            const response = await vehicleService.fetchVehicleById(vehicleId);    
+        try {
+            const response = await vehicleService.fetchVehicleById(vehicleId);
             setVehicle(response.data);
-            setOrder({...order, vehicle_id: vehicleId, employee_id: employeeId});
-        } catch (err) { 
+            setOrder({ ...order, vehicle_id: vehicleId, employee_id: employeeId });
+        } catch (err) {
             console.error(err);
-            setError("Failed to load vehicle data.");    
+            setError("Failed to load vehicle data.");
         } finally {
-            setLoading(false);  
+            setLoading(false);
         }
     };
 
@@ -113,11 +115,11 @@ const NewOrder = () => {
             setFilteredCustomers(customers);
         } else {
             const results = customers.filter(
-              (customer) =>
-                customer.customer_first_name?.toLowerCase().includes(term) ||
-                customer.customer_last_name?.toLowerCase().includes(term) ||
-                customer.customer_email?.toLowerCase().includes(term) ||
-                customer.customer_phone_number?.includes(term)
+                (customer) =>
+                    customer.customer_first_name?.toLowerCase().includes(term) ||
+                    customer.customer_last_name?.toLowerCase().includes(term) ||
+                    customer.customer_email?.toLowerCase().includes(term) ||
+                    customer.customer_phone_number?.includes(term)
             );
 
             setFilteredCustomers(results);
@@ -129,6 +131,7 @@ const NewOrder = () => {
     };
 
     const handleSelectCustomer = (customerId) => {
+        // console.log(customerId);
         // navigate(`/customer/${customerId}/select-vehicle`);
         fetchCustomerById(customerId);
         fetchVehiclesByCustomerId(customerId);
@@ -136,11 +139,11 @@ const NewOrder = () => {
         setShowCustomer(true);
     };
 
-    const handleSelectVehicle = (vehicleId) => {        
+    const handleSelectVehicle = (vehicleId) => {
         // navigate(`/admin/new-order/${vehicleId}`);
         fetchVehiclesById(vehicleId);
         fetchAllServices();
-        setVehicles(null);
+        // setVehicles(null);
     };
 
     const handleAddData = (e, service) => {
@@ -168,12 +171,19 @@ const NewOrder = () => {
         try {
             const response = await orderService.addOrder(orderWithHash);
             setOrder(response.data);
+            setTimeout(() => {
+                window.location.href = "/admin/orders";
+            }, 1000);
         } catch (err) {
             console.error(err);
             setError("Failed to create order.");
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleAddVehicle = (id) => {
+        navigate(`/customer-profile/${id}`);
     };
 
     if (loading) return <p>Loading customers...</p>;
@@ -248,7 +258,7 @@ const NewOrder = () => {
                                             <td>{customer.customer_phone_number}</td>
                                             <td>
                                                 <button
-                                                    onClick={() => handleSelectCustomer(customer.customer_id)}
+                                                    onClick={() => {handleSelectCustomer(customer.customer_id); setShowVehicles(true);}}
                                                     className={styles.selectButton}
                                                 >
                                                     <FaHandPointUp />
@@ -276,49 +286,54 @@ const NewOrder = () => {
                                     <p><strong>Edit Customer Info:</strong> <span><FaEdit /></span></p>
                                 </div>
                             </div>
-                            <button onClick={() => { setShowSearch(true); setShowCustomer(false) }}>x</button>
+                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}>x</button>
                         </div>
-                        {vehicles && <div>
+                        {!showVehicle && <div>
                             <h2>Choose a Vehicle</h2>
-                            <table className={styles.vehicleTable}>
-                                <thead>
-                                    <tr>
-                                        <th>Year</th>
-                                        <th>Make</th>
-                                        <th>Model</th>
-                                        <th>Color</th>
-                                        <th>Mileage</th>
-                                        <th>Tag</th>
-                                        <th>Serial</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {vehicles.map((vehicle) => (
-                                        <tr key={vehicle.vehicle_id}>
-                                            <td>{vehicle.vehicle_year}</td>
-                                            <td>{vehicle.vehicle_make}</td>
-                                            <td>{vehicle.vehicle_model}</td>
-                                            <td>{vehicle.vehicle_color}</td>
-                                            <td>{vehicle.vehicle_mileage}</td>
-                                            <td>{vehicle.vehicle_tag}</td>
-                                            <td>{vehicle.vehicle_serial}</td>
-                                            <td>
-                                                <button
-                                                    onClick={() => handleSelectVehicle(vehicle.vehicle_id)}
-                                                    className={styles.selectButton}
-                                                >
-                                                    <FaHandPointUp />
-                                                </button>
-                                            </td>
+                            {vehicles.length > 0 ? (<div>
+                                <table className={styles.vehicleTable}>
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Make</th>
+                                            <th>Model</th>
+                                            <th>Color</th>
+                                            <th>Mileage</th>
+                                            <th>Tag</th>
+                                            <th>Serial</th>
+                                            <th>Action</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {vehicles.map((vehicle) => (
+                                            <tr key={vehicle.vehicle_id}>
+                                                <td>{vehicle.vehicle_year}</td>
+                                                <td>{vehicle.vehicle_make}</td>
+                                                <td>{vehicle.vehicle_model}</td>
+                                                <td>{vehicle.vehicle_color}</td>
+                                                <td>{vehicle.vehicle_mileage}</td>
+                                                <td>{vehicle.vehicle_tag}</td>
+                                                <td>{vehicle.vehicle_serial}</td>
+                                                <td>
+                                                    <button
+                                                        onClick={() => { handleSelectVehicle(vehicle.vehicle_id); setShowVehicles(false); setShowVehicle(true); }}
+                                                        className={styles.selectButton}
+                                                    >
+                                                        <FaHandPointUp />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>) : (<div className={styles.noVehicles}>
+                                <p>No vehicles found for this customer.</p>
+                                <button onClick={() => { handleAddVehicle(customer.customer_id); }}>Add New Vehicle</button>
+                            </div>)}
                         </div>}
                     </div>
                     }
-                    {vehicle && <div>
+                    {showVehicle && <div>
                         <div className={styles.vehicleInfo}>
                             <div>
                                 <h3>{vehicle.vehicle_make} {vehicle.vehicle_model}</h3>
@@ -331,7 +346,7 @@ const NewOrder = () => {
                                     <p><strong>Edit Vehicle Info:</strong> <span><FaEdit /></span></p>
                                 </div>
                             </div>
-                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setShowVehicle(false) }}>x</button>
+                            <button onClick={() => { setShowVehicle(false); setServices(null); fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}>x</button>
                         </div>
                     </div>}
                     {services && <div>

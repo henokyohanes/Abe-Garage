@@ -84,30 +84,38 @@ const createOrder = async (orderData) => {
 const getAllOrders = async () => {
   try {
     // Query to fetch all orders along with associated order services
-    const [orders] = await db.execute(`
+    const orders = await db.query(`
       SELECT 
-        o.id AS order_id,
-        o.employee_id,
-        o.customer_id,
-        o.vehicle_id,
-        o.order_description,
-        o.order_date,
-        o.estimated_completion_date,
-        o.completion_date,
-        o.order_completed,
-        JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'service_id', os.service_id,
-            'service_description', os.service_description,
-            'service_cost', os.service_cost
-          )
-        ) AS order_services
-      FROM orders o
-      LEFT JOIN order_services os ON o.id = os.order_id
-      GROUP BY o.id
-      ORDER BY o.order_date DESC
-    `);
+    o.order_id,
+    o.customer_id,
+    o.vehicle_id,
+    o.employee_id,
+    o.order_date,
+    ci.customer_first_name,
+    ci.customer_last_name,
+    cid.customer_email,
+    cid.customer_phone_number,
+    cvi.vehicle_make,
+    cvi.vehicle_model,
+    cvi.vehicle_year,
+    cvi.vehicle_tag,
+    ei.employee_first_name,
+    ei.employee_last_name,
+    os.order_status
+FROM 
+    orders o
+LEFT JOIN 
+    customer_info ci ON o.customer_id = ci.customer_id
+LEFT JOIN 
+    customer_identifier cid ON o.customer_id = cid.customer_id
+LEFT JOIN 
+    customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+LEFT JOIN 
+    employee_info ei ON o.employee_id = ei.employee_id
+LEFT JOIN 
+    order_status os ON o.order_id = os.order_id;
 
+    `);
     return orders;
   } catch (error) {
     throw error;

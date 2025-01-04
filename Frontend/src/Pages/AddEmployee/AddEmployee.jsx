@@ -64,9 +64,7 @@ const AddEmployee = () => {
     const newEmployee = employeeService.addEmployee(formData, loggedInEmployeeToken);
 
     newEmployee.then((data) => {
-        console.log(data);
         if (data.error) {
-          console.log(data.error);
           setServerError(data.error)
         } else {
           setSuccess(true);
@@ -85,7 +83,6 @@ const AddEmployee = () => {
           error.message ||
           error.toString();
         setServerError(resMessage);
-        console.log(resMessage);
       });
   }
 
