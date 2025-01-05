@@ -43,9 +43,10 @@ export const fetchCustomerOrders = async (customerId) => {
 export const fetchOrderById = async (id) => {
     try {
         const response = await axios.get(
-            `${api_url}/api/orders/${id}`,
+            `${api_url}/api/order/${id}`,
             getAuthHeaders()
         );
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error fetching order:", error);

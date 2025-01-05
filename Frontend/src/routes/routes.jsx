@@ -19,6 +19,7 @@ import AddCustomer from "../Pages/AddCustomer/AddCustomer";
 import CustomerProfile from "../Pages/CustomerProfile/CustomerProfile";
 import ProvideServices from "../Pages/ProvideServices/ProvideServices";
 import ServiceUpdate from "../Pages/ServiceUpdate/ServiceUpdate";
+import OrdersDetail from "../Pages/OrderDetails/OrderDetails";
 
 
 const AppRoutes = () => (
@@ -37,6 +38,14 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[1, 2, 3]}>
           <Orders />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/admin/orders/:id"
+      element={
+        <PrivateAuthRoute roles={[1, 2, 3]}>
+          <OrdersDetail />
         </PrivateAuthRoute>
       }
     />

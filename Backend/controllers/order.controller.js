@@ -118,7 +118,6 @@ const getOrderById = async (req, res) => {
 
     // Fetch the order by ID
     const order = await orderService.getOrderById(id);
-
     // Check if the order exists
     if (!order) {
       return res.status(404).json({
