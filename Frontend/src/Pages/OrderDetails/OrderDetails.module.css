@@ -1,0 +1,110 @@
+.orderDetailsContainer {
+  background-color: #E6E4E9;
+}
+
+.orderDetails {
+  padding: 3vw;
+}
+
+.orderDetails p {
+  font-size: clamp(.6em, 2vw, 1em);
+  margin: 0;
+}
+
+.orderDetails strong {
+  font-size: clamp(.6em, 2vw, 1em);
+  color: #07184A;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vw;
+}
+
+.orderDetails h2 {
+  font-size: clamp(.8em, 3vw, 1.6em);
+  font-weight: bold;
+  color: #07184A;
+}
+
+.header span {
+  color: #d82323;
+}
+
+.orderDetails h3 {
+  font-size: clamp(.7em, 3vw, 1.2em);
+  font-weight: bold;
+  color: #07184A;
+  margin-bottom: 1vw;
+}
+
+.orderDetails h4 {
+  font-size: clamp(.6em, 2vw, 1em);
+  font-weight: bold;
+  color: #07184A;
+  margin-bottom: 0;
+}
+
+.orderDetails h6 {
+  font-size: clamp(.1em, 2vw, .6em);
+  color: #07184A;
+  margin-bottom: 0;
+}
+
+.infoSection {
+  display: flex;
+  gap: 3vw;
+  margin: 3vw 0;
+}
+
+.infoSection div {
+  width: 100%;
+  background: white;
+  padding: 1vw;
+  border-radius: .4em;
+  border-bottom: .4em solid #d82323;
+}
+
+.servicesSection {
+  background-color: white;
+  padding: 3vw;
+  border-radius: .4em;
+  border-bottom: .4em solid #d82323;
+
+}
+
+.service {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vw;
+  margin: 1vw 0;
+  border-radius: .4em;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.service div {
+  width: 80%;
+}
+
+.status {
+  display: inline-block;
+  color: white;
+  border-radius: .3em;
+  padding: .1em .6em;
+}
+
+.statusCompleted {
+  background-color: green;
+}
+
+.statusPending {
+  background-color: #d82323;
+}
+
+.statusReceived {
+  background-color: #57595c;
+}

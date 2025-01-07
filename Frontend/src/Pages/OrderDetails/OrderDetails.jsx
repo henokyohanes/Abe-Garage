@@ -74,15 +74,15 @@ const OrderDetails = () => {
                             <h6>CUSTOMER</h6>
                             <h3>{order[0].customer_first_name} {order[0].customer_last_name}</h3>
                             <p><strong>Email:</strong> {order[0].customer_email}</p>
-                            <p><strong>Phone Number:</strong> {order[0].customer_phone_number}</p>
-                            <p><strong>Active Customer:</strong> {order[0].active_customer_status ? "Yes" : "No"}</p>
+                            <p><strong>Phone:</strong> {order[0].customer_phone_number}</p>
+                            <p><strong>Active:</strong> {order[0].active_customer_status ? "Yes" : "No"}</p>
                         </div>
                         <div>
                             <h6>CAR IN SERVICE</h6>
                             <h3>{order[0].vehicle_make} {order[0].vehicle_model} ({order[0].vehicle_color})</h3>
-                            <p><strong>Vehicle Tag:</strong> {order[0].vehicle_model}</p>
-                            <p><strong>Vehicle Year:</strong> {order[0].vehicle_year}</p>
-                            <p><strong>Vehicle Mileage:</strong> {order[0].vehicle_mileage} km</p>
+                            <p><strong>Tag:</strong> {order[0].vehicle_model}</p>
+                            <p><strong>Year:</strong> {order[0].vehicle_year}</p>
+                            <p><strong>Mileage:</strong> {order[0].vehicle_mileage} km</p>
                         </div>
                     </div>
                     <div className={styles.servicesSection}>
