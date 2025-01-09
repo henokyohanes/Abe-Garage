@@ -64,12 +64,12 @@
 }
 
 .ordersTable th {
-    font-size: clamp(.4em, 1.5vw, 1.2em);
+    font-size: clamp(.4em, 1.5vw, 1em);
     font-weight: bold;
 }
 
 .ordersTable td {
-    font-size: clamp(.4em, 1.5vw, 1.2em);
+    font-size: clamp(.4em, 1.5vw, 1em);
 }
 
 .ordersTable tbody tr:hover {
@@ -96,7 +96,7 @@
 
 .pagination button {
     width: 7em;
-    font-size: clamp(.5em, 2vw, 1.2em);
+    font-size: clamp(.5em, 2vw, 1.1em);
     border: none;
     border-radius: .4em;
     background-color: #d82323;
@@ -116,7 +116,7 @@
 
 .pagination span {
     color: #1D2230;
-    font-size: clamp(.5em, 2vw, 1.2em);
+    font-size: clamp(.5em, 2vw, 1.1em);
     margin: 0 1em;
 }
 

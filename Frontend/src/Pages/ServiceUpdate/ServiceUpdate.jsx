@@ -50,7 +50,7 @@ const ServiceUpdate = () => {
             setTimeout(() => navigate("/admin/services"), 1000);
         } catch (err) {
             console.error(err);
-            setError("Failed to update employee. Please try again.");
+            setError("Failed to update service. Please try again.");
         }
     };
 

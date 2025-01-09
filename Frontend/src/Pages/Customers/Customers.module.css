@@ -98,12 +98,12 @@
 }
 
 .customerTable th {
-    font-size: clamp(.4em, 1.5vw, 1.2em);
+    font-size: clamp(.4em, 1.5vw, 1em);
     font-weight: bold;
 }
 
 .customerTable td {
-    font-size: clamp(.4em, 1.5vw, 1.2em);
+    font-size: clamp(.4em, 1.5vw, 1em);
 }
 
 .customerTable tbody tr:hover {

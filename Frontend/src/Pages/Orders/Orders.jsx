@@ -72,8 +72,12 @@ const Orders = () => {
   };
 
   const handleViewOrder = (orderId) => {
-    navigate(`/admin/orders/${orderId}`);
+    navigate(`/admin/order-details/${orderId}`);
   };  
+
+  const handleEditOrder = (orderId) => {
+    navigate(`/admin/edit-order/${orderId}`);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -162,7 +166,7 @@ const Orders = () => {
                     </span>
                   </td>
                   <td>
-                    <button className={styles.btnViewEdit}>
+                    <button className={styles.btnViewEdit} onClick={() => handleEditOrder(order.order_id)}>
                       <FaEdit />
                     </button>
                     <button className={styles.btnViewEdit} onClick={() => handleViewOrder(order.order_id)}>

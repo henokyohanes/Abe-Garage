@@ -64,12 +64,12 @@
 }
 
 .table th {
-  font-size: clamp(.4em, 1.5vw, 1.2em);
+  font-size: clamp(.4em, 1.5vw, 1em);
   font-weight: bold;
 }
 
 .table td {
-  font-size: clamp(.4em, 1.5vw, 1.2em);
+  font-size: clamp(.4em, 1.5vw, 1em);
 }
 
 .table tbody tr:hover {

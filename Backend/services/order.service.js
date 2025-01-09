@@ -159,6 +159,7 @@ const getOrderById = async (id) => {
     const order = await db.query(
       `
       SELECT 
+    o.active_order,
     ci.customer_first_name,
     ci.customer_last_name,
     ci.active_customer_status,
@@ -173,6 +174,10 @@ const getOrderById = async (id) => {
     os.order_status,
     oi.additional_request,
     oi.additional_requests_completed,
+    oi.order_total_price,
+    oi.completion_date,
+    oi.notes_for_internal_use,
+    oi.notes_for_customer,
     osrv.service_completed,
     cs.service_id,
     cs.service_name,
