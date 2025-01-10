@@ -82,7 +82,7 @@ const EmployeeUpdate = () => {
                                 <input className={styles.formControl} type="text" name="employee_phone" value={employee.employee_phone} onChange={handleChange} placeholder="Phone Number" required />
                             </div>
                             <div className={styles.formGroup}>
-                                <select name="employee_role" value={employee.employee_role} onChange={handleChange} className={styles.formControl} >
+                                <select name="employee_role" value={employee.company_role_name} onChange={handleChange} className={styles.formControl} >
                                     <option value="Employee">Employee</option>
                                     <option value="Manager">Manager</option>
                                     <option value="Admin">Admin</option>

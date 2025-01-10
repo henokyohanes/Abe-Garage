@@ -84,9 +84,11 @@ const OrderUpdate = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
+
+
     return (
         <Layout>
-            <div className={`${styles.orderDetailsContainer} row g-0`}>
+            <div className={`${styles.updateOrderContainer} row g-0`}>
                 <div className="col-3">
                     <AdminMenu />
                 </div>
@@ -115,16 +117,19 @@ const OrderUpdate = () => {
                     </div>
                     <div className={styles.servicesSection}>
                         <h6>{order[0].vehicle_make} {order[0].vehicle_model}</h6>
-                        <h3>Requested Services</h3>
+                        <h3>Edit: Requested Services</h3>
                         {order.map((order) => (
                             <div key={order.service_id} className={styles.service}>
                                 <div>
                                     <h4>{order.service_name}</h4>
                                     <p>{order.service_description}</p>
                                 </div>
-                                <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`}>
-                                    {getStatusText(order.additional_requests_completed)}
-                                </p>
+                                <select className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`} value={getStatusText(order.additional_requests_completed)} onChange={handleChange}>
+                                    <option>Received</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                    <option>Cancel</option>
+                                </select>
                             </div>
                         ))}
                         <div className={styles.service}>
@@ -135,6 +140,25 @@ const OrderUpdate = () => {
                             <p className={`${styles.status} ${getStatusClass(order[0].additional_requests_completed)}`}>{getStatusText(order[0].additional_requests_completed)}</p>
                         </div>
                     </div>
+                    <div className={styles.updateSectio}>
+                        <h3>Edit: Order</h3>
+                        <form onSubmit={handleAddOrder}>
+                            <div className={styles.formGrou}>
+                                    <h6>Order Status</h6>
+                                <select>
+                                    <option>Received</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <h6>Active Order</h6>
+                                <select>
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                                <h6></h6>
+                            </div>
+                        </form>
+                    </div>   
                 </div>
             </div>
         </Layout>

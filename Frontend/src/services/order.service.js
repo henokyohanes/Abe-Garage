@@ -46,7 +46,6 @@ export const fetchOrderById = async (id) => {
             `${api_url}/api/order/${id}`,
             getAuthHeaders()
         );
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error fetching order:", error);
