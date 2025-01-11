@@ -2,6 +2,35 @@
   background-color: #E6E4E9;
 }
 
+.adminMenuContainer {
+    width: 100%;
+    background-color: #222A47;
+    color: #D6D7DE;
+}
+
+.adminMenuTitle {
+    background-color: #1D2230;
+    padding: 1vw 2vw;
+}
+
+.adminMenuTitle h2 {
+    font-size: clamp(.7em, 2vw, 1.3em);
+}
+
+.listGroup {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2vw;
+}
+
+.listGroupItem {
+    padding: .8vw 0;
+    text-decoration: none;
+    color: #D6D7DE;
+    font-size: clamp(.5em, 2vw, 1em);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .orderDetails {
   padding: 3vw;
 }
@@ -12,7 +41,7 @@
 }
 
 .orderDetails strong {
-  font-size: clamp(.6em, 2vw, 1em);
+  font-size: clamp(.7em, 2vw, 1em);
   color: #07184A;
 }
 
@@ -34,7 +63,7 @@
 }
 
 .orderDetails h3 {
-  font-size: clamp(.7em, 3vw, 1.2em);
+  font-size: clamp(.7em, 2vw, 1.2em);
   font-weight: bold;
   color: #07184A;
   margin-bottom: 1vw;
@@ -48,7 +77,7 @@
 }
 
 .orderDetails h6 {
-  font-size: clamp(.1em, 2vw, .6em);
+  font-size: clamp(.1em, 2vw, .7em);
   color: #07184A;
   margin-bottom: 0;
 }
@@ -101,8 +130,8 @@
   background-color: green;
 }
 
-.statusPending {
-  background-color: #d82323;
+.statusInProgress {
+  background-color: #FEC008;
 }
 
 .statusReceived {

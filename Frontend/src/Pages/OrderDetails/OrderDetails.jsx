@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import orderService from "../../services/order.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -58,10 +58,41 @@ const OrderDetails = () => {
     return (
         <Layout>
             <div className={`${styles.orderDetailsContainer} row g-0`}>
-                <div className="col-3">
+                <div className="col-2 d-none d-lg-block">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.orderDetails} col-9`}>
+                <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+                    <div className={styles.adminMenuTitle}>
+                        <h2>Admin Menu</h2>
+                    </div>
+                    <div className={styles.listGroup}>
+                        <Link to="/admin/dashboard" className={styles.listGroupItem}>
+                            Dashboard
+                        </Link>
+                        <Link to="/admin/orders" className={styles.listGroupItem}>
+                            Orders
+                        </Link>
+                        <Link to="/admin/new-order" className={styles.listGroupItem}>
+                            New order
+                        </Link>
+                        <Link to="/admin/add-employee" className={styles.listGroupItem}>
+                            Add employee
+                        </Link>
+                        <Link to="/admin/employees" className={styles.listGroupItem}>
+                            Employees
+                        </Link>
+                        <Link to="/admin/add-customer" className={styles.listGroupItem}>
+                            Add customer
+                        </Link>
+                        <Link to="/admin/customers" className={styles.listGroupItem}>
+                            Customers
+                        </Link>
+                        <Link to="/admin/services" className={styles.listGroupItem}>
+                            Services
+                        </Link>
+                    </div>
+                </div>
+                <div className={`${styles.orderDetails} col-12 col-lg-9`}>
                     <div className={styles.header}>
                         <h2>{order[0].customer_first_name} {order[0].customer_last_name} <span>____</span></h2>
                         <p className={`${styles.status} ${getStatusClass(order[0].order_status)}`}>
