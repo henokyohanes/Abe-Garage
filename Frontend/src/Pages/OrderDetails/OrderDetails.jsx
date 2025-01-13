@@ -113,7 +113,7 @@ const OrderDetails = () => {
                             <h3>{order[0].vehicle_make} {order[0].vehicle_model} ({order[0].vehicle_color})</h3>
                             <p><strong>Tag:</strong> {order[0].vehicle_model}</p>
                             <p><strong>Year:</strong> {order[0].vehicle_year}</p>
-                            <p><strong>Mileage:</strong> {order[0].vehicle_mileage} km</p>
+                            <p><strong>Mileage:</strong> {order[0].vehicle_mileage}</p>
                         </div>
                     </div>
                     <div className={styles.servicesSection}>
@@ -125,8 +125,8 @@ const OrderDetails = () => {
                                     <h4>{order.service_name}</h4>
                                     <p>{order.service_description}</p>
                                 </div>
-                                <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`}>
-                                    {getStatusText(order.additional_requests_completed)}
+                                <p className={`${styles.status} ${getStatusClass(order.service_completed)}`}>
+                                    {getStatusText(order.service_completed)}
                                 </p>
                             </div>
                         ))}
