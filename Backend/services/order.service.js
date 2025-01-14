@@ -178,10 +178,23 @@ const getOrderById = async (id) => {
     oi.completion_date,
     oi.notes_for_internal_use,
     oi.notes_for_customer,
-    osrv.service_completed,
-    cs.service_id,
-    cs.service_name,
-    cs.service_description
+    (
+        SELECT 
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'service_id', cs.service_id,
+                    'service_name', cs.service_name,
+                    'service_description', cs.service_description,
+                    'service_completed', osrv.service_completed
+                )
+            )
+        FROM 
+            order_services osrv
+        LEFT JOIN 
+            common_services cs ON cs.service_id = osrv.service_id
+        WHERE 
+            osrv.order_id = o.order_id
+    ) AS services
 FROM 
     orders o
 LEFT JOIN 
@@ -196,13 +209,8 @@ LEFT JOIN
     order_status os ON o.order_id = os.order_id
 LEFT JOIN 
     order_info oi ON o.order_id = oi.order_id
-LEFT JOIN 
-    order_services osrv ON osrv.order_id = o.order_id -- Link order_services to orders
-LEFT JOIN 
-    common_services cs ON cs.service_id = osrv.service_id -- Link common_service to order_services
 WHERE 
     o.order_id = ?;
-
     `,
       [id]
     );
@@ -214,75 +222,100 @@ WHERE
 };
 
 // Update order and its associated services
-const updateOrder = async (
-  id,
-  order_description,
-  estimated_completion_date,
-  completion_date,
-  order_completed,
-  order_services
-) => {
-  const connection = await db.getConnection();
+const updateOrder = async (updatedData) => {
+
+  const {
+    id,
+    additional_request,
+    additional_requests_completed,
+    order_status,
+    active_order,
+    completion_date,
+    order_total_price,
+    notes_for_internal_use,
+    notes_for_customer,
+    services
+  } = updatedData;
+
+  const order_id = id;
+  let connection;
+
   try {
+    // Get a connection from the pool
+    connection = await db.getConnection();
+
+    // Start a transaction
     await connection.beginTransaction();
 
-    // Update order details
-    const [result] = await connection.execute(
-      `
-      UPDATE orders
-      SET
-        order_description = ?,
-        estimated_completion_date = ?,
+    // Update `order_service` table for multiple `service_completed` fields
+    if (services && services.length > 0) {
+      const serviceUpdateCases = services
+        .map(
+          (service) =>
+            `WHEN service_id = ${service.service_id} THEN '${service.service_completed}'`
+        )
+        .join(" ");
+      const serviceIds = services
+        .map((service) => service.service_id)
+        .join(", ");
+      const updateServiceQuery = `
+        UPDATE order_services
+        SET service_completed = CASE ${serviceUpdateCases} END
+        WHERE service_id IN (${serviceIds}) AND order_id = ?;
+      `;
+      await connection.query(updateServiceQuery, [order_id]);
+    }
+
+    // Update `order_info` table
+    const updateOrderInfoQuery = `
+      UPDATE order_info
+      SET 
+        additional_request = ?,
+        additional_requests_completed = ?,
         completion_date = ?,
-        order_completed = ?
-      WHERE id = ?
-    `,
-      [
-        order_description,
-        estimated_completion_date,
-        completion_date,
-        order_completed,
-        id,
-      ]
-    );
+        order_total_price = ?,
+        notes_for_internal_use = ?,
+        notes_for_customer = ?
+      WHERE order_id = ?;
+    `;
+    await connection.query(updateOrderInfoQuery, [
+      additional_request,
+      additional_requests_completed,
+      completion_date,
+      order_total_price,
+      notes_for_internal_use,
+      notes_for_customer,
+      order_id,
+    ]);
 
-    // Handle case where no rows were updated
-    if (result.affectedRows === 0) {
-      await connection.rollback();
-      return null;
-    }
+    // Update `order_status` table
+    const updateOrderStatusQuery = `
+      UPDATE order_status
+      SET order_status = ?
+      WHERE order_id = ?;
+    `;
+    await connection.query(updateOrderStatusQuery, [order_status, order_id]);
 
-    // Update order_services if provided
-    if (order_services && Array.isArray(order_services)) {
-      // Delete existing services
-      await connection.execute(
-        `
-        DELETE FROM order_services WHERE order_id = ?
-      `,
-        [id]
-      );
+    // Update `orders` table
+    const updateOrdersQuery = `
+      UPDATE orders
+      SET active_order = ?
+      WHERE order_id = ?;
+    `;
+    await connection.query(updateOrdersQuery, [active_order, order_id]);
 
-      // Insert new services
-      for (const service of order_services) {
-        const { service_id, service_description, service_cost } = service;
-        await connection.execute(
-          `
-          INSERT INTO order_services (order_id, service_id, service_description, service_cost)
-          VALUES (?, ?, ?, ?)
-        `,
-          [id, service_id, service_description, service_cost]
-        );
-      }
-    }
-
-    // Commit transaction
+    // Commit the transaction
     await connection.commit();
-    return true;
+
+    return { success: true, message: "Order updated successfully" };
   } catch (error) {
-    await connection.rollback();
-    throw error;
+    // Rollback on error
+    if (connection) await connection.rollback();
+    console.error("Error updating order:", error.message);
+    throw new Error("Failed to update the order");
   } finally {
-    connection.release();
+    // Release the connection back to the pool
+    if (connection) await connection.release();
   }
 };
 

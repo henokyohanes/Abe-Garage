@@ -119,10 +119,30 @@
   width: 72%;
 }
 
+.service textarea {
+  width: 100%;
+  margin-top: .4em;
+  padding: .1em .6em;
+  font-size: clamp(.6em, 2vw, 1em);
+  border: 1px solid #ccc;
+  border-radius: .4em;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.service textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.service textarea::placeholder {
+  font-size: clamp(.6em, 2vw, 1em);
+}
+
 .status {
   font-size: clamp(.6em, 2vw, 1em);
   display: inline-block;
   color: white;
+  border: none;
   border-radius: .3em;
   padding: .1em .6em;
 }

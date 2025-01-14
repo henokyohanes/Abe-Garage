@@ -7,11 +7,7 @@ import styles from "./OrderUpdate.module.css";
 
 const OrderUpdate = () => {
     const { id } = useParams();
-    const [order, setOrder] = useState([]);
-    const [updateOrder, setUpdateOrder] = useState({
-        service_completed: [], additional_requests_completed: "", order_status: "", active_order: "", completion_date: "", order_total_price: "",
-        notes_for_internal_use: "", notes_for_customer: "", 
-});
+    const [order, setOrder] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -25,8 +21,8 @@ const OrderUpdate = () => {
         try {
             const response = await orderService.fetchOrderById(parseInt(id));
             if (!response) throw new Error("order not found.");
-            console.log(response.data);
-            setOrder(response.data);
+            console.log(response.data[0]);
+            setOrder(response.data[0]);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch order data.");
@@ -36,20 +32,52 @@ const OrderUpdate = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setUpdateOrder((prevupdateOrder) => ({
-            ...prevupdateOrder,
-            [name]: type === "checkbox" ? checked : value,
-        }));
+        const { name, value, type, checked, dataset } = e.target;
+        const index = dataset.index ? parseInt(dataset.index, 10) : null;
+
+        setOrder((prevOrder) => {
+            if (index !== null) {
+                // Update the specific service in the services array
+                const updatedServices = [...prevOrder.services];
+                updatedServices[index] = {
+                    ...updatedServices[index],
+                    [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+                };
+                console.log(
+                  "Name:",
+                  name,
+                  "Value:",
+                  type === "checkbox" ? checked : value
+                );
+                return {
+                    ...prevOrder,
+                    services: updatedServices,
+                };
+            } else {
+                // Update top-level fields
+                console.log(
+                  "Name:",
+                  name,
+                  "Value:",
+                  type === "checkbox" ? checked : value
+                );
+                return {
+                    ...prevOrder,
+                    [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+                };
+            }
+
+        });
     };
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
+        console.log("Updated order:", id, order);
 
         try {
             await orderService.updateOrder(id, order);
             setSuccess(true);
-            setTimeout(() => navigate("/admin/orders"), 1000);
+            // setTimeout(() => navigate("/admin/orders"), 1000);
         } catch (err) {
             console.error(err);
             setError("Failed to update order. Please try again.");
@@ -57,7 +85,7 @@ const OrderUpdate = () => {
     };
 
     const getStatusClass = (status) => {
-        switch (status) {
+        switch (parseInt(status)) {
             case 2:
                 return styles.statusCompleted;
             case 1:
@@ -70,7 +98,7 @@ const OrderUpdate = () => {
     };
 
     const getStatusText = (status) => {
-        switch (status) {
+        switch (parseInt(status)) {
             case 2:
                 return "Completed";
             case 1:
@@ -82,10 +110,13 @@ const OrderUpdate = () => {
         }
     };
 
+    const formatDate = (date) => {
+      const d = new Date(date);
+      return d.toISOString().split("T")[0];
+    };
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
-
-
 
     return (
         <Layout>
@@ -127,39 +158,39 @@ const OrderUpdate = () => {
                 <div className={`${styles.orderDetails} col-12 col-lg-10`}>
                     <div className={styles.header}>
                         <h2>Update Order <span>____</span></h2>
-                        <p className={`${styles.status} ${getStatusClass(order[0].order_status)}`}>
-                            {getStatusText(order[0].order_status)}
+                        <p className={`${styles.status} ${getStatusClass(order.order_status)}`}>
+                            {getStatusText(order.order_status)}
                         </p>
                     </div>
                     <div className={styles.infoSection}>
                         <div>
                             <h6>CUSTOMER</h6>
-                            <h3>{order[0].customer_first_name} {order[0].customer_last_name}</h3>
-                            <p><strong>Email:</strong> {order[0].customer_email}</p>
-                            <p><strong>Phone:</strong> {order[0].customer_phone_number}</p>
-                            <p><strong>Active:</strong> {order[0].active_customer_status ? "Yes" : "No"}</p>
+                            <h3>{order.customer_first_name} {order.customer_last_name}</h3>
+                            <p><strong>Email:</strong> {order.customer_email}</p>
+                            <p><strong>Phone:</strong> {order.customer_phone_number}</p>
+                            <p><strong>Active:</strong> {order.active_customer_status ? "Yes" : "No"}</p>
                         </div>
                         <div>
                             <h6>CAR IN SERVICE</h6>
-                            <h3>{order[0].vehicle_make} {order[0].vehicle_model} ({order[0].vehicle_color})</h3>
-                            <p><strong>Tag:</strong> {order[0].vehicle_model}</p>
-                            <p><strong>Year:</strong> {order[0].vehicle_year}</p>
-                            <p><strong>Mileage:</strong> {order[0].vehicle_mileage}</p>
+                            <h3>{order.vehicle_make} {order.vehicle_model} ({order.vehicle_color})</h3>
+                            <p><strong>Tag:</strong> {order.vehicle_model}</p>
+                            <p><strong>Year:</strong> {order.vehicle_year}</p>
+                            <p><strong>Mileage:</strong> {order.vehicle_mileage}</p>
                         </div>
                     </div>
                     <div className={styles.servicesSection}>
-                        <h6>{order[0].vehicle_make} {order[0].vehicle_model}</h6>
+                        <h6>{order.vehicle_make} {order.vehicle_model}</h6>
                         <h3>Edit: Requested Services <span>____</span></h3>
-                        {order.map((order) => (
+                        {order.services.map((order, index) => (
                             <div key={order.service_id} className={styles.service}>
                                 <div>
                                     <h4>{order.service_name}</h4>
                                     <p>{order.service_description}</p>
                                 </div>
-                                <select name="service_completed" className={`${styles.status} ${getStatusClass(order.service_completed)}`} value={getStatusText(order.service_completed)} onChange={handleChange}>
-                                    <option value="0">Received</option>
-                                    <option value="1">In Progress</option>
-                                    <option value="2">Completed</option>
+                                <select name="service_completed" className={`${styles.status} ${getStatusClass(order.service_completed)}`} value={order.service_completed} onChange={handleChange} data-index={index}>
+                                    <option value={0}>Received</option>
+                                    <option value={1}>In Progress</option>
+                                    <option value={2}>Completed</option>
                                     {/* <option>Cancel</option> */}
                                 </select>
                             </div>
@@ -167,12 +198,12 @@ const OrderUpdate = () => {
                         <div className={styles.service}>
                             <div>
                                 <h4>Additional Requests</h4>
-                                <p>{order[0].additional_request}</p>
+                                <textarea type="text" name="additional_request" placeholder="Additional Requests" value={order.additional_request} onChange={handleChange} />
                             </div>
-                            <select name="additional_requests_completed" className={`${styles.status} ${getStatusClass(order[0].additional_requests_completed)}`} value={getStatusText(order[0].additional_requests_completed)} onChange={handleChange}>
-                                <option value="0">Received</option>
-                                <option value="1">In Progress</option>
-                                <option value="2">Completed</option>
+                            <select name="additional_requests_completed" className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`} value={order.additional_requests_completed} onChange={handleChange}>
+                                <option value={0}>Received</option>
+                                <option value={1}>In Progress</option>
+                                <option value={2}>Completed</option>
                                 {/* <option>Cancel</option> */}
                             </select>
                         </div>
@@ -185,42 +216,40 @@ const OrderUpdate = () => {
                                     <div>
                                         <div className={styles.orderFlex}>
                                             <h4>Order Status:</h4>
-                                            <select name="order_status" className={`${styles.status} ${getStatusClass(order[0].order_status)}`} value={getStatusText(order[0].order_status)} onChange={handleChange} >
-                                                <option value="0">Received</option>
-                                                <option value="1">In Progress</option>
-                                                <option value="2">Completed</option>
+                                            <select name="order_status" className={`${styles.status} ${getStatusClass(order.order_status)}`} value={order.order_status} onChange={handleChange} >
+                                                <option value={0}>Received</option>
+                                                <option value={1}>In Progress</option>
+                                                <option value={2}>Completed</option>
                                                 {/* <option>Cancel</option> */}
                                             </select>
                                         </div>
                                         <div className={styles.orderFlex}>
                                             <h4>completion date:</h4>
-                                            <input className={styles.date} name="completion_date" type="date" placeholder="dd/mm/yyyy" onChange={handleChange} value={order[0].completion_date || ""} />
+                                            <input className={styles.date} name="completion_date" type="date" placeholder="mm/dd/yyyy" onChange={handleChange} value={order.completion_date ? formatDate(order.completion_date) : ""} />
                                         </div>
                                         <div>
                                             <h4>Notes for customer</h4>
-                                            <textarea name="notes_for_customer" type="text" placeholder="Notes for customer" onChange={handleChange} value={order[0].notes_for_customer || ""} />
+                                            <textarea name="notes_for_customer" type="text" placeholder="Notes for customer" onChange={handleChange} value={order.notes_for_customer || ""} />
                                         </div>
                                     </div>
                                     <div>
                                         <div className={styles.orderFlex}>
                                             <h4>Active Order:</h4>
-                                            {/* <label className={styles.checkbox}> */}
                                             <input
                                                 className={styles.checkbox}
                                                 type="checkbox"
-                                                name="active_customer_status"
-                                                checked={order[0].active_customer_status === 1}
+                                                name="active_order"
+                                                checked={order.active_order}
                                                 onChange={handleChange}
                                             />
-                                            {/* </label> */}
                                         </div>
                                         <div className={styles.orderFlex}>
                                             <h4>Total Price:</h4>
-                                            <input className={styles.price} name="order_total_price" placeholder="Total Price" type="number" onChange={handleChange} value={order[0].order_total_price} />
+                                            <input className={styles.price} name="order_total_price" placeholder="Total Price" type="number" onChange={handleChange} value={order.order_total_price} />
                                         </div>
                                         <div>
                                             <h4>Notes for provider</h4>
-                                            <textarea name="notes_for_internal_use" type="text" placeholder="Notes for provider" onChange={handleChange} value={order[0].notes_for_internal_use || ""} />
+                                            <textarea name="notes_for_internal_use" type="text" placeholder="Notes for provider" onChange={handleChange} value={order.notes_for_internal_use || ""} />
                                         </div>
                                     </div>
                                 </div>

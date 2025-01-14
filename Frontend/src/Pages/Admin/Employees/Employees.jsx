@@ -68,6 +68,16 @@ const EmployeeList = () => {
         }
     };
 
+    const formatDate = (date) => {
+      if (!date) return "";
+      const d = new Date(date);
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const year = d.getFullYear();
+      return `${month}-${day}-${year}`;
+    };
+
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -116,7 +126,7 @@ const EmployeeList = () => {
                                         <td>{employee.employee_last_name}</td>
                                         <td>{employee.employee_email}</td>
                                         <td>{employee.employee_phone}</td>
-                                        <td>{employee.added_date.split("T")[0]}</td>
+                                        <td>{formatDate(employee.added_date)}</td>
                                         <td>{employee.company_role_name}</td>
                                         <td>
                                             <button onClick={() => handleEdit(employee.employee_id)}><FaEdit /></button>

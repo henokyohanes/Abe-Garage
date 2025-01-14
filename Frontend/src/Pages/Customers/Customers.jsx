@@ -89,6 +89,16 @@ const Customers = () => {
     navigate(`/customer-profile/${id}`);
   };
 
+  const formatDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${month}-${day}-${year}`;
+  };
+
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -153,7 +163,7 @@ const Customers = () => {
                     <td>{customer.customer_last_name}</td>
                     <td>{customer.customer_email}</td>
                     <td>{customer.customer_phone_number}</td>
-                    <td>{customer.customer_added_date.split("T")[0]}</td>
+                    <td>{formatDate(customer.customer_added_date)}</td>
                     <td>{customer.active_customer_status ? "Yes" : "No"}</td>
                     <td>
                       <button onClick={() => handleProfile(customer.customer_id)}>

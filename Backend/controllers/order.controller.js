@@ -148,13 +148,17 @@ const updateOrder = async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      order_description,
-      estimated_completion_date,
+      order_id,
+      services,
+      additional_request,
+      additional_requests_completed,
+      order_status,
+      active_order,
       completion_date,
-      order_completed,
-      order_services,
+      order_total_price,
+      notes_for_internal_use,
+      notes_for_customer,
     } = req.body;
-
     // Validate ID and required fields
     if (!id || isNaN(id)) {
       return res.status(400).json({
@@ -163,7 +167,7 @@ const updateOrder = async (req, res) => {
         message: "The order ID provided is invalid or missing.",
       });
     }
-
+    
     // Validate that the order exists
     const orderExists = await orderService.getOrderById(id);
     if (!orderExists) {
@@ -173,16 +177,21 @@ const updateOrder = async (req, res) => {
         message: "The order ID provided does not exist.",
       });
     }
-
+    
     // Update order in the database
-    const updatedOrder = await orderService.updateOrder(
+    const updatedOrder = await orderService.updateOrder({
       id,
-      order_description,
-      estimated_completion_date,
+      order_id,
+      additional_request,
+      additional_requests_completed,
+      order_status,
+      active_order,
       completion_date,
-      order_completed,
-      order_services
-    );
+      order_total_price,
+      notes_for_internal_use,
+      notes_for_customer,
+      services
+  });
 
     // Check for successful update
     if (!updatedOrder) {

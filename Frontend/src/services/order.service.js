@@ -70,12 +70,14 @@ export const addOrder = async (orderData) => {
 
 // function to update an order
 export const updateOrder = async (id, updatedData) => {
+    console.log("updatedData", id, updatedData);
     try {
         const response = await axios.put(
-            `${api_url}/api/orders/${id}`,
+            `${api_url}/api/order/${id}`,
             updatedData,
             getAuthHeaders()
         );
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error updating order:", error);

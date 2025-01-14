@@ -130,8 +130,8 @@
     background-color: green;
 }
 
-.statusPending {
-    background-color: #d82323;
+.statusInProgress {
+  background-color: #FEC008;
 }
 
 .statusReceived {
