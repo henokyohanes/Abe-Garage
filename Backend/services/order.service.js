@@ -344,12 +344,12 @@ const deleteOrder = async (id) => {
     // Handle case where no rows were deleted
     if (result.affectedRows === 0) {
       await connection.rollback();
-      return null; // Indicates no order with the given ID
+      return null;
     }
 
     // Commit transaction
     await connection.commit();
-    return true; // Indicates successful deletion
+    return true;
   } catch (error) {
     await connection.rollback();
     throw error;

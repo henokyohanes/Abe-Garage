@@ -31,44 +31,105 @@ const OrderUpdate = () => {
         }
     };
 
+    // const handleChange = (e) => {
+    //     const { name, value, type, checked, dataset } = e.target;
+    //     const index = dataset.index ? parseInt(dataset.index, 10) : null;
+
+    //     setOrder((prevOrder) => {
+    //         if (index !== null) {
+    //             // Update the specific service in the services array
+    //             const updatedServices = [...prevOrder.services];
+    //             updatedServices[index] = {
+    //                 ...updatedServices[index],
+    //                 [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+    //             };
+    //             console.log(
+    //               "Name:",
+    //               name,
+    //               "Value:",
+    //               type === "checkbox" ? checked : value
+    //             );
+    //             return {
+    //                 ...prevOrder,
+    //                 services: updatedServices,
+    //             };
+    //         } else {
+    //             // Update top-level fields
+    //             console.log(
+    //               "Name:",
+    //               name,
+    //               "Value:",
+    //               type === "checkbox" ? checked : value
+    //             );
+    //             return {
+    //                 ...prevOrder,
+    //                 [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+    //             };
+    //         }
+
+    //     });
+    // };
+
     const handleChange = (e) => {
         const { name, value, type, checked, dataset } = e.target;
         const index = dataset.index ? parseInt(dataset.index, 10) : null;
 
-        setOrder((prevOrder) => {
-            if (index !== null) {
-                // Update the specific service in the services array
+        if (value === "3" && name === "service_completed" && index !== null) {
+            // Confirmation step
+            const confirmDelete = window.confirm(
+                "Are you sure you want to cancel this service? This action cannot be undone."
+            );
+            if (!confirmDelete) {
+                return; // Exit if the user cancels the confirmation
+            }
+
+            // Remove the service if confirmed
+            setOrder((prevOrder) => {
                 const updatedServices = [...prevOrder.services];
-                updatedServices[index] = {
-                    ...updatedServices[index],
-                    [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-                };
-                console.log(
-                  "Name:",
-                  name,
-                  "Value:",
-                  type === "checkbox" ? checked : value
-                );
+                updatedServices.splice(index, 1); // Remove the service at the selected index
                 return {
                     ...prevOrder,
                     services: updatedServices,
                 };
-            } else {
-                // Update top-level fields
-                console.log(
-                  "Name:",
-                  name,
-                  "Value:",
-                  type === "checkbox" ? checked : value
-                );
-                return {
-                    ...prevOrder,
-                    [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-                };
+            });
+        } else if (value === "3" && name === "additional_requests_completed") {
+            const confirmCancel = window.confirm(
+                "Are you sure you want to cancel this additional request? This action cannot be undone."
+            );
+            if (!confirmCancel) {
+                return; // Exit if user cancels confirmation
             }
 
-        });
+            // Remove the additional request if confirmed
+            setOrder((prevOrder) => ({
+                ...prevOrder,
+                additional_request: null,
+                additional_requests_completed: null,
+            }));
+        } else {
+            setOrder((prevOrder) => {
+                if (index !== null) {
+                    const updatedServices = [...prevOrder.services];
+                    updatedServices[index] = {
+                        ...updatedServices[index],
+                        [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+                    };
+                    return {
+                        ...prevOrder,
+                        services: updatedServices,
+                    };
+                } else {
+                    return {
+                        ...prevOrder,
+                        [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+                    };
+                }
+            });
+        }
+        console.log("Updated order:", order);
     };
+
+
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
@@ -188,25 +249,25 @@ const OrderUpdate = () => {
                                     <p>{order.service_description}</p>
                                 </div>
                                 <select name="service_completed" className={`${styles.status} ${getStatusClass(order.service_completed)}`} value={order.service_completed} onChange={handleChange} data-index={index}>
-                                    <option value={0}>Received</option>
-                                    <option value={1}>In Progress</option>
-                                    <option value={2}>Completed</option>
-                                    {/* <option>Cancel</option> */}
+                                    <option className={styles.statusReceived} value={0}>Received</option>
+                                    <option className={styles.statusInProgress} value={1}>In Progress</option>
+                                    <option className={styles.statusCompleted} value={2}>Completed</option>
+                                    <option className={styles.statusCancelled} value={3}>Cancel</option>
                                 </select>
                             </div>
                         ))}
-                        <div className={styles.service}>
+                        {order.additional_requests_completed !== null && (<div className={styles.service}>
                             <div>
                                 <h4>Additional Requests</h4>
                                 <textarea type="text" name="additional_request" placeholder="Additional Requests" value={order.additional_request} onChange={handleChange} />
                             </div>
                             <select name="additional_requests_completed" className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`} value={order.additional_requests_completed} onChange={handleChange}>
-                                <option value={0}>Received</option>
-                                <option value={1}>In Progress</option>
-                                <option value={2}>Completed</option>
-                                {/* <option>Cancel</option> */}
+                                <option className={styles.statusReceived} value={0}>Received</option>
+                                <option className={styles.statusInProgress} value={1}>In Progress</option>
+                                <option className={styles.statusCompleted} value={2}>Completed</option>
+                                <option className={styles.statusCancelled} value={3}>Cancel</option>
                             </select>
-                        </div>
+                        </div>)}
                     </div>
                     <div className={styles.updateSection}>
                         <h3>Edit: Order Details <span>____</span></h3>
@@ -217,10 +278,10 @@ const OrderUpdate = () => {
                                         <div className={styles.orderFlex}>
                                             <h4>Order Status:</h4>
                                             <select name="order_status" className={`${styles.status} ${getStatusClass(order.order_status)}`} value={order.order_status} onChange={handleChange} >
-                                                <option value={0}>Received</option>
-                                                <option value={1}>In Progress</option>
-                                                <option value={2}>Completed</option>
-                                                {/* <option>Cancel</option> */}
+                                                <option className={styles.statusReceived} value={0}>Received</option>
+                                                <option className={styles.statusInProgress} value={1}>In Progress</option>
+                                                <option className={styles.statusCompleted} value={2}>Completed</option>
+                                                <option className={styles.statusCancelled}>Cancel</option>
                                             </select>
                                         </div>
                                         <div className={styles.orderFlex}>
