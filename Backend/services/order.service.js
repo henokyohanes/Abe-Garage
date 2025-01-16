@@ -326,18 +326,34 @@ const deleteOrder = async (id) => {
     await connection.beginTransaction();
 
     // Delete associated services first
-    await connection.execute(
+    await connection.query(
       `
       DELETE FROM order_services WHERE order_id = ?
     `,
       [id]
     );
 
-    // Delete the order
-    const [result] = await connection.execute(
+    // Delete from order_status
+    await connection.query(
       `
-      DELETE FROM orders WHERE id = ?
-    `,
+      DELETE FROM order_status WHERE order_id = ?
+      `,
+      [id]
+    );
+
+    // Delete from order_info
+    await connection.query(
+      `
+      DELETE FROM order_info WHERE order_id = ?
+      `,
+      [id]
+    );
+
+    // Delete the order
+    const [result] = await connection.query(
+      `
+      DELETE FROM orders WHERE order_id = ?
+      `,
       [id]
     );
 

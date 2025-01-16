@@ -119,7 +119,23 @@ const OrderUpdate = () => {
             } catch (error) {
                 console.error("Error deleting additional request:", error);
             }
-        } else {
+        } else if (value === "3" && name === "order_status") {
+            const confirmCancel = window.confirm(
+                "Are you sure you want to cancel this order? This action cannot be undone."
+            );
+            if (!confirmCancel) {
+                return; // Exit if user cancels confirmation
+            }
+
+            try {
+                await orderService.deleteOrder(id);
+                // Remove the order if confirmed
+                navigate("/admin/orders");
+            } catch (error) {
+                console.error("Error deleting order:", error);
+            }
+        
+        }else {
             setOrder((prevOrder) => {
                 if (index !== null) {
                     const updatedServices = [...prevOrder.services];
@@ -140,8 +156,6 @@ const OrderUpdate = () => {
             });
         }
     };
-
-
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
@@ -292,7 +306,7 @@ const OrderUpdate = () => {
                                                 <option className={styles.statusReceived} value={0}>Received</option>
                                                 <option className={styles.statusInProgress} value={1}>In Progress</option>
                                                 <option className={styles.statusCompleted} value={2}>Completed</option>
-                                                <option className={styles.statusCancelled}>Cancel</option>
+                                                <option className={styles.statusCancelled} value={3}>Cancel</option>
                                             </select>
                                         </div>
                                         <div className={styles.orderFlex}>

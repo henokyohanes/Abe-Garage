@@ -88,7 +88,7 @@ export const updateOrder = async (id, updatedData) => {
 export const deleteOrder = async (id) => {
     try {
         const response = await axios.delete(
-            `${api_url}/api/orders/${id}`,
+            `${api_url}/api/order/${id}`,
             getAuthHeaders()
         );
         return response.data;
