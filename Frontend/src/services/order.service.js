@@ -70,7 +70,6 @@ export const addOrder = async (orderData) => {
 
 // function to update an order
 export const updateOrder = async (id, updatedData) => {
-    console.log("updatedData", id, updatedData);
     try {
         const response = await axios.put(
             `${api_url}/api/order/${id}`,
@@ -99,6 +98,34 @@ export const deleteOrder = async (id) => {
     }
 };
 
-const orderService = {fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders};
+// function to delete a service from an order
+export const deleteService = async (orderId, serviceId) => {
+    try {
+        const response = await axios.delete(
+            `${api_url}/api/order/${orderId}/service/${serviceId}`,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting service:", error);
+        throw error.response?.data?.message || "Failed to delete service";
+    }
+};
+
+// function to delete additional request from an order
+export const deleteAdditionalRequest = async (orderId, additionalRequest) => {
+    try {
+        const response = await axios.put(
+            `${api_url}/api/order/${orderId}/additional-request`, additionalRequest,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting additional request:", error);
+        throw error.response?.data?.message || "Failed to delete additional request";
+    }
+};
+
+const orderService = {fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders, deleteService, deleteAdditionalRequest};
 
 export default orderService;

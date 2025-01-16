@@ -260,4 +260,52 @@ const deleteOrder = async (req, res) => {
   }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId};
+// Controller for deleting a service from an order
+const deleteService = async (req, res) => {
+  const { orderId, serviceId } = req.params;
+
+  // Validate order ID
+  if (!orderId || isNaN(orderId)) {
+    return res.status(400).json({
+      status: "fail",
+      error: "Bad Request",
+      message: "The order ID provided is invalid or missing.",
+    });
+  }
+
+  // Validate that the order exists
+  const orderExists = await orderService.getOrderById(orderId);
+  if (!orderExists) {
+    return res.status(404).json({
+      status: "fail",
+      error: "Not Found",
+      message: "The order ID provided does not exist.",
+    });
+  }
+
+  try {
+    const result = await orderService.deleteService(orderId, serviceId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in deleteServiceController:", error);
+    res
+      .status(500)
+      .json({ message: error.message || "Failed to delete service." });
+  }
+};
+
+// Controller for canceling additional request for an order
+const cancelAdditionalRequest = async (req, res) => {
+    const { orderId } = req.params;
+    const { additional_request, additional_requests_completed } = req.body;
+
+    try {
+        const result = await orderService.cancelAdditionalRequest(orderId, additional_request, additional_requests_completed);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("Error in cancelAdditionalRequestController:", error);
+        res.status(500).json({ message: error.message || "Failed to cancel additional request." });
+    }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};

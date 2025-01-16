@@ -21,7 +21,6 @@ const OrderUpdate = () => {
         try {
             const response = await orderService.fetchOrderById(parseInt(id));
             if (!response) throw new Error("order not found.");
-            console.log(response.data[0]);
             setOrder(response.data[0]);
         } catch (err) {
             console.error(err);
@@ -70,7 +69,7 @@ const OrderUpdate = () => {
     //     });
     // };
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const { name, value, type, checked, dataset } = e.target;
         const index = dataset.index ? parseInt(dataset.index, 10) : null;
 
@@ -83,6 +82,10 @@ const OrderUpdate = () => {
                 return; // Exit if the user cancels the confirmation
             }
 
+            try {
+            const serviceId = order.services[index].service_id; // Assume each service has a unique `id`
+            const orderId = id;
+            await orderService.deleteService(orderId, serviceId);
             // Remove the service if confirmed
             setOrder((prevOrder) => {
                 const updatedServices = [...prevOrder.services];
@@ -92,7 +95,10 @@ const OrderUpdate = () => {
                     services: updatedServices,
                 };
             });
-        } else if (value === "3" && name === "additional_requests_completed") {
+            } catch (error) {
+            console.error("Error deleting service:", error);
+        }
+    } else if (value === "3" && name === "additional_requests_completed") {
             const confirmCancel = window.confirm(
                 "Are you sure you want to cancel this additional request? This action cannot be undone."
             );
@@ -100,12 +106,19 @@ const OrderUpdate = () => {
                 return; // Exit if user cancels confirmation
             }
 
-            // Remove the additional request if confirmed
-            setOrder((prevOrder) => ({
-                ...prevOrder,
-                additional_request: null,
-                additional_requests_completed: null,
-            }));
+            try {
+                const orderId = id;
+                const additionalRequest = {additional_request: null, additional_requests_completed: 0};
+                await orderService.deleteAdditionalRequest(orderId, additionalRequest);
+                // Remove the additional request if confirmed
+                setOrder((prevOrder) => ({
+                    ...prevOrder,
+                    additional_request: null,
+                    additional_requests_completed: null,
+                }));
+            } catch (error) {
+                console.error("Error deleting additional request:", error);
+            }
         } else {
             setOrder((prevOrder) => {
                 if (index !== null) {
@@ -126,14 +139,12 @@ const OrderUpdate = () => {
                 }
             });
         }
-        console.log("Updated order:", order);
     };
 
 
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
-        console.log("Updated order:", id, order);
 
         try {
             await orderService.updateOrder(id, order);
@@ -256,7 +267,7 @@ const OrderUpdate = () => {
                                 </select>
                             </div>
                         ))}
-                        {order.additional_requests_completed !== null && (<div className={styles.service}>
+                        {order.additional_request !== null && (<div className={styles.service}>
                             <div>
                                 <h4>Additional Requests</h4>
                                 <textarea type="text" name="additional_request" placeholder="Additional Requests" value={order.additional_request} onChange={handleChange} />

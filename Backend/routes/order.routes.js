@@ -22,4 +22,10 @@ router.put('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin
 // Delete order endpoint
 router.delete('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.deleteOrder);
 
+// Delete service endpoint of an order
+router.delete('/api/order/:orderId/service/:serviceId', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.deleteService);
+
+// Cancel additional request endpoint
+router.put('/api/order/:orderId/additional-request', [authMiddleware.verifyToken, authMiddleware.isAdmin], orderController.cancelAdditionalRequest);
+
 module.exports = router;

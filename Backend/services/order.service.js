@@ -358,4 +358,68 @@ const deleteOrder = async (id) => {
   }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId};
+// Service to delete a service from an order
+const deleteService = async (orderId, serviceId) => {
+    const connection = await db.getConnection();
+
+    try {
+        // Begin transaction
+        await connection.beginTransaction();
+
+        // Delete service from the services table
+        const [result] = await connection.query(
+            'DELETE FROM order_services WHERE order_id = ? AND service_id = ?',
+            [orderId, serviceId]
+        );
+
+        // If no service was deleted
+        if (result.affectedRows === 0) {
+            await connection.rollback();
+            throw new Error("Service not found.");
+        }
+
+        // Commit transaction
+        await connection.commit();
+        return { success: true, message: "Service deleted successfully." };
+    } catch (error) {
+        console.error("Error deleting service:", error);
+        await connection.rollback();
+        throw new Error("Failed to delete service.");
+    } finally {
+        connection.release();
+    }
+};
+
+// Service to cancel additional request for an order
+const cancelAdditionalRequest = async (orderId, additionalRequest, additionalRequestsCompleted) => {
+    const connection = await db.getConnection();
+
+    try {
+        // Begin transaction
+        await connection.beginTransaction();
+
+        // Update the additional request and status
+        const [result] = await connection.query(
+            'UPDATE order_info SET additional_request = ?, additional_requests_completed = ? WHERE order_id = ?',
+            [additionalRequest, additionalRequestsCompleted, orderId]
+        );
+
+        // If the order doesn't exist
+        if (result.affectedRows === 0) {
+            await connection.rollback();
+            throw new Error("Order not found.");
+        }
+
+        // Commit transaction
+        await connection.commit();
+        return { success: true, message: "Additional request canceled successfully." };
+    } catch (error) {
+        console.error("Error canceling additional request:", error);
+        await connection.rollback();
+        throw new Error("Failed to cancel additional request.");
+    } finally {
+        connection.release();
+    }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};
