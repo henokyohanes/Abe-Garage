@@ -15,10 +15,11 @@
 }
 
 .appointment p {
-    font-size: clamp(.1em, 2vw, .7em);
+    font-size: clamp(.2em, 3vw, .9em);
 }
 
-.appointment h3 {
+.contactUs {
+    text-decoration: none;
     font-size: clamp(.4em, 3vw, 1em);
     font-weight: bold;
     background-color: white;

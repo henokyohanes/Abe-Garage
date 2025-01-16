@@ -40,21 +40,11 @@ const Footer = () => {
                 <div className="col-5 col-md-3 col-lg-2">
                     <h4>Useful Links</h4>
                     <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/about-us">About Us</Link>
-                        </li>
-                        <li>
-                            <Link to="/appointment">Appointment</Link>
-                        </li>
-                        <li>
-                            <Link to="/testimonials">Testimonials</Link>
-                        </li>
-                        <li>
-                            <Link to="/contact-us">Contact Us</Link>
-                        </li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/">Appointment</Link></li>
+                        <li><Link to="/">Testimonials</Link></li>
+                        <li><Link to="/contact-us">Contact Us</Link></li>
                     </ul>
                 </div>
 

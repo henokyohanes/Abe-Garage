@@ -1,6 +1,7 @@
 import React from 'react'
 import engine from "../../assets/images/engine.jpg"
 import style from "./Experience.module.css"
+import { Link } from 'react-router-dom';
 
 const Experience = () => {
 
@@ -21,7 +22,7 @@ const Experience = () => {
                     journe. <strong>Visit us today</strong>, and let us keep you safely on
                     the road for years to come.
                 </p>
-                <button className={style.aboutButton}>About Us ____</button>
+                <Link to="/about-us" className={style.aboutButton}>About Us ____</Link>
                 <div className={`${style.aboutUs} d-none d-xxl-block`}>
                     Fast, Reliable, and Always Road-Ready for Your Journey.
                 </div>

@@ -14,9 +14,9 @@ const Header = (props) => {
     const { isLogged, setIsLogged, employee } = useAuth();
 
     // Log out event handler function
-    const logOut = () => {
+    const logOut = async () => {
         // Call the logout function from the login service
-        loginService.logOut();
+        await loginService.logOut();
         // Set the isLogged state to false
         setIsLogged(false);
     };
@@ -45,30 +45,20 @@ const Header = (props) => {
                     title={<FaBars size={30} />}
                     className="d-md-none"
                 >
-                    <NavDropdown.Item>Home</NavDropdown.Item>
-                    <NavDropdown.Item>About Us</NavDropdown.Item>
-                    <NavDropdown.Item>Services</NavDropdown.Item>
-                    <NavDropdown.Item>Contact Us</NavDropdown.Item>
-                    <NavDropdown.Item>Admin</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/">Home</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/about-us">About Us</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/services">Services</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/contact-us">Contact Us</NavDropdown.Item>
+                    {isLogged && (<NavDropdown.Item as={Link} to="/admin/dashboard">Admin</NavDropdown.Item>)}
                 </NavDropdown>
-                <img src={logo} alt="ABE Garage Logo" />
-                <dir className={Style.navMenu}>
+                <img src={logo} alt="ABE Garage Logo"/>
+                <div className={Style.navMenu}>
                     <ul className="d-none d-md-flex">
-                        <li>
-                            <a href="/">Home</a>
-                        </li>
-                        <li>
-                            <a href="/about-us">About Us</a>
-                        </li>
-                        <li>
-                            <a href="/services">Services</a>
-                        </li>
-                        <li>
-                            <a href="/contact-us">Contact Us</a>
-                        </li>
-                        <li>
-                            <a href="/admin/dashboard">Admin</a>
-                        </li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/services">Services</Link></li>
+                        <li><Link to="/contact-us">Contact Us</Link></li>
+                        {isLogged && (<li><Link to="/admin/dashboard">Admin</Link></li>)}
                     </ul>
                     <div>
                         {isLogged ? (
@@ -77,7 +67,7 @@ const Header = (props) => {
                             <Link to="/login" className={Style.signInButton}>Sign In</Link>
                         )}
                     </div>
-                </dir>
+                </div>
             </div>
         </header>
     );
