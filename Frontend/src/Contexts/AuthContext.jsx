@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  createContext,
-  useMemo,
-} from "react";
+import React, {useState, useEffect, useContext, createContext, useMemo} from "react";
 import getAuth from "../util/auth";
 
 // Create a context object
@@ -19,6 +13,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isManager, setIsManager] = useState(false);
   const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,6 +27,11 @@ export const AuthProvider = ({ children }) => {
           // Check if the employee is an admin
           if (loggedInEmployee.employee_role === 3) {
             setIsAdmin(true);
+          }
+
+          // Check if the employee is a manager
+          if (loggedInEmployee.employee_role === 2) {
+            setIsManager(true);
           }
 
           // Set the employee object
@@ -49,15 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   // Memoize the context value to avoid unnecessary re-renders
   const value = useMemo(
-    () => ({
-      isLogged,
-      isAdmin,
-      setIsAdmin,
-      setIsLogged,
-      employee,
-      loading,
-      employeeId: employee?.employee_id, // Add employee_id to the context value
-    }),
+    () => ({isLogged, isAdmin, isManager, setIsAdmin, setIsLogged, employee, loading, employeeId: employee?.employee_id}),
     [isLogged, isAdmin, employee, loading]
   );
 

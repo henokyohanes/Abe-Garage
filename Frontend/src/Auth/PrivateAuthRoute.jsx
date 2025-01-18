@@ -11,6 +11,7 @@ const PrivateAuthRoute = ({ roles = [], children }) => {
     const checkAuthentication = async () => {
       try {
         const employee = await getAuth(); // Get employee data
+        console.log("employee", employee);
         if (employee?.employee_token) {
           setIsLogged(true); // User is logged in
           // If roles are specified, check authorization

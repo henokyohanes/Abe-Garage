@@ -8,17 +8,21 @@ import logo from "../../assets/images/logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Style from "./Header.module.css";
 
-const Header = (props) => {
+const Header = () => {
 
     // Access the authentication context
-    const { isLogged, setIsLogged, employee } = useAuth();
+    const { isLogged, setIsLogged, employee, isAdmin, isManager } = useAuth();
 
     // Log out event handler function
     const logOut = async () => {
-        // Call the logout function from the login service
         await loginService.logOut();
-        // Set the isLogged state to false
         setIsLogged(false);
+    };
+
+    const getRoleText = () => {
+        if (isAdmin) return "Admin";
+        if (isManager) return "Manager";
+        return "Mechanic";
     };
 
     return (
@@ -49,16 +53,16 @@ const Header = (props) => {
                     <NavDropdown.Item as={Link} to="/about-us">About Us</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/services">Services</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/contact-us">Contact Us</NavDropdown.Item>
-                    {isLogged && (<NavDropdown.Item as={Link} to="/admin/dashboard">Admin</NavDropdown.Item>)}
+                    {isLogged && (<NavDropdown.Item as={Link} to="/dashboard">{getRoleText()}</NavDropdown.Item>)}
                 </NavDropdown>
-                <img src={logo} alt="ABE Garage Logo"/>
+                <img src={logo} alt="ABE Garage Logo" />
                 <div className={Style.navMenu}>
                     <ul className="d-none d-md-flex">
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
                         <li><Link to="/services">Services</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
-                        {isLogged && (<li><Link to="/admin/dashboard">Admin</Link></li>)}
+                        {isLogged && (<li><Link to="/dashboard">{getRoleText()}</Link></li>)}
                     </ul>
                     <div>
                         {isLogged ? (

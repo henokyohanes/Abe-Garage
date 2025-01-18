@@ -11,6 +11,7 @@ const dbConfig = {
 
 // Create the connection pool  
 const pool = mysql.createPool(dbConfig);
+console.log("Database connected");
 
 // function that will execute the SQL queries asynchronously
 async function query(sql, params) {
