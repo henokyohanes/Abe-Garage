@@ -10,6 +10,7 @@ import vehicleService from "../../../services/vehicle.service";
 import serviceService from "../../../services/service.service";
 import orderService from "../../../services/order.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
 import Layout from "../../../Layout/Layout";
 import styles from "./NewOrder.module.css";
 
@@ -202,7 +203,8 @@ const NewOrder = () => {
                 <div className=" d-none d-lg-block col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+                <AdminMenuMobile />
+                {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
                     <div className={styles.adminMenuTitle}>
                         <h2>Admin Menu</h2>
                     </div>
@@ -216,7 +218,7 @@ const NewOrder = () => {
                         <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
                         <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
                     </div>
-                </div>
+                </div> */}
                 <div className={`${styles.orderList} col-12 col-lg-9`}>
                     <div className={styles.header}>
                         <h2>

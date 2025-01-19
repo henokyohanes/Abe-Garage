@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import customerService from "../../services/customer.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import styles from "./Customers.module.css";
 
 const Customers = () => {
@@ -109,7 +110,8 @@ const Customers = () => {
         <div className=" d-none d-lg-block col-2">
           <AdminMenu />
         </div>
-        <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+        <AdminMenuMobile />
+        {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
           <div className={styles.adminMenuTitle}>
             <h2>Admin Menu</h2>
           </div>
@@ -123,7 +125,7 @@ const Customers = () => {
             <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
             <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
           </div>
-        </div>
+        </div> */}
         <div className={`${styles.customerList} col-12 col-lg-10`}>
           <div className={styles.header}>
             <h2>

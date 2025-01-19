@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { GrView } from "react-icons/gr";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import oredrService from "../../services/order.service";
 import styles from "./Orders.module.css";
 import Layout from "../../Layout/Layout";
@@ -88,7 +89,8 @@ const Orders = () => {
         <div className="d-none d-lg-block col-2">
           <AdminMenu />
         </div>
-        <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+        <AdminMenuMobile />
+        {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
           <div className={styles.adminMenuTitle}>
             <h2>Admin Menu</h2>
           </div>
@@ -118,7 +120,7 @@ const Orders = () => {
               Services
             </Link>
           </div>
-        </div>
+        </div> */}
         <div className={`${styles.ordersList} col-12 col-lg-10`}>
 
           <h2>

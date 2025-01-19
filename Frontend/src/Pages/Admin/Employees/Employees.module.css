@@ -2,7 +2,7 @@
   background-color: #E6E4E9;
 }
 
-.adminMenuContainer {
+/* .adminMenuContainer {
   width: 100%;
   background-color: #222A47;
   color: #D6D7DE;
@@ -29,7 +29,7 @@
   color: #D6D7DE;
   font-size: clamp(.5em, 2vw, 1em); 
   transition: background-color 0.3s ease, color 0.3s ease;
-}
+} */
 
 .employeeList {
   padding:4vw 1vw 4vw 2vw;

@@ -6,20 +6,27 @@ import Styles from "./AdminMenu.module.css"
 function AdminMenu() {
 
   // Access the authentication context
-  const { employee } = useAuth();
+  const { isAdmin, isManager } = useAuth();
+
+  const getRoleText = () => {
+    if (isAdmin) return "Admin";
+    if (isManager) return "Manager";
+    return "Mechanic";
+  };
+
   return (
     <div className={Styles.adminMenuContainer}>
       <div className={Styles.adminMenuTitle}>
-        <h2>Admin Menu</h2>
+        <h2>{getRoleText()} Menu</h2>
       </div>
       <div className={Styles.listGroup}>
         <Link to="/dashboard" className={Styles.listGroupItem}>Dashboard</Link>
         <Link to="/admin/orders" className={Styles.listGroupItem}>Orders</Link>
-        <Link to="/admin/new-order" className={Styles.listGroupItem}>New order</Link>
-        <Link to="/admin/add-employee" className={Styles.listGroupItem}>Add employee</Link>
-        <Link to="/admin/employees" className={Styles.listGroupItem}>Employees</Link>
-        <Link to="/admin/add-customer" className={Styles.listGroupItem}>Add customer</Link>
-        <Link to="/admin/customers" className={Styles.listGroupItem}>Customers</Link>
+        {(isAdmin || isManager) && <Link to="/admin/new-order" className={Styles.listGroupItem}>New order</Link>}
+        {isAdmin && <Link to="/admin/add-employee" className={Styles.listGroupItem}>Add employee</Link>}
+        {(isAdmin || isManager) && <Link to="/admin/employees" className={Styles.listGroupItem}>Employees</Link>}
+        {(isAdmin || isManager) && <Link to="/admin/add-customer" className={Styles.listGroupItem}>Add customer</Link>}
+        {(isAdmin || isManager) && <Link to="/admin/customers" className={Styles.listGroupItem}>Customers</Link>}
         <Link to="/admin/services" className={Styles.listGroupItem}>Services</Link>
       </div>
     </div>

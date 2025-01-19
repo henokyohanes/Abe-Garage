@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import orderService from "../../services/order.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import styles from "./OrderDetails.module.css";
 
 const OrderDetails = () => {
@@ -60,7 +61,8 @@ const OrderDetails = () => {
                 <div className="col-2 d-none d-lg-block">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+                <AdminMenuMobile /> 
+                {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
                     <div className={styles.adminMenuTitle}>
                         <h2>Admin Menu</h2>
                     </div>
@@ -90,7 +92,7 @@ const OrderDetails = () => {
                             Services
                         </Link>
                     </div>
-                </div>
+                </div> */}
                 <div className={`${styles.orderDetails} col-12 col-lg-9`}>
                     <div className={styles.header}>
                         <h2>{order.customer_first_name} {order.customer_last_name} <span>____</span></h2>
