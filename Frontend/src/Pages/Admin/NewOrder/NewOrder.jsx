@@ -143,7 +143,7 @@ const NewOrder = () => {
     };
 
     const handleAddCustomer = () => {
-        navigate("/admin/add-customer");
+        navigate("/add-customer");
     };
 
     const handleSelectCustomer = (customerId) => {
@@ -180,7 +180,7 @@ const NewOrder = () => {
             const response = await orderService.addOrder(orderWithHash);
             setOrder(response.data);
             setTimeout(() => {
-                window.location.href = "/admin/orders";
+                window.location.href = "/orders";
             }, 1000);
         } catch (err) {
             console.error(err);

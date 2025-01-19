@@ -1,5 +1,5 @@
-import React, { useState, useEffect, act } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import orderService from "../../services/order.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -131,7 +131,7 @@ const OrderUpdate = () => {
             try {
                 await orderService.deleteOrder(id);
                 // Remove the order if confirmed
-                navigate("/admin/orders");
+                navigate("/orders");
             } catch (error) {
                 console.error("Error deleting order:", error);
             }

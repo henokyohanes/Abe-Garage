@@ -19,6 +19,12 @@
     padding: 0 2vw;
 }
 
+.listGroupMechanic {
+    display: flex;
+    gap: 4vw;
+    padding: 0 2vw;
+}
+
 .listGroupItem {
     padding: .8vw 0;
     text-decoration: none;

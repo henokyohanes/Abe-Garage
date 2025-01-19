@@ -51,7 +51,7 @@ const Header = () => {
                 >
                     <NavDropdown.Item as={Link} to="/">Home</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/about-us">About Us</NavDropdown.Item>
-                    <NavDropdown.Item as={Link} to="/services">Services</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/abe-services">Services</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/contact-us">Contact Us</NavDropdown.Item>
                     {isLogged && (<NavDropdown.Item as={Link} to="/dashboard">{getRoleText()}</NavDropdown.Item>)}
                 </NavDropdown>
@@ -60,7 +60,7 @@ const Header = () => {
                     <ul className="d-none d-md-flex">
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
-                        <li><Link to="/services">Services</Link></li>
+                        <li><Link to="/abe-services">Services</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                         {isLogged && (<li><Link to="/dashboard">{getRoleText()}</Link></li>)}
                     </ul>

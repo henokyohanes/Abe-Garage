@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../Contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -14,6 +15,7 @@ const EmployeeList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const { isAdmin } = useAuth();
     const itemsPerPage = 10;
     const navigate = useNavigate();
 
@@ -116,7 +118,7 @@ const EmployeeList = () => {
                                 <th>Phone</th>
                                 <th>Added Date</th>
                                 <th>Role</th>
-                                <th>Actions</th>
+                                {isAdmin && <th>Actions</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -130,10 +132,10 @@ const EmployeeList = () => {
                                         <td>{employee.employee_phone}</td>
                                         <td>{formatDate(employee.added_date)}</td>
                                         <td>{employee.company_role_name}</td>
-                                        <td>
+                                        {isAdmin && <td>
                                             <button onClick={() => handleEdit(employee.employee_id)}><FaEdit /></button>
                                             <button onClick={() => handleDelete(employee.employee_id)}><MdDelete /></button>
-                                        </td>
+                                        </td>}
                                     </tr>
                                 ))
                             ) : (

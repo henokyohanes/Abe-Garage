@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import serviceService from "../../services/service.service";
@@ -11,6 +12,7 @@ const ProvideServices = () => {
 
     const [newservice, setNewservice] = useState({ service_name: "", service_description: "" });
     const [services, setServices] = useState([]);
+    const { isAdmin, isManager } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,7 +45,7 @@ const ProvideServices = () => {
     };
 
     const handleEdit = (id) => {
-        navigate(`/edit-service/${id}`);
+        navigate(`/admin/edit-service/${id}`);
     };
 
     const handleDelete = async (id) => {
@@ -76,14 +78,14 @@ const ProvideServices = () => {
                                     <h2>{service.service_name}</h2>
                                     <p>{service.service_description}</p>
                                 </div>
-                                <div className={styles.actions}>
+                                {isAdmin && <div className={styles.actions}>
                                     <button onClick={() => handleEdit(service.service_id)}><FaEdit /></button>
                                     <button onClick={() => handleDelete(service.service_id)}><MdDelete /></button>
-                                </div>
+                                </div>}
                             </div>
                         ))}
                     </div>
-                    <div className={styles.form}>
+                    {isAdmin && <div className={styles.form}>
                         <h1>Add a new Service <span>____</span></h1>
                         <input
                             type="text"
@@ -101,7 +103,7 @@ const ProvideServices = () => {
                         <button className={styles.addButton} onClick={handleAddService}>
                             Add Service
                         </button>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </Layout>

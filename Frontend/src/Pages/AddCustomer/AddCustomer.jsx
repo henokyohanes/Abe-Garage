@@ -71,7 +71,7 @@ const AddCustomer = () => {
             const response = await customerService.addCustomer(formDataWithHash);
             if (response.status === "success") {
                 alert("Customer added successfully!");
-                navigate(`/admin/customers`);
+                navigate(`/customers`);
             } else {
                 alert("Failed to add customer. Please try again.");
             }

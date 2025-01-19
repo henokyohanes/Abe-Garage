@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 import { FaEdit } from "react-icons/fa";
 import { GrView } from "react-icons/gr";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -13,6 +14,7 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const { isAdmin, isManager } = useAuth();
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
@@ -73,11 +75,11 @@ const Orders = () => {
   };
 
   const handleViewOrder = (orderId) => {
-    navigate(`/admin/order-details/${orderId}`);
+    navigate(`/order-details/${orderId}`);
   };  
 
   const handleEditOrder = (orderId) => {
-    navigate(`/admin/edit-order/${orderId}`);
+    navigate(`/edit-order/${orderId}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -168,9 +170,9 @@ const Orders = () => {
                     </span>
                   </td>
                   <td>
-                    <button className={styles.btnViewEdit} onClick={() => handleEditOrder(order.order_id)}>
+                    {(isAdmin || isManager) && <button className={styles.btnViewEdit} onClick={() => handleEditOrder(order.order_id)}>
                       <FaEdit />
-                    </button>
+                    </button>}
                     <button className={styles.btnViewEdit} onClick={() => handleViewOrder(order.order_id)}>
                       <GrView />
                     </button>

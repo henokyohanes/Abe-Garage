@@ -50,7 +50,7 @@ const EmployeeUpdate = () => {
                 active_employee
             });
             setSuccess(true);
-            setTimeout(() => navigate("/admin/employees"), 1000);
+            setTimeout(() => navigate("/employees"), 1000);
         } catch (err) {
             console.error(err);
             setError("Failed to update employee. Please try again.");

@@ -47,7 +47,7 @@ const ServiceUpdate = () => {
         try {
             await serviceService.updateService(id, service);
             setSuccess(true);
-            setTimeout(() => navigate("/admin/services"), 1000);
+            setTimeout(() => navigate("/services"), 1000);
         } catch (err) {
             console.error(err);
             setError("Failed to update service. Please try again.");

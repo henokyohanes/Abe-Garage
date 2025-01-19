@@ -1,23 +1,42 @@
 import React from 'react'
 import { Link } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 import styles from "./AdminMenuMobile.module.css"
 
 const AdminMenuMobile = () => {
 
+    // Access the authentication context
+    const { isAdmin, isManager } = useAuth();
+
+    const getRoleText = () => {
+        if (isAdmin) return "Admin";
+        if (isManager) return "Manager";
+        return "Mechanic";
+    };
+
+    const handleclass = () => {
+        if (isAdmin || isManager) {
+            return styles.listGroup;
+        } else {
+            return styles.listGroupMechanic
+        }
+    }
+
     return (
+
         <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
             <div className={styles.adminMenuTitle}>
-                <h2>Admin Menu</h2>
+                <h2>{getRoleText()} Menu</h2>
             </div>
-            <div className={styles.listGroup}>
-                <Link to="/admin/dashboard" className={styles.listGroupItem}>Dashboard</Link>
-                <Link to="/admin/orders" className={styles.listGroupItem}>Orders</Link>
-                <Link to="/admin/new-order" className={styles.listGroupItem}>New order</Link>
-                <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>
-                <Link to="/admin/employees" className={styles.listGroupItem}>Employees</Link>
-                <Link to="/admin/add-customer" className={styles.listGroupItem}>Add customer</Link>
-                <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
-                <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
+            <div className={handleclass()}>
+                <Link to="/dashboard" className={styles.listGroupItem}>Dashboard</Link>
+                <Link to="/orders" className={styles.listGroupItem}>Orders</Link>
+                {(isAdmin || isManager) && <Link to="/new-order" className={styles.listGroupItem}>New order</Link>}
+                {isAdmin && <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>}
+                {(isAdmin || isManager) && <Link to="/employees" className={styles.listGroupItem}>Employees</Link>}
+                {(isAdmin || isManager) && <Link to="/add-customer" className={styles.listGroupItem}>Add customer</Link>}
+                {(isAdmin || isManager) && <Link to="/customers" className={styles.listGroupItem}>Customers</Link>}
+                <Link to="/services" className={styles.listGroupItem}>Services</Link>
             </div>
         </div>
     )

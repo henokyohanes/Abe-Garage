@@ -30,23 +30,23 @@ const AppRoutes = () => (
     <Route path="/about-us" element={<AboutUs />} />
     <Route path="/unauthorized" element={<Unauthorized />} />
     <Route path="/contact-us" element={<ContactUs />} />
-    <Route path="/Services" element={<AbeServices />} />
+    <Route path="/abe-Services" element={<AbeServices />} />
 
     {/* Protected Routes */}
     <Route path="/dashboard" element={<PrivateAuthRoute roles={[1, 2, 3]}> <Dashboard /> </PrivateAuthRoute>}/>
-    <Route path="/admin/orders" element={<PrivateAuthRoute roles={[1, 2, 3]}> <Orders /> </PrivateAuthRoute>}/>
-    <Route path="/admin/order-details/:id" element={<PrivateAuthRoute roles={[1, 2, 3]}> <OrderDetails /> </PrivateAuthRoute>}/>
-    <Route path="/admin/edit-order/:id" element={<PrivateAuthRoute roles={[2, 3]}> <OrderUpdate /> </PrivateAuthRoute>}/>
-    <Route path="/admin/new-order" element={<PrivateAuthRoute roles={[2, 3]}> <NewOrder /> </PrivateAuthRoute>}/>
+    <Route path="/orders" element={<PrivateAuthRoute roles={[1, 2, 3]}> <Orders /> </PrivateAuthRoute>}/>
+    <Route path="/order-details/:id" element={<PrivateAuthRoute roles={[1, 2, 3]}> <OrderDetails /> </PrivateAuthRoute>}/>
+    <Route path="/edit-order/:id" element={<PrivateAuthRoute roles={[2, 3]}> <OrderUpdate /> </PrivateAuthRoute>}/>
+    <Route path="/new-order" element={<PrivateAuthRoute roles={[2, 3]}> <NewOrder /> </PrivateAuthRoute>}/>
     <Route path="/admin/add-employee" element={<PrivateAuthRoute roles={[3]}> <AddEmployee /> </PrivateAuthRoute>}/>
-    <Route path="/admin/employees" element={<PrivateAuthRoute roles={[2, 3]}> <Employees /> </PrivateAuthRoute>}/>
+    <Route path="/employees" element={<PrivateAuthRoute roles={[2, 3]}> <Employees /> </PrivateAuthRoute>}/>
     <Route path="/edit-employee/:id" element={<PrivateAuthRoute roles={[3]}> <EmployeeUpdate /> </PrivateAuthRoute>}/>
-    <Route path="/admin/add-customer" element={<PrivateAuthRoute roles={[2, 3]}> <AddCustomer /> </PrivateAuthRoute>}/>
-    <Route path="/admin/customers" element={<PrivateAuthRoute roles={[2, 3]}> <Customers /> </PrivateAuthRoute>}/>
+    <Route path="/add-customer" element={<PrivateAuthRoute roles={[2, 3]}> <AddCustomer /> </PrivateAuthRoute>}/>
+    <Route path="/customers" element={<PrivateAuthRoute roles={[2, 3]}> <Customers /> </PrivateAuthRoute>}/>
     <Route path="/edit-customer/:id" element={<PrivateAuthRoute roles={[2, 3]}> <CustomerUpdate /> </PrivateAuthRoute>}/>
     <Route path="/customer-profile/:id" element={<PrivateAuthRoute roles={[2, 3]}> <CustomerProfile /> </PrivateAuthRoute>}/>
-    <Route path="/admin/services" element={<PrivateAuthRoute roles={[1, 2, 3]}> <ProvideServices /> </PrivateAuthRoute>}/>
-    <Route path="/edit-service/:id" element={<PrivateAuthRoute roles={[3]}> <ServiceUpdate /> </PrivateAuthRoute>}/>
+    <Route path="/services" element={<PrivateAuthRoute roles={[1, 2, 3]}> <ProvideServices /> </PrivateAuthRoute>}/>
+    <Route path="/admin/edit-service/:id" element={<PrivateAuthRoute roles={[3]}> <ServiceUpdate /> </PrivateAuthRoute>}/>
   </Routes>
 );
 
