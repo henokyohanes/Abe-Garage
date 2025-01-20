@@ -20,14 +20,14 @@ const Footer = () => {
                     <p>
                         Email us:
                         <br />
-                        <a href="mailto:contact@autorex.com">contact@abe.com</a>
+                        <a href="mailto:henokyohanes8@gmail.com">contact@abe.com</a>
                     </p>
                 </div>
                 <div className="col-md-4 col-sm-12">
                     <i className="fas fa-phone"></i>
                     <p>
                         Call us: <br />
-                        <a href="tel:+18004567890">+1 800 456 7890</a>
+                        <a href="tel:+18325160930">+1 800 456 7890</a>
                     </p>
                 </div>
             </div>
@@ -42,7 +42,7 @@ const Footer = () => {
                     <ul>
                         <li><Link to="/">Home</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
-                        <li><Link to="/">Appointment</Link></li>
+                        <li><Link to="/contact-us">Appointment</Link></li>
                         <li><Link to="/">Testimonials</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
                     </ul>
@@ -63,18 +63,18 @@ const Footer = () => {
                     <h4>Newsletter</h4>
                     <p>Get the latest updates and offers.</p>
                     <div className={styles.socialMedia}>
-                        <a href="#" aria-label="Facebook">
+                        <Link to="https://www.facebook.com/nani.love.16100" target="_blank" aria-label="Facebook">
                             <i className="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" aria-label="Twitter">
-                            <i className="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" aria-label="Instagram">
+                        </Link>
+                        <Link to="https://x.com/Henokyohanes2" target="_blank" aria-label="Twitter">
+                            <i className="fab fa-x-twitter"></i>
+                        </Link>
+                        <Link to="https://www.instagram.com/henok3303" target="_blank" aria-label="Instagram">
                             <i className="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" aria-label="Google">
+                        </Link>
+                        <Link to="/" aria-label="Google">
                             <i className="fab fa-google"></i>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

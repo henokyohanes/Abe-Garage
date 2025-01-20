@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import style from "./Testimonial.module.css"
 
 const Testimonial = () => {
@@ -8,7 +9,8 @@ const Testimonial = () => {
             <p>Working since 2000 <span>______</span></p>
             <h1>We are Leader in Car Mechanical Work</h1>
             <div className={style.testimonialsButtons}>
-                <i className="fab fa-youtube"></i>
+        <Link to="https://www.youtube.com/watch?v=CZ3U5oHLyl8" target="_blank"><i className="fab fa-youtube"/></Link>
+                
                 <p>Watch Intro Video<br />about us</p>
             </div>
         </section>

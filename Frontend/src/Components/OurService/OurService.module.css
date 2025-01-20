@@ -33,6 +33,10 @@
     border-bottom: .4em solid #d82323;
 }
 
+.serviceSub {
+    text-align: left;
+}
+
 .serviceCard p {
     color: #07184A;
     margin-bottom: 0.2em;
