@@ -160,11 +160,10 @@ const OrderUpdate = () => {
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
-
         try {
             await orderService.updateOrder(id, order);
             setSuccess(true);
-            // setTimeout(() => navigate("/admin/orders"), 1000);
+            setTimeout(() => navigate("/orders"), 2000);
         } catch (err) {
             console.error(err);
             setError("Failed to update order. Please try again.");
@@ -201,6 +200,16 @@ const OrderUpdate = () => {
       const d = new Date(date);
       return d.toISOString().split("T")[0];
     };
+
+    const formatDateToday = (date) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    const today = formatDateToday(new Date());
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -313,7 +322,7 @@ const OrderUpdate = () => {
                                         </div>
                                         <div className={styles.orderFlex}>
                                             <h4>completion date:</h4>
-                                            <input className={styles.date} name="completion_date" type="date" placeholder="mm/dd/yyyy" onChange={handleChange} value={order.completion_date ? formatDate(order.completion_date) : ""} />
+                                            <input className={styles.date} name="completion_date" type="date" placeholder="mm/dd/yy" onChange={handleChange} min={today} value={order.completion_date ? formatDate(order.completion_date) : ""} />
                                         </div>
                                         <div>
                                             <h4>Notes for customer</h4>

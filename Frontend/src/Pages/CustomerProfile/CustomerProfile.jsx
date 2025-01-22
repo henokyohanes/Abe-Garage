@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import vehicleService from "../../services/vehicle.service";
@@ -60,7 +61,8 @@ const CustomerProfile = () => {
         try {
             await vehicleService.addVehicle(parseInt(id), newVehicle);
             setShowform(false);
-            fetchVehicles();
+            // fetchVehicles();
+            window.location.reload();
             alert("Vehicle added successfully!");
         } catch (error) {
             console.error("Error adding vehicle:", error);
@@ -72,6 +74,20 @@ const CustomerProfile = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewVehicle((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleDelete = async (id) => {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this customer?"
+      );
+      if (confirmDelete) {
+        try {
+          await customerService.deleteCustomer(id);
+          setCustomers(customers.filter((customer) => customer.id !== id));
+        } catch (err) {
+          alert(err.message || "Failed to delete customer");
+        }
+      }
     };
 
     function getOrderStatus(status) {
@@ -112,6 +128,9 @@ const CustomerProfile = () => {
                                 {vehicles && Object.keys(vehicles).length > 0 ? (
                                     Object.values(vehicles).map((vehicle, index) => (
                                         <div key={index} className={styles.vehicleCard}>
+                                            <div onClick={() => handleDelete(customer.customer_id)}>
+                                                <MdDelete />
+                                            </div>
                                             <p>
                                                 <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
                                             </p>

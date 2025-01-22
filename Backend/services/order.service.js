@@ -175,7 +175,7 @@ const getOrderById = async (id) => {
     oi.additional_request,
     oi.additional_requests_completed,
     oi.order_total_price,
-    oi.completion_date,
+    DATE_FORMAT(oi.completion_date, '%Y-%m-%d') AS completion_date,
     oi.notes_for_internal_use,
     oi.notes_for_customer,
     (

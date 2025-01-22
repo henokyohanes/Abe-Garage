@@ -149,7 +149,14 @@
   color: #d82323;
 }
 
-.customerInfo, .vehicleInfo, .serviceInfo {
+.customerInfo, .vehicleInfo {
+  background-color: #FFFFFF ;
+  padding: 1vw;
+  margin: 1vw 0;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+}
+
+.serviceInfo {
   background-color: #FFFFFF ;
   display: flex;
   justify-content: space-between;
@@ -181,6 +188,7 @@
 }
 
 .customerInfo button, .vehicleInfo button {
+  float: right;
   background-color: #d82323;
   color: #FFFFFF;
   padding: 0 .6em;

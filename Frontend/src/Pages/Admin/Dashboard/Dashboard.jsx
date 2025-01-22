@@ -13,15 +13,15 @@ const Dashboard = () => {
                     <AdminMenu />
                 </div>
                 <div className={`${styles.main} col-9`}>
-                    <h1>Admin Dashboard <span>____</span></h1>
+                    <h1>Dashboard <span>____</span></h1>
                     <p>
                         Delivering reliable, win-win solutions to keep your vehicle running smoothly. At the end of the day, our proactive approach ensures optimal performance and customer satisfaction. Moving forward, the next generation of automotive care is here, with advanced diagnostics and streamlined repair solutions to get you back on the road quickly and safely.
                     </p>
                     <div className="row g-3 g-lg-4">
                         {[
                             { icon: "📦", title: "All Orders", sub:"Open For All" },
-                            { icon: "🆕", title: "New Orders", sub:"Open For Leads" },
-                            { icon: "👥", title: "Employees", sub:"Open For Admins" },
+                            { icon: "🆕", title: "New Orders", sub:"Open For Managers" },
+                            { icon: "👥", title: "Employees", sub:"Open For Managers" },
                             { icon: "➕👤", title: "Add Employee", sub:"Open For Admins" },
                             { icon: "🛠️", title: "Engine Service", sub:"Service And Repairs" },
                             { icon: "🎨", title: "Denting & Painting", sub:"Service And Repairs" },
@@ -33,9 +33,6 @@ const Dashboard = () => {
                                     <p>{service.sub}</p>
                                     <h3>{service.title}</h3>
                                     <div className={styles.dashboardIcon}>{service.icon}</div>
-                                    <a href="#" className={styles.readMore}>
-                                        Read More
-                                    </a>
                                 </div>
                             </div>
                         ))}

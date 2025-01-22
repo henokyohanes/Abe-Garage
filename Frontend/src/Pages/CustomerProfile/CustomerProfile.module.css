@@ -122,3 +122,8 @@
     border-radius: .4em;
     cursor: pointer;
 }
+
+.vehicleCard div {
+    display: flex;
+    float: right;
+}

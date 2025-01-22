@@ -38,7 +38,7 @@ const AppRoutes = () => (
     <Route path="/order-details/:id" element={<PrivateAuthRoute roles={[1, 2, 3]}> <OrderDetails /> </PrivateAuthRoute>}/>
     <Route path="/edit-order/:id" element={<PrivateAuthRoute roles={[2, 3]}> <OrderUpdate /> </PrivateAuthRoute>}/>
     <Route path="/new-order" element={<PrivateAuthRoute roles={[2, 3]}> <NewOrder /> </PrivateAuthRoute>}/>
-    <Route path="/admin/add-employee" element={<PrivateAuthRoute roles={[3]}> <AddEmployee /> </PrivateAuthRoute>}/>
+    <Route path="/add-employee" element={<PrivateAuthRoute roles={[3]}> <AddEmployee /> </PrivateAuthRoute>}/>
     <Route path="/employees" element={<PrivateAuthRoute roles={[2, 3]}> <Employees /> </PrivateAuthRoute>}/>
     <Route path="/edit-employee/:id" element={<PrivateAuthRoute roles={[3]}> <EmployeeUpdate /> </PrivateAuthRoute>}/>
     <Route path="/add-customer" element={<PrivateAuthRoute roles={[2, 3]}> <AddCustomer /> </PrivateAuthRoute>}/>

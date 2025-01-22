@@ -24,7 +24,7 @@ function AdminMenu() {
         <Link to="/dashboard" className={Styles.listGroupItem}>Dashboard</Link>
         <Link to="/orders" className={Styles.listGroupItem}>Orders</Link>
         {(isAdmin || isManager) && <Link to="/new-order" className={Styles.listGroupItem}>New order</Link>}
-        {isAdmin && <Link to="/admin/add-employee" className={Styles.listGroupItem}>Add employee</Link>}
+        {isAdmin && <Link to="/add-employee" className={Styles.listGroupItem}>Add employee</Link>}
         {(isAdmin || isManager) && <Link to="/employees" className={Styles.listGroupItem}>Employees</Link>}
         {(isAdmin || isManager) && <Link to="/add-customer" className={Styles.listGroupItem}>Add customer</Link>}
         {(isAdmin || isManager) && <Link to="/customers" className={Styles.listGroupItem}>Customers</Link>}

@@ -13,6 +13,7 @@ import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
 import Layout from "../../../Layout/Layout";
 import styles from "./NewOrder.module.css";
+import { Next } from "react-bootstrap/esm/PageItem";
 
 const NewOrder = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -306,16 +307,16 @@ const NewOrder = () => {
                     }
                     {showCustomer && <div>
                         <div className={styles.customerInfo}>
+                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}>x</button>
                             <div>
                                 <h3>{customer.customer_first_name} {customer.customer_last_name}</h3>
                                 <div className={styles.customerDetails}>
                                     <p><strong>Email:</strong> {customer.customer_email}</p>
                                     <p><strong>Phone Number:</strong> {customer.customer_phone_number}</p>
                                     <p><strong>Customer:</strong> {customer.active_customer_status ? "Yes" : "No"}</p>
-                                    <p><strong>Edit Customer Info:</strong> <span><FaEdit /></span></p>
+                                    <p><strong>Edit Customer Info:</strong> <span onClick={() => navigate(`/edit-customer/${customer.customer_id}`)}><FaEdit /></span></p>
                                 </div>
                             </div>
-                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}>x</button>
                         </div>
                         {!showVehicle && <div>
                             <h2>Choose a Vehicle</h2>
@@ -364,6 +365,7 @@ const NewOrder = () => {
                     }
                     {showVehicle && <div>
                         <div className={styles.vehicleInfo}>
+                            <button onClick={() => { setShowVehicle(false); setServices(null); fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}>x</button>
                             <div>
                                 <h3>{vehicle.vehicle_make} {vehicle.vehicle_model}</h3>
                                 <div className={styles.vehicleDetails}>
@@ -375,7 +377,6 @@ const NewOrder = () => {
                                     <p><strong>Edit Vehicle Info:</strong> <span><FaEdit /></span></p>
                                 </div>
                             </div>
-                            <button onClick={() => { setShowVehicle(false); setServices(null); fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}>x</button>
                         </div>
                     </div>}
                     {services && <div>

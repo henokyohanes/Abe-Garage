@@ -44,13 +44,3 @@
     font-size: clamp(.9em, 3vw, 1.6em);
     margin-bottom: .2vw;
 }
-
-.readMore {
-    font-size: clamp(.6em, 2vw, .9em);
-    color: #d82323;
-    text-decoration: none;
-}
-
-.readMore:hover {
-    color: #07184A;
-}

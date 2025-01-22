@@ -126,7 +126,6 @@ const getOrderById = async (req, res) => {
         message: "The order ID provided does not exist.",
       });
     }
-
     // Return successful response
     return res.status(200).json({
       status: "success",
@@ -177,7 +176,6 @@ const updateOrder = async (req, res) => {
         message: "The order ID provided does not exist.",
       });
     }
-    
     // Update order in the database
     const updatedOrder = await orderService.updateOrder({
       id,

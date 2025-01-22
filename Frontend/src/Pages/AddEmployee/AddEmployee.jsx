@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Contexts/AuthContext';
 import employeeService from '../../services/employee.service';
 import AdminMenu from '../../Components/AdminMenu/AdminMenu';
@@ -19,6 +20,7 @@ const AddEmployee = () => {
   const [passwordError, setPasswordError] = useState('');
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState('');
+  const navigate = useNavigate();
 
   // Create a variable to hold the user's token
   let loggedInEmployeeToken = '';
@@ -70,7 +72,7 @@ const AddEmployee = () => {
           setSuccess(true);
           setServerError('')
           setTimeout(() => {
-            window.location.href = '/admin/employees';
+            navigate('/employees');
           }, 2000);
         }
       })
