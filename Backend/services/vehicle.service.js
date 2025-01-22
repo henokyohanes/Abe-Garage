@@ -57,17 +57,17 @@ const getVehicleById = async (vehicleId) => {
 
 // Update vehicle details
 const updateVehicle = async (vehicle_id, vehicleData) => {
-    const {vehicle_year, vehicle_make, vehicle_model, vehicle_type, vehicle_mileage, vehicle_tag, vehicle_serial, vehicle_color} = vehicleData;
+    const {vehicle_mileage, vehicle_tag, vehicle_color} = vehicleData;
 
     try {
         const query = `
       UPDATE customer_vehicle_info 
-      SET vehicle_year = ?, vehicle_make = ?, vehicle_model = ?, vehicle_type = ?, vehicle_mileage = ?, vehicle_tag = ?, vehicle_serial = ?, vehicle_color = ?
+      SET vehicle_mileage = ?, vehicle_tag = ?, vehicle_color = ?
       WHERE vehicle_id = ?
     `;
-        const values = [vehicle_year, vehicle_make, vehicle_model, vehicle_type, vehicle_mileage, vehicle_tag, vehicle_serial, vehicle_color, vehicle_id];
+        const values = [vehicle_mileage, vehicle_tag, vehicle_color, vehicle_id];
 
-        const [result] = await db.execute(query, values);
+        const result = await db.query(query, values);
         return result;
     } catch (error) {
         console.error("Error updating vehicle:", error.message);
@@ -77,9 +77,10 @@ const updateVehicle = async (vehicle_id, vehicleData) => {
 
 // Delete a vehicle by its ID
 const deleteVehicle = async (vehicleId) => {
+
     try {
         const query = "DELETE FROM customer_vehicle_info WHERE vehicle_id = ?";
-        const [result] = await db.execute(query, [vehicleId]);
+        const result = await db.query(query, [vehicleId]);
         return result; // Return the result from the deletion
     } catch (error) {
         console.error("Error deleting vehicle:", error.message);

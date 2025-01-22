@@ -165,7 +165,7 @@ const getVehicleById = async (req, res) => {
 // Update vehicle information
 const updateVehicle = async (req, res) => {
     const { id } = req.params;
-    const { vehicle_license_plate, vehicle_make, vehicle_model, vehicle_year } = req.body;
+    const { vehicle_color, vehicle_mileage, vehicle_tag } = req.body;
 
     // Validate ID
     if (!id || isNaN(id)) {
@@ -188,7 +188,7 @@ const updateVehicle = async (req, res) => {
         }
 
         // Update vehicle information
-        const updatedVehicle = await vehicleService.updateVehicle(id, {vehicle_license_plate, vehicle_make, vehicle_model, vehicle_year});
+        const updatedVehicle = await vehicleService.updateVehicle(id, {vehicle_color, vehicle_mileage, vehicle_tag});
 
         // Send success response
         return res.status(200).json({

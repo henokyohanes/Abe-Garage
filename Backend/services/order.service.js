@@ -129,6 +129,8 @@ const getOrdersByCustomerId = async (customer_id) => {
       `
       SELECT 
         o.order_id,
+        o.customer_id,
+        o.vehicle_id,
         o.order_date,
         os.order_status,
         oi.order_total_price,

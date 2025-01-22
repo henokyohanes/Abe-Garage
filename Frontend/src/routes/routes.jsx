@@ -14,6 +14,7 @@ import Employees from "../Pages/Admin/Employees/Employees";
 import AbeServices from "../Pages/AbeSevices/AbeServices";
 import EmployeeUpdate from "../Pages/Admin/EmployeeUpdate/EmployeeUpdate";
 import CustomerUpdate from "../Pages/Admin/CustomerUpdate/CustomerUpdate";
+import VehicleUpdate from "../Pages/VehicleUpdate/VehicleUpdate";
 import NewOrder from "../Pages/Admin/NewOrder/NewOrder";
 import AddCustomer from "../Pages/AddCustomer/AddCustomer";
 import CustomerProfile from "../Pages/CustomerProfile/CustomerProfile";
@@ -44,6 +45,7 @@ const AppRoutes = () => (
     <Route path="/add-customer" element={<PrivateAuthRoute roles={[2, 3]}> <AddCustomer /> </PrivateAuthRoute>}/>
     <Route path="/customers" element={<PrivateAuthRoute roles={[2, 3]}> <Customers /> </PrivateAuthRoute>}/>
     <Route path="/edit-customer/:id" element={<PrivateAuthRoute roles={[2, 3]}> <CustomerUpdate /> </PrivateAuthRoute>}/>
+    <Route path="/edit-vehicle/:customer_id/:vehicle_id" element={<PrivateAuthRoute roles={[2, 3]}> <VehicleUpdate /> </PrivateAuthRoute>}/>
     <Route path="/customer-profile/:id" element={<PrivateAuthRoute roles={[2, 3]}> <CustomerProfile /> </PrivateAuthRoute>}/>
     <Route path="/services" element={<PrivateAuthRoute roles={[1, 2, 3]}> <ProvideServices /> </PrivateAuthRoute>}/>
     <Route path="/admin/edit-service/:id" element={<PrivateAuthRoute roles={[3]}> <ServiceUpdate /> </PrivateAuthRoute>}/>

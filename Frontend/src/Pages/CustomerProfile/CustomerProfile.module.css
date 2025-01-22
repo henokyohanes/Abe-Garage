@@ -8,6 +8,11 @@
     padding: 2vw 3vw;
 }
 
+.allInfo {
+    width: 100%;
+    max-width: 30em;
+}
+
 .title {
     font-size: clamp(.8em, 3vw, 1.6em);
     font-weight: bold;  
@@ -34,6 +39,7 @@
 
 .customerContainer span {    
     color: #d82323;
+    cursor: pointer;
 }
 
 .vehicleCard, .orderCard, .customerInfo {
@@ -41,7 +47,7 @@
     width: 100%;
     margin-top: 1vw;
     margin-bottom: 1em;
-    padding: .4em 1em;
+    padding: .3em .8em;
     border-radius: .4em;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -123,7 +129,14 @@
     cursor: pointer;
 }
 
-.vehicleCard div {
-    display: flex;
+.deleteIcon {
     float: right;
+    background-color: #d82323;
+    color: #FFFFFF;
+    padding: 0 .2em;
+    font-size: clamp(.7em, 2vw, 1.2em);
+    font-weight: bold;
+    border: none;
+    border-radius: .2em;
+    cursor: pointer;
 }

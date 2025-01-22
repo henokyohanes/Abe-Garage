@@ -61,7 +61,6 @@ const CustomerProfile = () => {
         try {
             await vehicleService.addVehicle(parseInt(id), newVehicle);
             setShowform(false);
-            // fetchVehicles();
             window.location.reload();
             alert("Vehicle added successfully!");
         } catch (error) {
@@ -76,18 +75,40 @@ const CustomerProfile = () => {
         setNewVehicle((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleDelete = async (id) => {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this customer?"
-      );
-      if (confirmDelete) {
-        try {
-          await customerService.deleteCustomer(id);
-          setCustomers(customers.filter((customer) => customer.id !== id));
-        } catch (err) {
-          alert(err.message || "Failed to delete customer");
+    const handleDeleteVehicle = async (id) => {
+        // check if there is order associated with the vehicle
+        const order = orders.find((order) => order.vehicle_id === id);
+        if (order) {
+            alert("This vehicle is associated with an order. Please delete the order first.");
+            return; // stop the function
+        }   
+        // Confirmation step
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this customer?"
+        );
+        if (confirmDelete) {
+            try {
+                await vehicleService.deleteVehicle(id);
+                fetchVehicles();
+            } catch (err) {
+                alert(err.message || "Failed to delete customer");
+            }
         }
-      }
+    };
+
+    const handleDeleteOrder = async (id) => {
+        // Confirmation step
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this order?"
+        );
+        if (confirmDelete) {
+            try {
+                await orderService.deleteOrder(id);
+                fetchOrders();
+            } catch (err) {
+                alert(err.message || "Failed to delete order");
+            }
+        }
     };
 
     function getOrderStatus(status) {
@@ -108,7 +129,7 @@ const CustomerProfile = () => {
                     {/* Info Section */}
                     <div className={styles.container}>
                         <div className={styles.title}>Info</div>
-                        <div>
+                        <div className={styles.allInfo}>
                             <h2>Customer: {customer?.customer_first_name} {customer?.customer_last_name}</h2>
                             {customer ? (<div className={styles.customerInfo}>
                                 <p><strong>Email:</strong> {customer.customer_email}</p>
@@ -122,21 +143,25 @@ const CustomerProfile = () => {
                     {/* Vehicles Section */}
                     <div className={styles.container}>
                         <div className={styles.title}>Cars</div>
-                        <div>
+                        <div className={styles.allInfo}>
                             <h2>Vehicles of {customer?.customer_first_name}</h2>
                             <div className={styles.vehicleInfo}>
                                 {vehicles && Object.keys(vehicles).length > 0 ? (
                                     Object.values(vehicles).map((vehicle, index) => (
-                                        <div key={index} className={styles.vehicleCard}>
-                                            <div onClick={() => handleDelete(customer.customer_id)}>
+                                        <div key={index}>
+                                            <div className={styles.deleteIcon} onClick={() => handleDeleteVehicle(vehicle.vehicle_id)}>
                                                 <MdDelete />
                                             </div>
-                                            <p>
-                                                <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
-                                            </p>
-                                            <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
-                                            <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
-                                            <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
+                                            <div className={styles.vehicleCard}>
+                                                <p>
+                                                    <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
+                                                </p>
+                                                <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
+                                                <p><strong>Mileage:</strong> {vehicle.vehicle_mileage}</p>
+                                                <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
+                                                <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
+                                                <p><strong>Edit Vehicle Info:</strong> <span onClick={() => navigate(`/edit-vehicle/${customer.customer_id}/${vehicle.vehicle_id}`)}><FaEdit /></span></p>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (
@@ -217,17 +242,23 @@ const CustomerProfile = () => {
                     {/* Orders Section */}
                     <div className={styles.container}>
                         <div className={styles.title}>Orders</div>
-                        <div>
+                        <div className={styles.allInfo}>
                             <h2>Orders of {customer?.customer_first_name}</h2>
                             <div className={styles.orderInfo}>
                                 {orders && orders.length > 0 ? (
                                     orders.map((order, index) => (
-                                        <div key={index} className={styles.orderCard}>
+                                        <div key={index}>
+                                        <div className={styles.deleteIcon} onClick={() => handleDeleteOrder(order.order_id)}>
+                                                <MdDelete />
+                                            </div>
+                                        <div className={styles.orderCard}>
                                             <p><strong>Order #: </strong>{order.order_id}</p>
                                             <p><strong>Vehicle: </strong>{order.vehicle_year} {order.vehicle_make} {order.vehicle_model}</p>
                                             <p><strong>Date: </strong>{order.order_date.split("T")[0]}</p>
                                             <p><strong>Status: </strong>{getOrderStatus(order.order_status)}</p>
                                             <p><strong>Total: </strong>${order.order_total_price}</p>
+                                            <p><strong>Edit Order Info:</strong> <span onClick={() => navigate(`/edit-order/${order.order_id}`)}><FaEdit /></span></p>
+                                        </div>
                                         </div>
                                     ))
                                 ) : (

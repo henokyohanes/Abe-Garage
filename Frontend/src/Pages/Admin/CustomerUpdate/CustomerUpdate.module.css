@@ -37,10 +37,18 @@
     gap: 1vw;
 }
 
+.formGroup p {
+    font-size: clamp(.7em, 3vw, 1em);
+    font-weight: bold;
+    color: #07184A;
+    margin-bottom: .1em;
+}
+
 .formControl {
     width: 100%;
-    padding: .7em;
-    font-size: clamp(.7em, 3vw, 1.2em);
+    padding: .6em;
+    margin-bottom: 1vw;
+    font-size: clamp(.7em, 3vw, 1em);
     border: 1px solid #ccc;
     border-radius: .4em;
     transition: border-color 0.2s ease-in-out;
@@ -72,7 +80,7 @@
 
 .updateButton {
     width: 100%;
-    padding: .7em;
+    padding: .6em;
     margin-top: 1em;
     background-color: #d82323;
     color: white;

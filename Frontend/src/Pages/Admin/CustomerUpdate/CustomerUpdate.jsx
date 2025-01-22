@@ -25,7 +25,7 @@ const CustomerUpdate = () => {
             setCustomer(response.data);
         } catch (err) {
             console.error(err);
-            setError("Failed to fetch employee data.");
+            setError("Failed to fetch customer data.");
         } finally {
             setLoading(false);
         }
@@ -47,7 +47,7 @@ const CustomerUpdate = () => {
             setTimeout(() => navigate(`/customer-profile/${id}`), 1000);
         } catch (err) {
             console.error(err);
-            setError("Failed to update employee. Please try again.");
+            setError("Failed to update customer. Please try again.");
         }
     };
 
@@ -67,12 +67,15 @@ const CustomerUpdate = () => {
                         {success && (<p className={styles.successMessage}>Customer updated successfully!</p>)}
                         <form onSubmit={handleSubmit} className={styles.form}>
                             <div className={styles.formGroup}>
+                                <p>First Name:</p>
                                 <input className={styles.formControl} type="text" name="customer_first_name" value={customer.customer_first_name} onChange={handleChange} placeholder="First Name" required />
                             </div>
                             <div className={styles.formGroup}>
+                                <p>Last Name:</p>
                                 <input className={styles.formControl} type="text" name="customer_last_name" value={customer.customer_last_name} onChange={handleChange} placeholder="Last Name" required />
                             </div>
                             <div className={styles.formGroup}>
+                                <p>Phone Number:</p>
                                 <input className={styles.formControl} type="text" name="customer_phone_number" value={customer.customer_phone_number} onChange={handleChange} placeholder="Phone Number" required />
                             </div>
                             <div className={styles.formGroup}>

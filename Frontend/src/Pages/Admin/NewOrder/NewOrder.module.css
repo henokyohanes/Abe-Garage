@@ -43,6 +43,7 @@
 
 .orderList span {
   color: #d82323;
+  cursor: pointer;
 }
 
 .searchBar {
@@ -187,7 +188,7 @@
   margin-bottom: .01em;
 }
 
-.customerInfo button, .vehicleInfo button {
+.closeButton {
   float: right;
   background-color: #d82323;
   color: #FFFFFF;
@@ -199,7 +200,7 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.customerInfo button:hover, .vehicleInfo button:hover {
+.closeButton:hover {
   background-color: #07184A;
 }
 

@@ -306,9 +306,9 @@ const NewOrder = () => {
                     </div>
                     }
                     {showCustomer && <div>
+                            {/* <div> */}
+                            <button className={styles.closeButton} onClick={() => { setShowSearch(true); setShowCustomer(false); setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}>x</button>
                         <div className={styles.customerInfo}>
-                            <button onClick={() => { setShowSearch(true); setShowCustomer(false); setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}>x</button>
-                            <div>
                                 <h3>{customer.customer_first_name} {customer.customer_last_name}</h3>
                                 <div className={styles.customerDetails}>
                                     <p><strong>Email:</strong> {customer.customer_email}</p>
@@ -317,7 +317,7 @@ const NewOrder = () => {
                                     <p><strong>Edit Customer Info:</strong> <span onClick={() => navigate(`/edit-customer/${customer.customer_id}`)}><FaEdit /></span></p>
                                 </div>
                             </div>
-                        </div>
+                        {/* </div> */}
                         {!showVehicle && <div>
                             <h2>Choose a Vehicle</h2>
                             {vehicles.length > 0 ? (<div>
@@ -364,9 +364,9 @@ const NewOrder = () => {
                     </div>
                     }
                     {showVehicle && <div>
+                            <button className={styles.closeButton} onClick={() => { setShowVehicle(false); setServices(null); fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}>x</button>
                         <div className={styles.vehicleInfo}>
-                            <button onClick={() => { setShowVehicle(false); setServices(null); fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}>x</button>
-                            <div>
+                            {/* <div> */}
                                 <h3>{vehicle.vehicle_make} {vehicle.vehicle_model}</h3>
                                 <div className={styles.vehicleDetails}>
                                     <p><strong>Year:</strong> {vehicle.vehicle_year}</p>
@@ -374,10 +374,10 @@ const NewOrder = () => {
                                     <p><strong>Mileage:</strong> {vehicle.vehicle_mileage}</p>
                                     <p><strong>Tag:</strong> {vehicle.vehicle_tag}</p>
                                     <p><strong>Serial:</strong> {vehicle.vehicle_serial}</p>
-                                    <p><strong>Edit Vehicle Info:</strong> <span><FaEdit /></span></p>
+                                    <p><strong>Edit Vehicle Info:</strong> <span onClick={() => navigate(`/edit-vehicle/${customer.customer_id}/${vehicle.vehicle_id}`)}><FaEdit /></span></p>
                                 </div>
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>}
                     {services && <div>
                         <div className={styles.services}>
