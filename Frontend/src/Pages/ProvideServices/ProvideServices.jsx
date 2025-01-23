@@ -27,21 +27,22 @@ const ProvideServices = () => {
             console.error("Error fetching services:", error);
         }
     };
+    
+    // Handle form input changes
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setNewservice({ ...newservice, [name]: value });
+    };
 
     const handleAddService = async () => {
         try {
             await serviceService.addService(newservice);
             alert("Service added successfully!");
+            window.location.reload();
         } catch (error) {
             console.error("Error adding service:", error);
             alert("Failed to add service");
         }
-    };
-
-    // Handle form input changes
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewservice({ ...newservice, [name]: value });
     };
 
     const handleEdit = (id) => {
@@ -70,7 +71,7 @@ const ProvideServices = () => {
                 </div>
                 <div className={`${styles.container} col-9`}>
                     <h1>Service We Provide <span>____</span></h1>
-                    <p> Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal has evolved from generation X experiences.</p>
+                    <p> Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal has evolved from generation experiences.</p>
                     <div className={styles.serviceList}>
                         {services.map((service) => (
                             <div key={service.service_id} className={styles.service}>

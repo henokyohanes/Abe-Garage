@@ -42,7 +42,7 @@ const EmployeeList = () => {
         if (confirmDelete) {
             try {
                 await employeeService.deleteEmployee(id);
-                setEmployees(employees.filter((employee) => employee.id !== id));
+                window.location.reload();
             } catch (err) {
                 alert(err.message || "Failed to delete employee");
             }

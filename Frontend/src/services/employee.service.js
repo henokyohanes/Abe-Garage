@@ -15,6 +15,21 @@ const getAuthHeaders = () => {
     };
 };
 
+// Function to add a new employee
+export const addEmployee = async (employeeData) => {
+    try {
+        const response = await axios.post(
+            `${api_url}/api/employee`,
+            employeeData,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error adding employee:", error);
+        throw error.response?.data?.error || "Failed to add employee";
+    }
+};
+
 // Function to fetch all employees
 export const fetchEmployees = async () => {
     try {
@@ -43,20 +58,6 @@ export const fetchEmployeeById = async (id) => {
     }
 };
 
-// Function to delete an employee by ID
-export const deleteEmployee = async (id) => {
-    try {
-        const response = await axios.delete(
-            `${api_url}/api/employees/${id}`,
-            getAuthHeaders()
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error deleting employee:", error);
-        throw error.response?.data?.message || "Failed to delete employee";
-    }
-};
-
 // Function to update an employee (e.g., editing their details)
 export const updateEmployee = async (id, updatedData) => {
     try {
@@ -72,18 +73,17 @@ export const updateEmployee = async (id, updatedData) => {
     }
 };
 
-// Function to add a new employee
-export const addEmployee = async (employeeData) => {
+// Function to delete an employee by ID
+export const deleteEmployee = async (id) => {
     try {
-        const response = await axios.post(
-            `${api_url}/api/employee`,
-            employeeData,
+        const response = await axios.delete(
+            `${api_url}/api/employee/${id}`,
             getAuthHeaders()
         );
         return response.data;
     } catch (error) {
-        console.error("Error adding employee:", error);
-        throw error.response?.data?.error || "Failed to add employee";
+        console.error("Error deleting employee:", error);
+        throw error.response?.data?.message || "Failed to delete employee";
     }
 };
 

@@ -7,7 +7,7 @@ import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {
     const { id } = useParams();
-    const [employee, setEmployee] = useState({employee_first_name: "", employee_last_name: "", employee_email: "", employee_phone: "", employee_role_name: "Employee",  active_employee: false});
+    const [employee, setEmployee] = useState({ employee_first_name: "", employee_last_name: "", employee_email: "", employee_phone: "", employee_role_name: "Employee", active_employee: false });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -22,6 +22,7 @@ const EmployeeUpdate = () => {
             const response = await employeeService.fetchEmployeeById(parseInt(id));
             if (!response) throw new Error("Employee not found.");
             setEmployee(response.data);
+            console.log(response.data);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch employee data.");
@@ -40,14 +41,24 @@ const EmployeeUpdate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null); // Reset error state before submission
+        console.log(employee);
         try {
-            await employeeService.updateEmployee(id, {...employee,
+            const {
                 employee_first_name,
                 employee_last_name,
                 employee_email,
                 employee_phone,
-                company_role_name,
-                active_employee
+                company_role_id,
+                active_employee,
+            } = employee;
+            await employeeService.updateEmployee(id, {
+                employee_first_name,
+                employee_last_name,
+                employee_email,
+                employee_phone,
+                company_role_id,
+                active_employee,
             });
             setSuccess(true);
             setTimeout(() => navigate("/employees"), 1000);
@@ -56,6 +67,7 @@ const EmployeeUpdate = () => {
             setError("Failed to update employee. Please try again.");
         }
     };
+
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -82,10 +94,10 @@ const EmployeeUpdate = () => {
                                 <input className={styles.formControl} type="text" name="employee_phone" value={employee.employee_phone} onChange={handleChange} placeholder="Phone Number" required />
                             </div>
                             <div className={styles.formGroup}>
-                                <select name="employee_role" value={employee.company_role_name} onChange={handleChange} className={styles.formControl} >
-                                    <option value="Employee">Employee</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Admin">Admin</option>
+                                <select name="company_role_id" value={employee.company_role_id} onChange={handleChange} className={styles.formControl} >
+                                    <option value="1">Employee</option>
+                                    <option value="2">Manager</option>
+                                    <option value="3">Admin</option>
                                 </select>
                             </div>
                             <div className={styles.formGroup}>

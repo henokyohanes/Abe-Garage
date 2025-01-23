@@ -95,7 +95,7 @@ const getEmployeeById = async (req, res) => {
 };
 
 // Controller for updating an employee
-async function updateEmployee(req, res, next) {
+async function updateEmployee(req, res) {
   const employeeId = req.params.id;
   const employeeData = req.body;
 
@@ -113,7 +113,7 @@ async function updateEmployee(req, res, next) {
 }
 
 // Controller for deleting an employee
-async function deleteEmployee(req, res, next) {
+async function deleteEmployee(req, res) {
   const employeeId = req.params.id;
 
   try {

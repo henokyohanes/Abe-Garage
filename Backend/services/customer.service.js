@@ -70,7 +70,7 @@ const getAllCustomers = async () => {
     customer_info.active_customer_status, customer_identifier.customer_email, customer_identifier.customer_phone_number, customer_identifier.customer_added_date 
     FROM customer_info 
     INNER JOIN customer_identifier 
-    ON customer_info.customer_id = customer_identifier.customer_id;`
+    ON customer_info.customer_id = customer_identifier.customer_id ORDER BY customer_info.customer_id DESC;`
   );
   return rows;
 };
@@ -89,7 +89,6 @@ const getCustomerById = async (id) => {
 
 // Update customer information
 const updateCustomer = async (id, customerData) => {
-  console.log("Updating customer with id:", id, customerData);
 
   // Destructure the required fields from customerData
   const {
