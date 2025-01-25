@@ -113,7 +113,9 @@ LEFT JOIN
 LEFT JOIN 
     employee_info ei ON o.employee_id = ei.employee_id
 LEFT JOIN 
-    order_status os ON o.order_id = os.order_id;
+    order_status os ON o.order_id = os.order_id
+ORDER BY 
+    o.order_date DESC;
 
     `);
     return orders;
