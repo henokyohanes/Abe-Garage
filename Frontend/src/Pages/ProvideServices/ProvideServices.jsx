@@ -46,7 +46,7 @@ const ProvideServices = () => {
     };
 
     const handleEdit = (id) => {
-        navigate(`/admin/edit-service/${id}`);
+        navigate(`/edit-service/${id}`);
     };
 
     const handleDelete = async (id) => {

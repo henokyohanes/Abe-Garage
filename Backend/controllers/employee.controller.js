@@ -115,6 +115,7 @@ async function updateEmployee(req, res) {
 // Controller for deleting an employee
 async function deleteEmployee(req, res) {
   const employeeId = req.params.id;
+  console.log(employeeId);
 
   try {
     // Call the service function to delete the employee

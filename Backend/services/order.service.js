@@ -225,6 +225,38 @@ WHERE
   }
 };
 
+//get all orders for a specific employee
+const getOrdersByEmployeeId = async (employee_id) => {
+  try {
+    const orders = await db.query(
+      `
+      SELECT 
+        o.order_id,
+        o.customer_id,
+        o.vehicle_id,
+        o.order_date,
+        os.order_status,
+        oi.order_total_price,
+        cvi.vehicle_year,
+        cvi.vehicle_make,
+        cvi.vehicle_model
+      FROM orders o
+      LEFT JOIN order_status os ON o.order_id = os.order_id
+      LEFT JOIN order_info oi ON o.order_id = oi.order_id
+      LEFT JOIN customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+      WHERE o.employee_id = ? 
+      ORDER BY o.order_date DESC;
+      `,
+      [employee_id]
+    );
+
+    return orders; // Return the list of orders
+  } catch (error) {
+    console.error("Error retrieving orders for employee:", error);
+    throw error;
+  }
+};
+
 // Update order and its associated services
 const updateOrder = async (updatedData) => {
 
@@ -442,4 +474,4 @@ const cancelAdditionalRequest = async (orderId, additionalRequest, additionalReq
     }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};
+module.exports = {createOrder, getAllOrders, getOrderById, getOrdersByEmployeeId, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};

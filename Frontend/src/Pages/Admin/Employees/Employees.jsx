@@ -12,6 +12,9 @@ import styles from "./Employees.module.css";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
+    const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -20,10 +23,10 @@ const EmployeeList = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchEmployeeData();
+        fetchEmployeesData();
     }, []);
 
-    const fetchEmployeeData = async () => {
+    const fetchEmployeesData = async () => {
         try {
             const response = await employeeService.fetchEmployees();
             setEmployees(response.data);
@@ -32,20 +35,6 @@ const EmployeeList = () => {
             setError(err.message || "Failed to fetch data");
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this employee?"
-        );
-        if (confirmDelete) {
-            try {
-                await employeeService.deleteEmployee(id);
-                window.location.reload();
-            } catch (err) {
-                alert(err.message || "Failed to delete employee");
-            }
         }
     };
 
@@ -72,14 +61,52 @@ const EmployeeList = () => {
     };
 
     const formatDate = (date) => {
-      if (!date) return "";
-      const d = new Date(date);
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      const year = d.getFullYear();
-      return `${month}-${day}-${year}`;
+        if (!date) return "";
+        const d = new Date(date);
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        const year = d.getFullYear();
+        return `${month}-${day}-${year}`;
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setSelectedEmployee((prevEmployee) => ({
+            ...prevEmployee,
+            [name]: value,
+        }));
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await employeeService.fetchEmployeeById(id);
+            const employee = response.data;
+            setSelectedEmployee(response.data);
+
+            if (employee.company_role_id !== 1) {
+                if (employee.employee_email === "admin@admin.com") {
+                    alert("You cannot delete this employee");
+                    return;
+                } else {
+                    setShow(true);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            alert(err.message || "Failed to fetch employee");
+            return;
+        }
+    };
+
+    useEffect(() => {
+        const filterEmployees = employees.filter(
+          (employee) =>
+            (employee.company_role_id === 2 ||
+              employee.company_role_id === 3) &&
+            employee.employee_id !== selectedEmployee?.employee_id
+        );
+        setFilteredEmployees(filterEmployees);
+    }, [selectedEmployee, employees]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -106,7 +133,7 @@ const EmployeeList = () => {
                         <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
                     </div>
                 </div> */}
-                <div className={`${styles.employeeList} col-12 col-lg-10`}>
+                {!show && <div className={`${styles.employeeList} col-12 col-lg-10`}>
                     <h2>Employees <span>____</span></h2>
                     <table className={styles.table}>
                         <thead>
@@ -162,7 +189,36 @@ const EmployeeList = () => {
                             Next
                         </button>
                     </div>
-                </div>
+                </div>}
+                {show && <div className={`${styles.employeeList} col-12 col-lg-10`}>
+                    <h2>Update Orders Recipient Employee <span>____</span></h2>
+                    <p>update all orders associated to this employee before deleting the employee by selecting new orders recipient employee.</p>
+                    <p><strong>Orders Recipient Employee:</strong> {selectedEmployee.employee_first_name} {selectedEmployee.employee_last_name}</p>
+                    <div className={styles.formGroup}>
+                        <strong>New Orders Recipient Employee: </strong>
+                        {/* <select name="company_role_id" value={selectedEmployee.company_role_id} onChange={handleChange} className={styles.formControl} >
+                            <option value="1">Employee</option>
+                            <option value="2">Manager</option>
+                            <option value="3">Admin</option>
+                        </select> */}
+                        <select
+                            name="newOrdersRecipient"
+                            value={selectedEmployee?.employee_id || ""}
+                            onChange={handleChange}
+                            className={styles.formControl}
+                        >
+                            <option value="" disabled>
+                                Select an employee
+                            </option>
+                            {filteredEmployees.map((employee) => (
+                                <option key={employee.employee_id} value={employee.employee_id}>
+                                    {employee.employee_first_name} {employee.employee_last_name}
+                                </option>
+                            ))}
+                        </select>
+
+                    </div>
+                </div>}
             </div>
         </Layout>
     );

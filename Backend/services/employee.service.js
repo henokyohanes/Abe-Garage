@@ -189,7 +189,7 @@ async function updateEmployee(employeeId, employeeData) {
   }
 }
 
-// Service function to delete an employee
+// Service function to delete an employee0
 async function deleteEmployee(employeeId) {
   // Verify the employee exists
   const checkQuery = "SELECT * FROM employee WHERE employee_id = ?";

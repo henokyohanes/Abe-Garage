@@ -142,6 +142,39 @@ const getOrderById = async (req, res) => {
   }
 };
 
+// get order by employee id
+const getOrdersByEmployeeId = async (req, res) => {
+  try {
+    const { employee_id } = req.params;
+
+    // Validate employee ID
+    if (!employee_id || isNaN(employee_id)) {
+      return res.status(400).json({
+        status: "fail",
+        error: "Bad Request",
+        message: "The employee ID provided is invalid or missing.",
+      });
+    }
+
+    // Fetch orders for the employee
+    const orders = await orderService.getOrdersByEmployeeId(employee_id);
+
+    // Return success response
+    return res.status(200).json({
+      status: "success",
+      data: orders,
+    });
+  } catch (error) { 
+    console.error("Error retrieving orders for employee:", error.message);
+    return res.status(500).json({
+      status: "fail", 
+      error: "Internal Server Error",
+      message:  
+        "There was an issue retrieving the orders for the employee. Please try again later.",
+    });
+  }
+};
+
 // Update order by ID
 const updateOrder = async (req, res) => {
   try {
@@ -306,4 +339,4 @@ const cancelAdditionalRequest = async (req, res) => {
     }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};
+module.exports = {createOrder, getAllOrders, getOrderById, getOrdersByEmployeeId, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};
