@@ -14,6 +14,7 @@ const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [filteredEmployees, setFilteredEmployees] = useState([]);
+    const [newOrdersRecipient, setNewOrdersRecipient] = useState("");
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -69,26 +70,23 @@ const EmployeeList = () => {
         return `${month}-${day}-${year}`;
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSelectedEmployee((prevEmployee) => ({
-            ...prevEmployee,
-            [name]: value,
-        }));
-    };
-
+    
     const handleDelete = async (id) => {
         try {
             const response = await employeeService.fetchEmployeeById(id);
             const employee = response.data;
             setSelectedEmployee(response.data);
-
+            
             if (employee.company_role_id !== 1) {
                 if (employee.employee_email === "admin@admin.com") {
                     alert("You cannot delete this employee");
                     return;
                 } else {
-                    setShow(true);
+                    const confirmation = window.confirm("before deleting this employee, you have to update orders associated with this employee first");
+                    if (confirmation) {
+                        
+                        setShow(true);
+                    }
                 }
             }
         } catch (err) {
@@ -97,16 +95,42 @@ const EmployeeList = () => {
             return;
         }
     };
-
+    
     useEffect(() => {
         const filterEmployees = employees.filter(
-          (employee) =>
-            (employee.company_role_id === 2 ||
-              employee.company_role_id === 3) &&
-            employee.employee_id !== selectedEmployee?.employee_id
-        );
-        setFilteredEmployees(filterEmployees);
-    }, [selectedEmployee, employees]);
+            (employee) =>
+                (employee.company_role_id === 2 ||
+                    employee.company_role_id === 3) &&
+                    employee.employee_id !== selectedEmployee?.employee_id
+                );
+                setFilteredEmployees(filterEmployees);
+            }, [selectedEmployee, employees]);
+            
+            const handleUpdate = () => {
+                if (!newOrdersRecipient) {
+                    alert("Please select a new recipient");
+                    return;
+                }
+                
+                // Perform further actions with newOrdersRecipient
+                console.log("Selected new recipient ID:", newOrdersRecipient);
+                
+            };
+            
+            const updateEmployeeForOrders = async () => {
+                try {
+                    const response = await employeeService.updateEmployeeOrders(
+
+                      selectedEmployee?.employee_id,
+                      newOrdersRecipient
+                    );
+                    // fetchEmployeesData();
+                    // setShow(false);
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message || "Failed to update employee");
+                }
+            };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -203,8 +227,8 @@ const EmployeeList = () => {
                         </select> */}
                         <select
                             name="newOrdersRecipient"
-                            value={selectedEmployee?.employee_id || ""}
-                            onChange={handleChange}
+                            value={newOrdersRecipient}
+                            onChange={(e) => setNewOrdersRecipient(e.target.value)}
                             className={styles.formControl}
                         >
                             <option value="" disabled>
@@ -216,6 +240,8 @@ const EmployeeList = () => {
                                 </option>
                             ))}
                         </select>
+
+                        <div><button onClick={handleUpdate} className={styles.button}>Update</button></div>
 
                     </div>
                 </div>}

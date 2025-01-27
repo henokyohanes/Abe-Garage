@@ -73,6 +73,21 @@ export const updateEmployee = async (id, updatedData) => {
     }
 };
 
+// Function to update orders associated with an employee
+export const updateEmployeeOrders = async (id, updatedData) => {
+    try {
+        const response = await axios.put(
+            `${api_url}/api/employee/orders/${id}`,
+            updatedData,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error updating employee orders:", error);
+        throw error.response?.data?.message || "Failed to update employee orders";
+    }
+};
+
 // Function to delete an employee by ID
 export const deleteEmployee = async (id) => {
     try {
