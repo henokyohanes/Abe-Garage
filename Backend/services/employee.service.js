@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 async function checkIfEmployeeExists(email) {
   const query = "SELECT * FROM employee WHERE employee_email = ? ";
   const rows = await db.query(query, [email]);
-  console.log(rows);
+  // console.log(rows);
   if (rows.length > 0) {
     return true;
   }
@@ -30,7 +30,7 @@ async function createEmployee(employee) {
       employee.employee_email,
       employee.active_employee,
     ]);
-    console.log(rows);
+    // console.log(rows);
     if (rows.affectedRows !== 1) {
       return false;
     }
@@ -91,7 +91,8 @@ const getEmployeeById = async (id) => {
       employee.*, 
       employee_info.*, 
       employee_role.*, 
-      company_roles.*
+      company_roles.*,
+      orders.order_id
     FROM 
       employee
     INNER JOIN 
@@ -106,6 +107,10 @@ const getEmployeeById = async (id) => {
       company_roles 
     ON 
       employee_role.company_role_id = company_roles.company_role_id
+    LEFT JOIN 
+      orders 
+    ON 
+      employee.employee_id = orders.employee_id
     WHERE 
       employee.employee_id = ?
   `,
@@ -116,7 +121,7 @@ const getEmployeeById = async (id) => {
 
 // A function to update an employee
 async function updateEmployee(employeeId, employeeData) {
-  console.log(employeeData);
+  // console.log(employeeData);
   const { employee_email, active_employee, employee_first_name, employee_last_name, company_role_id, employee_phone } = employeeData;
   try {
     // Check if the employee exists
@@ -189,7 +194,15 @@ async function updateEmployee(employeeId, employeeData) {
   }
 }
 
-// Service function to delete an employee0
+// A function to update an order recipient employee
+async function updateOrderRecipientEmployee(id, updatedId) {
+  // console.log("ferid", id, "ferupdatedId", updatedId);
+  const updateQuery = "UPDATE orders SET employee_id = ? WHERE employee_id = ?";
+  const result = await db.query(updateQuery, [updatedId, id]);
+  return result.affectedRows === 1; // Return true if update was successful
+}
+
+// Service function to delete an employee
 async function deleteEmployee(employeeId) {
   // Verify the employee exists
   const checkQuery = "SELECT * FROM employee WHERE employee_id = ?";
@@ -200,11 +213,26 @@ async function deleteEmployee(employeeId) {
     return false;
   }
 
-  // Proceed with deletion
-  const deleteQuery = "DELETE FROM employee WHERE employee_id = ?";
-  const result = await db.query(deleteQuery, [employeeId]);
+  // Delete related records from child tables first
+  const deleteEmployeeInfoQuery = "DELETE FROM employee_info WHERE employee_id = ?";
+  const deleteEmployeePassQuery = "DELETE FROM employee_pass WHERE employee_id = ?";
+  const deleteEmployeeRoleQuery = "DELETE FROM employee_role WHERE employee_id = ?";
 
-  return result.affectedRows === 1; // Return true if deletion was successful
+  try {
+    await db.query(deleteEmployeeInfoQuery, [employeeId]);
+    await db.query(deleteEmployeePassQuery, [employeeId]);
+    await db.query(deleteEmployeeRoleQuery, [employeeId]);
+
+    // Delete the employee record from the parent table
+    const deleteEmployeeQuery = "DELETE FROM employee WHERE employee_id = ?";
+    const result = await db.query(deleteEmployeeQuery, [employeeId]);
+
+    return result.affectedRows === 1; // Return true if the deletion was successful
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    throw new Error("Failed to delete employee");
+  }
 }
 
-module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getEmployeeById, getAllEmployees, updateEmployee, deleteEmployee};
+
+module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getEmployeeById, getAllEmployees, updateEmployee, deleteEmployee, updateOrderRecipientEmployee};

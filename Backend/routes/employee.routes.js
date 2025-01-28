@@ -15,6 +15,9 @@ router.get("/api/employee/:id", [authMiddleware.verifyToken, authMiddleware.isAd
 // Create a route to handle the update employee request on put
 router.put("/api/employee/:id", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.updateEmployee);
 
+// Create a route to handle the update orders recipient employee request on put
+router.put("/api/employee/orders/:id/:updatedId", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.updateOrderRecipientEmployee);
+
 // Create a route to handle the delete employee request on delete
 router.delete("/api/employee/:id", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.deleteEmployee);
 

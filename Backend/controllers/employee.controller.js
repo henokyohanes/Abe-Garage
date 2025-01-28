@@ -1,3 +1,4 @@
+const e = require("express");
 const employeeService = require("../services/employee.service");
 
 // Create the add employee controller
@@ -112,6 +113,24 @@ async function updateEmployee(req, res) {
   }
 }
 
+// Controller for updating an order recipient employee
+async function updateOrderRecipientEmployee(req, res) {
+  const id = req.params.id;
+  const updatedId = req.params.updatedId;
+
+  try {
+    // Call the service function to update the order recipient employee
+    const result = await employeeService.updateOrderRecipientEmployee(id, updatedId);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    if (err.message === "Employee not found.") {
+      return res.status(404).json({ message: err.message });
+    }
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 // Controller for deleting an employee
 async function deleteEmployee(req, res) {
   const employeeId = req.params.id;
@@ -133,4 +152,4 @@ async function deleteEmployee(req, res) {
   }
 }
 
-module.exports = { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee };
+module.exports = { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee, updateOrderRecipientEmployee };

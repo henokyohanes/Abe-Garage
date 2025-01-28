@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Contexts/AuthContext";
-import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import employeeService from "../../../services/employee.service";
@@ -15,13 +14,14 @@ const EmployeeList = () => {
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [filteredEmployees, setFilteredEmployees] = useState([]);
     const [newOrdersRecipient, setNewOrdersRecipient] = useState("");
-    const [show, setShow] = useState(false);
+    const [showUpdateSection, setShowUpdateSection] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const { isAdmin } = useAuth();
-    const itemsPerPage = 10;
     const navigate = useNavigate();
+
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchEmployeesData();
@@ -32,7 +32,6 @@ const EmployeeList = () => {
             const response = await employeeService.fetchEmployees();
             setEmployees(response.data);
         } catch (err) {
-            console.error(err);
             setError(err.message || "Failed to fetch data");
         } finally {
             setLoading(false);
@@ -47,11 +46,66 @@ const EmployeeList = () => {
         navigate(`/edit-employee/${id}`);
     };
 
-    const totalPages = Math.ceil(employees.length / itemsPerPage);
-    const displayedEmployees = employees.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
+    const handleDelete = async (id) => {
+        try {
+            const response = await employeeService.fetchEmployeeById(id);
+            const employee = response.data;
+            setSelectedEmployee(employee);
+
+            if (employee.order_id) {
+                if (employee.employee_email === "admin@admin.com") {
+                    alert("You cannot delete this employee.");
+                    return;
+                }
+
+                const confirmation = window.confirm(
+                    "Before deleting this employee, you must reassign their orders."
+                );
+
+                if (confirmation) {
+                    setShowUpdateSection(true);
+                }
+            } else {
+                const confirmation = window.confirm(
+                    "Are you sure you want to delete this employee?"
+                );
+                if (confirmation) {
+                    await employeeService.deleteEmployee(id);
+                    fetchEmployeesData();
+                }
+            }
+        } catch (err) {
+            alert(err.message || "Failed to fetch employee.");
+        }
+    };
+
+    useEffect(() => {
+        const filterEmployees = employees.filter(
+            (employee) =>
+                (employee.company_role_id === 2 || employee.company_role_id === 3) &&
+                employee.employee_id !== selectedEmployee?.employee_id
+        );
+        setFilteredEmployees(filterEmployees);
+    }, [selectedEmployee, employees]);
+
+    const handleUpdate = async () => {
+        if (!newOrdersRecipient) {
+            alert("Please select a new recipient.");
+            return;
+        }
+
+        try {
+            await employeeService.updateEmployeeOrders(
+                selectedEmployee?.employee_id,
+                newOrdersRecipient
+            );
+            fetchEmployeesData();
+            setShowUpdateSection(false);
+            alert("Orders reassigned successfully.");
+        } catch (err) {
+            alert(err.message || "Failed to update orders.");
+        }
+    };
 
     const handlePageChange = (direction) => {
         if (direction === "next" && currentPage < totalPages) {
@@ -70,67 +124,11 @@ const EmployeeList = () => {
         return `${month}-${day}-${year}`;
     };
 
-    
-    const handleDelete = async (id) => {
-        try {
-            const response = await employeeService.fetchEmployeeById(id);
-            const employee = response.data;
-            setSelectedEmployee(response.data);
-            
-            if (employee.company_role_id !== 1) {
-                if (employee.employee_email === "admin@admin.com") {
-                    alert("You cannot delete this employee");
-                    return;
-                } else {
-                    const confirmation = window.confirm("before deleting this employee, you have to update orders associated with this employee first");
-                    if (confirmation) {
-                        
-                        setShow(true);
-                    }
-                }
-            }
-        } catch (err) {
-            console.error(err);
-            alert(err.message || "Failed to fetch employee");
-            return;
-        }
-    };
-    
-    useEffect(() => {
-        const filterEmployees = employees.filter(
-            (employee) =>
-                (employee.company_role_id === 2 ||
-                    employee.company_role_id === 3) &&
-                    employee.employee_id !== selectedEmployee?.employee_id
-                );
-                setFilteredEmployees(filterEmployees);
-            }, [selectedEmployee, employees]);
-            
-            const handleUpdate = () => {
-                if (!newOrdersRecipient) {
-                    alert("Please select a new recipient");
-                    return;
-                }
-                
-                // Perform further actions with newOrdersRecipient
-                console.log("Selected new recipient ID:", newOrdersRecipient);
-                
-            };
-            
-            const updateEmployeeForOrders = async () => {
-                try {
-                    const response = await employeeService.updateEmployeeOrders(
-
-                      selectedEmployee?.employee_id,
-                      newOrdersRecipient
-                    );
-                    // fetchEmployeesData();
-                    // setShow(false);
-                } catch (err) {
-                    console.error(err);
-                    alert(err.message || "Failed to update employee");
-                }
-            };
+    const totalPages = Math.ceil(employees.length / itemsPerPage);
+    const displayedEmployees = employees.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -142,109 +140,118 @@ const EmployeeList = () => {
                     <AdminMenu />
                 </div>
                 <AdminMenuMobile />
-                {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
-                    <div className={styles.adminMenuTitle}>
-                        <h2>Admin Menu</h2>
-                    </div>
-                    <div className={styles.listGroup}>
-                        <Link to="/admin/dashboard" className={styles.listGroupItem}>Dashboard</Link>
-                        <Link to="/admin/orders" className={styles.listGroupItem}>Orders</Link>
-                        <Link to="/admin/new-order" className={styles.listGroupItem}>New order</Link>
-                        <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>
-                        <Link to="/admin/employees" className={styles.listGroupItem}>Employees</Link>
-                        <Link to="/admin/add-customer" className={styles.listGroupItem}>Add customer</Link>
-                        <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
-                        <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
-                    </div>
-                </div> */}
-                {!show && <div className={`${styles.employeeList} col-12 col-lg-10`}>
-                    <h2>Employees <span>____</span></h2>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>Active</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Added Date</th>
-                                <th>Role</th>
-                                {isAdmin && <th>Actions</th>}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {displayedEmployees.length > 0 ? (
-                                displayedEmployees.map((employee) => (
-                                    <tr key={employee.employee_id}>
-                                        <td>{employee.active_employee ? "Yes" : "No"}</td>
-                                        <td>{employee.employee_first_name}</td>
-                                        <td>{employee.employee_last_name}</td>
-                                        <td>{employee.employee_email}</td>
-                                        <td>{employee.employee_phone}</td>
-                                        <td>{formatDate(employee.added_date)}</td>
-                                        <td>{employee.company_role_name}</td>
-                                        {isAdmin && <td>
-                                            <button onClick={() => handleEdit(employee.employee_id)}><FaEdit /></button>
-                                            <button onClick={() => handleDelete(employee.employee_id)}><MdDelete /></button>
-                                        </td>}
-                                    </tr>
-                                ))
-                            ) : (
+
+                {!showUpdateSection && (
+                    <div className={`${styles.employeeList} col-12 col-lg-10`}>
+                        <h2>
+                            Employees <span>____</span>
+                        </h2>
+                        <table className={styles.table}>
+                            <thead>
                                 <tr>
-                                    <td colSpan="8">No employees found</td>
+                                    <th>Active</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Added Date</th>
+                                    <th>Role</th>
+                                    {isAdmin && <th>Actions</th>}
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <div className={styles.pagination}>
-                        <button
-                            onClick={() => handlePageChange("prev")}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            Page {currentPage} of {totalPages}
-                        </span>
-                        <button
-                            onClick={() => handlePageChange("next")}
-                            disabled={currentPage === totalPages}
-                        >
-                            Next
-                        </button>
+                            </thead>
+                            <tbody>
+                                {displayedEmployees.length > 0 ? (
+                                    displayedEmployees.map((employee) => (
+                                        <tr key={employee.employee_id}>
+                                            <td>{employee.active_employee ? "Yes" : "No"}</td>
+                                            <td>{employee.employee_first_name}</td>
+                                            <td>{employee.employee_last_name}</td>
+                                            <td>{employee.employee_email}</td>
+                                            <td>{employee.employee_phone}</td>
+                                            <td>{formatDate(employee.added_date)}</td>
+                                            <td>{employee.company_role_name}</td>
+                                            {isAdmin && (
+                                                <td>
+                                                    <button
+                                                        onClick={() => handleEdit(employee.employee_id)}
+                                                    >
+                                                        <FaEdit />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(employee.employee_id)}
+                                                    >
+                                                        <MdDelete />
+                                                    </button>
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="8">No employees found</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                        <div className={styles.pagination}>
+                            <button
+                                onClick={() => handlePageChange("prev")}
+                                disabled={currentPage === 1}
+                            >
+                                Previous
+                            </button>
+                            <span>
+                                Page {currentPage} of {totalPages}
+                            </span>
+                            <button
+                                onClick={() => handlePageChange("next")}
+                                disabled={currentPage === totalPages}
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
-                </div>}
-                {show && <div className={`${styles.employeeList} col-12 col-lg-10`}>
-                    <h2>Update Orders Recipient Employee <span>____</span></h2>
-                    <p>update all orders associated to this employee before deleting the employee by selecting new orders recipient employee.</p>
-                    <p><strong>Orders Recipient Employee:</strong> {selectedEmployee.employee_first_name} {selectedEmployee.employee_last_name}</p>
-                    <div className={styles.formGroup}>
-                        <strong>New Orders Recipient Employee: </strong>
-                        {/* <select name="company_role_id" value={selectedEmployee.company_role_id} onChange={handleChange} className={styles.formControl} >
-                            <option value="1">Employee</option>
-                            <option value="2">Manager</option>
-                            <option value="3">Admin</option>
-                        </select> */}
-                        <select
-                            name="newOrdersRecipient"
-                            value={newOrdersRecipient}
-                            onChange={(e) => setNewOrdersRecipient(e.target.value)}
-                            className={styles.formControl}
-                        >
-                            <option value="" disabled>
-                                Select an employee
-                            </option>
-                            {filteredEmployees.map((employee) => (
-                                <option key={employee.employee_id} value={employee.employee_id}>
-                                    {employee.employee_first_name} {employee.employee_last_name}
+                )}
+
+                {showUpdateSection && (
+                    <div className={`${styles.employeeList} col-12 col-lg-10`}>
+                        <h2>
+                            Update Orders Recipient <span>____</span>
+                        </h2>
+                        <p>
+                            Reassign all orders associated with{" "}
+                            <strong>
+                                {selectedEmployee?.employee_first_name}{" "}
+                                {selectedEmployee?.employee_last_name}
+                            </strong>{" "}
+                            before deletion.
+                        </p>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="newOrdersRecipient">
+                                <strong>Select New Recipient:</strong>
+                            </label>
+                            <select
+                                id="newOrdersRecipient"
+                                value={newOrdersRecipient}
+                                onChange={(e) => setNewOrdersRecipient(e.target.value)}
+                                className={styles.formControl}
+                            >
+                                <option value="" disabled>
+                                    Select an employee
                                 </option>
-                            ))}
-                        </select>
-
-                        <div><button onClick={handleUpdate} className={styles.button}>Update</button></div>
-
+                                {filteredEmployees.map((employee) => (
+                                    <option key={employee.employee_id} value={employee.employee_id}>
+                                        {employee.employee_first_name}{" "}
+                                        {employee.employee_last_name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button onClick={handleUpdate} className={styles.button}>
+                                Update
+                            </button>
+                        </div>
                     </div>
-                </div>}
+                )}
             </div>
         </Layout>
     );
