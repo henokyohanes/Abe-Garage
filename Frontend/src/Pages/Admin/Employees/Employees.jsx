@@ -52,26 +52,28 @@ const EmployeeList = () => {
             const employee = response.data;
             setSelectedEmployee(employee);
 
-            if (employee.order_id) {
-                if (employee.employee_email === "admin@admin.com") {
-                    alert("You cannot delete this employee.");
-                    return;
-                }
+            const confirmation = window.confirm(
+                "Are you sure you want to delete this employee?"
+            );
+            if (confirmation) {
 
-                const confirmation = window.confirm(
-                    "Before deleting this employee, you must reassign their orders."
-                );
+                if (employee.order_id) {
+                    if (employee.employee_email === "admin@admin.com") {
+                        alert("You cannot delete this employee.");
+                        return;
+                    }
 
-                if (confirmation) {
-                    setShowUpdateSection(true);
-                }
-            } else {
-                const confirmation = window.confirm(
-                    "Are you sure you want to delete this employee?"
-                );
-                if (confirmation) {
+                    const confirmation = window.confirm(
+                        "Before deleting this employee, you must reassign orders recipient to another employee."
+                    );
+
+                    if (confirmation) {
+                        setShowUpdateSection(true);
+                    }
+                } else {
                     await employeeService.deleteEmployee(id);
                     fetchEmployeesData();
+                    alert("Employee deleted successfully.");
                 }
             }
         } catch (err) {
@@ -95,17 +97,24 @@ const EmployeeList = () => {
         }
 
         try {
+            // Reassign the orders
             await employeeService.updateEmployeeOrders(
                 selectedEmployee?.employee_id,
                 newOrdersRecipient
             );
+
+            // Now, delete the employee after successful reassignment
+            await employeeService.deleteEmployee(selectedEmployee?.employee_id);
+            alert("orders reassigned and employee deleted successfully.");
+
+            // Refresh the employee data
             fetchEmployeesData();
             setShowUpdateSection(false);
-            alert("Orders reassigned successfully.");
         } catch (err) {
-            alert(err.message || "Failed to update orders.");
+            alert(err.message || "Failed to update orders or delete employee.");
         }
     };
+
 
     const handlePageChange = (direction) => {
         if (direction === "next" && currentPage < totalPages) {
@@ -219,16 +228,16 @@ const EmployeeList = () => {
                             Update Orders Recipient <span>____</span>
                         </h2>
                         <p>
-                            Reassign all orders associated with{" "}
+                            Reassign all orders associated with 
                             <strong>
-                                {selectedEmployee?.employee_first_name}{" "}
-                                {selectedEmployee?.employee_last_name}
-                            </strong>{" "}
+                                {" "}{selectedEmployee?.employee_first_name}{" "}
+                                {selectedEmployee?.employee_last_name}{" "}
+                            </strong>
                             before deletion.
                         </p>
-                        <div className={styles.formGroup}>
-                            <label htmlFor="newOrdersRecipient">
-                                <strong>Select New Recipient:</strong>
+                        <div className={styles.newRecipient}>
+                            <label>
+                                Select New Recipient:
                             </label>
                             <select
                                 id="newOrdersRecipient"
@@ -246,9 +255,9 @@ const EmployeeList = () => {
                                     </option>
                                 ))}
                             </select>
-                            <button onClick={handleUpdate} className={styles.button}>
+                            <div onClick={handleUpdate} className={styles.button}>
                                 Update
-                            </button>
+                            </div>
                         </div>
                     </div>
                 )}
