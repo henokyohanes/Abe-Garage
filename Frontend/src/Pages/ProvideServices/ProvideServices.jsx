@@ -56,7 +56,7 @@ const ProvideServices = () => {
         if (confirmDelete) {
             try {
                 await serviceService.deleteService(id);
-                setServices(customers.filter((service) => service.id !== id));
+                setServices(services.filter((service) => service.service_id !== id));
             } catch (err) {
                 alert(err.message || "Failed to delete customer");
             }

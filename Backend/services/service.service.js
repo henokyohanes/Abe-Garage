@@ -86,12 +86,21 @@ const updateServiceById = async (id, service_name, service_description) => {
 // Delete a service by ID
 const deleteServiceById = async (id) => {
   try {
-    const [result] = await db.execute('DELETE FROM services WHERE id = ?', [id]);
+    // Step 1: Delete related records from order_services first
+    await db.query(`DELETE FROM order_services WHERE service_id = ?`, [id]);
+
+    // Step 2: Delete from common_services
+    const result = await db.query(
+      `DELETE FROM common_services WHERE service_id = ?`,
+      [id]
+    );
+
     return result.affectedRows > 0;
   } catch (error) {
-    console.error('Error deleting service by ID:', error.message);
+    console.error("Error deleting service by ID:", error.message);
     throw error;
   }
 };
+
 
 module.exports = {createService, fetchAllServices, fetchServiceById, updateServiceById, deleteServiceById};

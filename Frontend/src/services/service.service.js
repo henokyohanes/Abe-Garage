@@ -61,7 +61,7 @@ export const updateService = async (id, serviceData) => {
 // function to delete a service
 export const deleteService = async (id) => {
     try {
-        const response = await axios.delete(`${api_url}/services/${id}`, getAuthHeaders());
+        const response = await axios.delete(`${api_url}/api/service/${id}`, getAuthHeaders());
         return response.data;
     } catch (error) {
         console.error(`Error deleting service with ID ${id}:`, error);
