@@ -15,4 +15,7 @@ router.get('/api/customer/:id', [authMiddleware.verifyToken, authMiddleware.isAd
 // Update customer endpoint
 router.put('/api/update-customer/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], customerController.updateCustomer);
 
+// Delete customer endpoint
+router.delete('/api/delete-customer/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], customerController.deleteCustomer);
+
 module.exports = router;

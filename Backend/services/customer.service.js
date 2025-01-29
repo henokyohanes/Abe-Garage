@@ -78,12 +78,18 @@ const getAllCustomers = async () => {
 // Get a customer by ID
 const getCustomerById = async (id) => {
   const rows = await db.query(
-    `SELECT customer_info.*, customer_identifier.* 
-     FROM customer_info 
-     INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id
-     WHERE customer_info.customer_id = ?`,
+    `SELECT customer_info.*, 
+          customer_identifier.*, 
+          customer_vehicle_info.vehicle_id,
+          orders.order_id
+   FROM customer_info 
+   INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id
+   LEFT JOIN customer_vehicle_info ON customer_info.customer_id = customer_vehicle_info.customer_id
+   LEFT JOIN orders ON customer_info.customer_id = orders.customer_id
+   WHERE customer_info.customer_id = ?`,
     [id]
   );
+
   return rows[0]; // Return the first row if found
 };
 
@@ -154,6 +160,22 @@ const updateCustomer = async (id, customerData) => {
   }
 };
 
+// delete a customer
+const deleteCustomer = async (id) => {
+  try {
+    const result = await db.query(
+      `DELETE customer_info, customer_identifier 
+   FROM customer_info 
+   INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id
+   WHERE customer_info.customer_id = ?`,
+      [id]
+    );
 
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    throw new Error("Failed to delete customer");
+  }
+};
 
-module.exports = {findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById, updateCustomer,};
+module.exports = {findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById, updateCustomer, deleteCustomer};

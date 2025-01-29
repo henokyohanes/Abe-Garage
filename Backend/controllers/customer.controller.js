@@ -203,4 +203,44 @@ const updateCustomer = async (req, res) => {
   }
 };
 
-module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById, updateCustomer};
+// delete customer by ID    
+const deleteCustomer = async (req, res) => {
+  const { id } = req.params;
+
+  // Validate ID
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      status: "fail",
+      error: "Bad Request",
+      message: "The customer ID provided is invalid or missing",
+    });
+  }
+
+  try {
+    // Check if customer exists
+    const existingCustomer = await customerService.getCustomerById(id);
+    if (!existingCustomer) {
+      return res.status(404).json({
+        status: "fail",
+        error: "Customer Not Found",
+        message: "The customer ID provided does not exist.",
+      });
+    }
+
+    await customerService.deleteCustomer(id);
+    return res.status(200).json({
+      status: "success",
+      message: "Customer deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting customer:", err.message);
+    return res.status(500).json({
+      status: "fail",
+      error: "Internal Server Error",
+      message:
+        "There was an issue deleting the customer. Please try again later.",
+    });
+  }
+};
+
+module.exports = {validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById, updateCustomer, deleteCustomer};
