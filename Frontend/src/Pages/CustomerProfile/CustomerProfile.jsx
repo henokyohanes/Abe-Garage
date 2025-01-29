@@ -31,6 +31,7 @@ const CustomerProfile = () => {
             const customerData = await customerService.fetchCustomerById(parseInt(id));
             if (!customerData) throw new Error("Customer not found.");
             setCustomer(customerData.data);
+            console.log(customerData.data);
         } catch (error) {
             console.error("Error fetching customer data:", error);
         }
@@ -42,7 +43,7 @@ const CustomerProfile = () => {
             const vehicleData = await vehicleService.fetchVehiclesByCustomerId(parseInt(id));
             setVehicles(vehicleData.data);
         } catch (error) {
-            console.error("Error fetching vehicles:", error);
+            console.error("Error fetching vehicles:,", error);
         }
     };
 

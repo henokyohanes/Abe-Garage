@@ -77,7 +77,7 @@ export const updateCustomer = async (id, updatedData) => {
 export const deleteCustomer = async (id) => {
     try {
         const response = await axios.delete(
-            `${api_url}/api/customers/${id}`,
+            `${api_url}/api/delete-customer/${id}`,
             getAuthHeaders()
         );
         return response.data;

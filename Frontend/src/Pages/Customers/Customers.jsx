@@ -5,6 +5,8 @@ import { FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
 import customerService from "../../services/customer.service";
+import orderService from "../../services/order.service";
+import vehicleService from "../../services/vehicle.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
@@ -74,11 +76,29 @@ const Customers = () => {
     );
     if (confirmDelete) {
       try {
-        await customerService.deleteCustomer(id);
-        setCustomers(customers.filter((customer) => customer.id !== id));
-      } catch (err) {
-        alert(err.message || "Failed to delete customer");
-      }
+            const customerData = await customerService.fetchCustomerById(id);
+
+            if (customerData.data.order_id) {
+                console.log("customerData.data.order_id", customerData.data.order_id);
+
+                await orderService.deleteOrder(customerData.data.order_id);
+            }
+
+            if (customerData.data.vehicle_id) {
+                console.log("customerData.data.vehicle_id", customerData.data.vehicle_id);
+
+                await vehicleService.deleteVehicle(customerData.data.vehicle_id);
+            }
+          } catch (err) {
+            alert(err.message || "Failed to delete customer");
+          }
+          
+          try {
+            await customerService.deleteCustomer(id);
+            setCustomers(customers.filter((customer) => customer.customer_id !== id));
+          } catch (err) {
+            alert(err.message || "Failed to delete customer");
+          }
     }
   };
 
