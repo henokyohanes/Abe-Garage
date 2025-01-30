@@ -12,7 +12,7 @@
 }
 
 .nav span {
-    font-size: clamp(.7em, 3vw, 1.1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .home {

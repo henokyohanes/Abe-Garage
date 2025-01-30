@@ -17,6 +17,7 @@ const OrderDetails = () => {
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
                 setOrder(response.data[0]);
+                console.log(response.data[0]);
             } catch (error) {
                 console.error("Error fetching order details:", error);
             } finally {
@@ -58,10 +59,12 @@ const OrderDetails = () => {
     return (
         <Layout>
             <div className={`${styles.orderDetailsContainer} row g-0`}>
-                <div className="col-2 d-none d-lg-block">
+                <div className="d-none d-xl-block col-3">
                     <AdminMenu />
                 </div>
-                <AdminMenuMobile /> 
+                <div className="d-block d-xl-none">
+                    <AdminMenuMobile /> 
+                </div>
                 {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
                     <div className={styles.adminMenuTitle}>
                         <h2>Admin Menu</h2>
@@ -93,7 +96,7 @@ const OrderDetails = () => {
                         </Link>
                     </div>
                 </div> */}
-                <div className={`${styles.orderDetails} col-12 col-lg-9`}>
+                <div className={`${styles.orderDetails} col-12 col-xl-9`}>
                     <div className={styles.header}>
                         <h2>{order.customer_first_name} {order.customer_last_name} <span>____</span></h2>
                         <p className={`${styles.status} ${getStatusClass(order.order_status)}`}>
@@ -120,7 +123,7 @@ const OrderDetails = () => {
                     <div className={styles.servicesSection}>
                         <h6>{order.vehicle_make} {order.vehicle_model}</h6>
                         <h3>Requested Services</h3>
-                        {(order.services).map((order) => (
+                        {order.services ? ((order.services).map((order) => (
                             <div key={order.service_id} className={styles.service}>
                                 <div>
                                     <h4>{order.service_name}</h4>
@@ -130,14 +133,14 @@ const OrderDetails = () => {
                                     {getStatusText(order.service_completed)}
                                 </p>
                             </div>
-                        ))}
-                        <div className={styles.service}>
+                        ))) : <p className={styles.noServices}>No services requested or we stop performing the selected services.</p>}
+                        {order.additional_request && <div className={styles.service}>
                             <div>
                                 <h4>Additional Requests</h4>
                                 <p>{order.additional_request}</p>
                             </div>
                             <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`}>{getStatusText(order.additional_requests_completed)}</p>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>

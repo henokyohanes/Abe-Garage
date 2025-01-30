@@ -1,5 +1,6 @@
 import React from "react";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
 import Layout from "../../../Layout/Layout";
 import styles from "./Dashboard.module.css";
 
@@ -9,8 +10,11 @@ const Dashboard = () => {
         <Layout>
             <div className={`${styles.dashboard} row g-0`}>
                 {/* Sidebar Navigation */}
-                <div className="col-3">
+                <div className="d-none d-md-block col-3">
                     <AdminMenu />
+                </div>
+                <div className="d-block d-md-none">
+                    <AdminMenuMobile />
                 </div>
                 <div className={`${styles.main} col-9`}>
                     <h1>Dashboard <span>____</span></h1>

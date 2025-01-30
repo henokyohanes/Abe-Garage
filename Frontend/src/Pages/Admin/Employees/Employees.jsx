@@ -145,13 +145,15 @@ const EmployeeList = () => {
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
-                <div className="d-none d-lg-block col-2">
+                <div className="d-none d-xl-block col-2">
                     <AdminMenu />
                 </div>
-                <AdminMenuMobile />
+                <div className="d-block d-xl-none">
+                    <AdminMenuMobile />
+                </div>
 
                 {!showUpdateSection && (
-                    <div className={`${styles.employeeList} col-12 col-lg-10`}>
+                    <div className={`${styles.employeeList} col-12 col-xl-10`}>
                         <h2>
                             Employees <span>____</span>
                         </h2>

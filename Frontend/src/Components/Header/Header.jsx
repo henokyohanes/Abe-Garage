@@ -29,7 +29,7 @@ const Header = () => {
         <header className={Style.header}>
             <div className={Style.topBar}>
                 <div className={Style.leftTopBar}>
-                    <div className={`${Style.tagline} d-none d-md-block`}>
+                    <div className={`${Style.tagline} d-none d-lg-block`}>
                         Enjoy the Beso while we fix your car
                     </div>
                     <div className={Style.workingHours}>
@@ -40,13 +40,13 @@ const Header = () => {
                     {isLogged ? (
                         <div className={Style.contactInfo}>Welcome: <strong>{employee?.employee_first_name}</strong></div>
                     ) : (
-                        <div className={Style.contactInfo}>Call Abe: <strong>1800 456 7890</strong></div>
+                        <div className={Style.contactInfo}>Call: <strong>1800 456 7890</strong></div>
                     )}
                 </div>
             </div>
             <div className={Style.mainHeader}>
                 <NavDropdown
-                    title={<FaBars size={30} />}
+                    title={<FaBars size={35} />}
                     className="d-md-none"
                 >
                     <NavDropdown.Item as={Link} to="/">Home</NavDropdown.Item>

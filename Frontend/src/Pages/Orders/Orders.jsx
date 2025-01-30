@@ -88,10 +88,12 @@ const Orders = () => {
   return (
     <Layout>
       <div className={`${styles.ordersContainer} row g-0`}>
-        <div className="d-none d-lg-block col-2">
+        <div className="d-none d-xl-block col-3">
           <AdminMenu />
         </div>
-        <AdminMenuMobile />
+        <div className="d-block d-xl-none">
+          <AdminMenuMobile />
+        </div>
         {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
           <div className={styles.adminMenuTitle}>
             <h2>Admin Menu</h2>
@@ -123,7 +125,7 @@ const Orders = () => {
             </Link>
           </div>
         </div> */}
-        <div className={`${styles.ordersList} col-12 col-lg-10`}>
+        <div className={`${styles.ordersList} col-12 col-xl-9`}>
 
           <h2>
             Orders <span>____</span>

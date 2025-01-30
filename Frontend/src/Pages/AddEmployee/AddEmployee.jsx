@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Contexts/AuthContext';
 import employeeService from '../../services/employee.service';
 import AdminMenu from '../../Components/AdminMenu/AdminMenu';
+import AdminMenuMobile from '../../Components/AdminMenuMobile/AdminMenuMobile';
 import Layout from '../../Layout/Layout';
 import styles from "./AddEmployee.module.css";
 
@@ -91,10 +92,13 @@ const AddEmployee = () => {
   return (
     <Layout>
       <div className={`${styles.contactSection} row g-0`}>
-        <div className="col-3">
+        <div className="d-none d-md-block col-3">
           <AdminMenu />
         </div>
-        <div className="col-8">
+        <div className="d-block d-md-none">
+          <AdminMenuMobile />
+        </div>
+        <div className="col-9">
           <div className={styles.container}>
             <h2>Add a new employee <span>____</span></h2>
             <div className={styles.contactForm}>

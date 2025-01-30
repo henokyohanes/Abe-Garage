@@ -137,3 +137,8 @@
 .statusReceived {
   background-color: #57595c;
 }
+
+.noServices {
+  font-size: clamp(.6em, 2vw, 1em);
+  color: #d82323;
+}

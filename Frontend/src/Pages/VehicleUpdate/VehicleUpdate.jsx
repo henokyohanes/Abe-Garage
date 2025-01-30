@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import vehicleService from "../../services/vehicle.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import styles from "./VehicleUpdate.module.css";
 
 const VehicleUpdate = () => {
@@ -67,10 +68,13 @@ const VehicleUpdate = () => {
     return (
         <Layout>
             <section className={`${styles.updateSection} row g-0`}>
-                <div className="col-3">
+                <div className="d-none d-md-block col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.container} col-8`}>
+                <div className="d-block d-md-none">
+                    <AdminMenuMobile />
+                </div>
+                <div className={`${styles.container} col-12 col-md-9`}>
                     <h2>Edit: {`${vehicle.vehicle_make} ${vehicle.vehicle_model} ${vehicle.vehicle_year}`} <span>____</span></h2>
                     <div className={styles.formContainer}>
                         {success && (<p className={styles.successMessage}>Vehicle updated successfully!</p>)}

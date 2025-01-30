@@ -24,7 +24,7 @@ const AdminMenuMobile = () => {
 
     return (
 
-        <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
+        <div className={styles.adminMenuContainer}>
             <div className={styles.adminMenuTitle}>
                 <h2>{getRoleText()} Menu</h2>
             </div>

@@ -7,7 +7,7 @@ const Footer = () => {
         <div className={styles.footer}>
             {/* Footer Top Section */}
             <div className={`${styles.contactDetails} row`}>
-                <div className="col-md-4 col-sm-12">
+                <div className="col-md-4 col-12">
                     <i className="fas fa-map-marker-alt"></i>
                     <p>
                         1234 Tailstoi Street
@@ -15,7 +15,7 @@ const Footer = () => {
                         Houston, TX 12345
                     </p>
                 </div>
-                <div className="col-md-4 col-sm-12">
+                <div className="col-md-4 col-12">
                     <i className="fas fa-envelope"></i>
                     <p>
                         Email us:
@@ -23,7 +23,7 @@ const Footer = () => {
                         <a href="mailto:henokyohanes8@gmail.com">contact@abe.com</a>
                     </p>
                 </div>
-                <div className="col-md-4 col-sm-12">
+                <div className="col-md-4 col-12">
                     <i className="fas fa-phone"></i>
                     <p>
                         Call us: <br />
@@ -34,9 +34,9 @@ const Footer = () => {
 
             {/* Footer Bottom Section */}
             <div className={`${styles.footerBottom} row`}>
-                <div className="d-none d-lg-block col-lg-4">
+                <p className="d-none d-lg-block col-lg-4">
                     we offer expert auto repair, maintenance, and customization services for all vehicles.<br /><strong>Your ride, our pride!</strong>
-                </div>
+                </p>
                 <div className="col-5 col-md-3 col-lg-2">
                     <h4>Useful Links</h4>
                     <ul>

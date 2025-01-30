@@ -6,7 +6,7 @@
 .container {
   max-width: 30em;
   margin: 0 auto;
-  padding: 1.2em;
+  padding: 2em;
   background-color: white;
   border-radius: .6em;
   box-shadow: 0 .6em 1em rgba(0, 0, 0, 0.1);
@@ -18,7 +18,7 @@
 }
 
 .sectionTitle h2 {
-  font-size: clamp(1.3em, 3vw, 1.7em);
+  font-size: clamp(1.3em, 3vw, 1.8em);
   color: #07184A;
   font-weight: bold;
 }
@@ -59,7 +59,7 @@
   padding: .5em .8em;  
   background-color: #d82323;
   color: white;
-  font-size: clamp(.9em, 3vw, 1.1em);
+  font-size: clamp(1em, 3vw, 1.2em);
   font-weight: bold;
   border: none;
   border-radius: .4em;
@@ -73,5 +73,5 @@
 
 .error {
   color: #d82323;
-  font-size: clamp(.8em, 3vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
 }

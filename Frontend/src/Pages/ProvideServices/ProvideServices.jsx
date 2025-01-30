@@ -6,6 +6,7 @@ import { MdDelete } from "react-icons/md";
 import serviceService from "../../services/service.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import styles from "./ProvideServices.module.css";
 
 const ProvideServices = () => {
@@ -66,10 +67,13 @@ const ProvideServices = () => {
     return (
         <Layout>
             <div className={`${styles.provideServices} row g-0`}>
-                <div className="col-3">
+                <div className="d-none d-xl-block col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.container} col-9`}>
+                <div className="d-block d-xl-none">
+                    <AdminMenuMobile />
+                </div>
+                <div className={`${styles.container} col-12 col-xl-9`}>
                     <h1>Service We Provide <span>____</span></h1>
                     <p> Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal has evolved from generation experiences.</p>
                     <div className={styles.serviceList}>

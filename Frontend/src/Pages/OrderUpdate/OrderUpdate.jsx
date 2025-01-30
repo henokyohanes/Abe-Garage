@@ -217,10 +217,12 @@ const OrderUpdate = () => {
     return (
         <Layout>
             <div className={`${styles.updateOrderContainer} row g-0`}>
-                <div className="col-2 d-none d-lg-block">
+                <div className="d-none d-xl-block col-3">
                     <AdminMenu />
                 </div>
-                <AdminMenuMobile />
+                <div className="d-block d-xl-none">
+                    <AdminMenuMobile />
+                </div>
                 {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
                     <div className={styles.adminMenuTitle}>
                         <h2>Admin Menu</h2>
@@ -248,11 +250,12 @@ const OrderUpdate = () => {
                             Customers
                         </Link>
                         <Link to="/admin/services" className={styles.listGroupItem}>
+
                             Services
                         </Link>
                     </div>
                 </div> */}
-                <div className={`${styles.orderDetails} col-12 col-lg-10`}>
+                <div className={`${styles.orderDetails} col-12 col-xl-9`}>
                     <div className={styles.header}>
                         <h2>Update Order <span>____</span></h2>
                         <p className={`${styles.status} ${getStatusClass(order.order_status)}`}>
@@ -278,7 +281,7 @@ const OrderUpdate = () => {
                     <div className={styles.servicesSection}>
                         <h6>{order.vehicle_make} {order.vehicle_model}</h6>
                         <h3>Edit: Requested Services <span>____</span></h3>
-                        {order.services.map((order, index) => (
+                        {order.services ? (order.services.map((order, index) => (
                             <div key={order.service_id} className={styles.service}>
                                 <div>
                                     <h4>{order.service_name}</h4>
@@ -291,8 +294,8 @@ const OrderUpdate = () => {
                                     <option className={styles.statusCancelled} value={3}>Cancel</option>
                                 </select>
                             </div>
-                        ))}
-                        {order.additional_request !== null && (<div className={styles.service}>
+                        ))) : <p className={styles.noServices}>No services requested or we stop performing the selected services.</p>}
+                        {order.additional_request && (<div className={styles.service}>
                             <div>
                                 <h4>Additional Requests</h4>
                                 <textarea type="text" name="additional_request" placeholder="Additional Requests" value={order.additional_request} onChange={handleChange} />

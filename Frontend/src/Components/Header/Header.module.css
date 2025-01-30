@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: clamp(.6em, 2.9vw, .9em);
+    font-size: clamp(.7em, 3vw, 1.1em);
     background-color: #07184A;
 }
 
@@ -53,8 +53,9 @@
 
 .navMenu ul a {
     text-decoration: none;
-    font-size: clamp(.6em, 2.9vw, 1em);
-    color: black;
+    font-size: 1em;
+    font-weight: bold;
+    color: #07184A;
 }
 
 .signInButton {
@@ -65,6 +66,7 @@
     padding: .4em 1em;
     cursor: pointer;
     font-size: clamp(.6em, 4vw, 1em);
+    font-weight: bold;
 }
 
 .signInButton:hover {

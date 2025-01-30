@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import customerService from "../../services/customer.service";
 import styles from "./AddCustomer.module.css";
 
@@ -84,10 +85,13 @@ const AddCustomer = () => {
     return (
         <Layout>
             <div className={`${styles.background} row g-0`}>
-                <div className="col-3">
+                <div className="d-none d-md-block col-3">
                     <AdminMenu />
                 </div>
-                <div className="col-8">
+                <div className="d-block d-md-none">
+                    <AdminMenuMobile />
+                </div>
+                <div className="col-12 col-md-9">
                     <div className={styles.container}>
                         <h2>Add a New Customer <span>____</span></h2>
                         <div className={styles.formContainer}>

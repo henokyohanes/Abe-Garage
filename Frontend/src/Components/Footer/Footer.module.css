@@ -1,8 +1,7 @@
 .footer {
     background-color: #091336;
     color: #8993AE;
-    padding: 2vw 12vw;
-    font-size: clamp(.9em, 1vw, 2em);
+    padding: 2vw 6vw;
 }
 
 .contactDetails {
@@ -17,11 +16,12 @@
 } 
 
 .contactDetails i {
-    font-size: clamp(.5em, 6vw, 3em);
+    font-size: clamp(1.8em, 10vw, 2.8em);
     color: #67283D;
 }
 
 .contactDetails p {
+    font-size: clamp(.9em, 3vw, 1.1em);
     margin: .6em 0;
 }
 
@@ -35,19 +35,23 @@
     margin-top: 1em;
 }
 
-h4 {
-    font-size: clamp(1em, 4.5vw, 1.2em);
+.footerBottom h4 {
+    font-size: clamp(1em, 10vw, 1.3em);
     color: #67283D;
 }
 
-ul {
+.footerBottom ul {
     list-style: none;
     padding: 0;
 }
 
-li {
-    font-size: clamp(.6em, 3vw, 1em);
+.footerBottom li {
+    font-size: clamp(.9em, 3vw, 1.1em);
     margin: .2em 0;
+}
+
+.footerBottom p {
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .footer a {
@@ -61,5 +65,5 @@ li {
 
 .socialMedia a {
     margin-right: 1em;
-    font-size: 1.5em;
+    font-size: 1.6em;
 }

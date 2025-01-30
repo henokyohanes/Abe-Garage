@@ -4,6 +4,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import vehicleService from "../../services/vehicle.service";
 import customerService from "../../services/customer.service";
 import orderService from "../../services/order.service";
@@ -122,10 +123,13 @@ const CustomerProfile = () => {
     return (
         <Layout>
             <div className={`${styles.customerProfile} row g-0`}>
-                <div className="col-3">
+                <div className="d-none d-md-block col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.customerContainer} col-9`}>
+                <div className="d-block d-md-none">
+                    <AdminMenuMobile />
+                </div>
+                <div className={`${styles.customerContainer} col-12 col-md-9`}>
 
                     {/* Info Section */}
                     <div className={styles.container}>

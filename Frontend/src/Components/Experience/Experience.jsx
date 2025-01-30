@@ -17,9 +17,7 @@ const Experience = () => {
                     top-quality repairs, maintenance, and customer service.From routine
                     oil changes to complex engine diagnostics, we’ve consistently stayed
                     ahead of industry advancements to ensure your vehicle performs at its
-                    best. Our commitment to excellence, honesty, and reliability has
-                    earned us the trust of countless customers throughout our 24-year
-                    journe. <strong>Visit us today</strong>, and let us keep you safely on
+                    best. <strong>Visit us today</strong>, and let us keep you safely on
                     the road for years to come.
                 </p>
                 <Link to="/about-us" className={style.aboutButton}>About Us ____</Link>

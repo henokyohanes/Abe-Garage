@@ -5,10 +5,10 @@ import style from "./ChooseUs.module.css"
 const ChooseUs = () => {
 
     return (
-        <section className="row justify-content-center g-0 pt-">
+        <section className="row justify-content-center g-0">
 
             {/* Why Choose Us Section */}
-            <div className={`${style.whyChooseUs} m-2 col-11 col-md-5 col-lg-3`}>
+            <div className={`${style.whyChooseUs} ps-lg-4 col-11 col-md-5 col-lg-4`}>
                 <h2>Why Choose Us <span>____</span></h2>
                 <ul>
                     {[
@@ -26,11 +26,11 @@ const ChooseUs = () => {
             </div>
 
             {/* Additional Services Section */}
-            <div className={`${style.additionalServices} m-2 col-11 col-md-6 col-lg-8 col-xl-7`}>
+            <div className={`${style.additionalServices} col-11 col-md-6 col-lg-8 col-xl-7 col-xxl-6`}>
                 <h2>Additional Services <span>____</span></h2>
                 <div className="row justify-content-center g-0">
-                    <img className="d-none d-lg-block col-lg-5 col-xl-5 col-xxl-4" src={additional} alt="Additional Service" />
-                    <ul className="col-lg-7 col-xl-6 col-xxl-5">
+                    <img className="d-none d-lg-block col-lg-5" src={additional} alt="Additional Service" />
+                    <ul className="col-lg-7">
                         <li>General Auto Repair & Maintenance</li>
                         <li>Transmission Repair & Replacement</li>
                         <li>Tire Repair and Replacement</li>

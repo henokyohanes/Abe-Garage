@@ -3,7 +3,7 @@
 }
 
 .experience p {
-    font-size: clamp(.1em, 3vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .experience h2 {
@@ -11,21 +11,21 @@
     text-align: center;
     color: white;
     border-radius: .4em;
-    padding: .2em;
-    font-size: clamp(1em, 3vw, 1.6em);
+    padding: .3em;
+    font-size: clamp(1.1em, 3vw, 1.8em);
     font-weight: bold;
 }
 
 .aboutButton {
     text-decoration: none;
-    width: 30%;
+    width: 40%;
     display: flex;
     margin: 0 auto;
-    padding: .4em;
+    padding: .3em;
     justify-content: center;
     background-color: #d82323;
     color: white;
-    font-size: clamp(.1em, 3vw, 1em);
+    font-size: clamp(.8em, 3vw, 1.2em);
     font-weight: bold;
     border: none;
     border-radius: .4em;
@@ -45,5 +45,5 @@
     border-radius: .4em;
     padding: .3em;
     margin-top: 1.4em;
-    font-size: 1.6em;
+    font-size: 1.3em;
 }

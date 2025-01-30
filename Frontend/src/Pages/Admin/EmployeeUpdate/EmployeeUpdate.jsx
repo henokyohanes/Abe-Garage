@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import employeeService from "../../../services/employee.service";
 import Layout from "../../../Layout/Layout";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
 import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {
@@ -75,10 +76,13 @@ const EmployeeUpdate = () => {
     return (
         <Layout>
             <section className={`${styles.updateSection} row g-0`}>
-                <div className="col-3">
+                <div className="d-none d-md-block col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.container} col-8`}>
+                <div className="d-block d-md-none">
+                    <AdminMenuMobile />
+                </div>
+                <div className={`${styles.container} col-9`}>
                     <h2>Edit: {`${employee.employee_first_name} ${employee.employee_last_name}`} <span>____</span></h2>
                     <div className={styles.formContainer}>
                         <h6>Employee email: <strong>{employee.employee_email}</strong></h6>

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import serviceService from "../../services/service.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import styles from "./ServiceUpdate.module.css";
 
 
@@ -60,10 +61,13 @@ const ServiceUpdate = () => {
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
-                <div className="col-3">
+                <div className="d-none d-md-block col-3">
                     <AdminMenu />
                 </div>
-                <div className={`${styles.content} col-9`}>
+                <div className="d-block d-md-none">
+                    <AdminMenuMobile />
+                </div>
+                <div className={`${styles.content} col-12 col-md-9`}>
                     <h1>Update Service <span>___</span></h1>
                         {success && (<p className={styles.successMessage}>Employee updated successfully!</p>)}
                     <form onSubmit={handleAddService}>
