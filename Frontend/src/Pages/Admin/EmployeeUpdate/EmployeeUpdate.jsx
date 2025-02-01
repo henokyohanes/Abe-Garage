@@ -82,7 +82,7 @@ const EmployeeUpdate = () => {
                 <div className="d-block d-md-none">
                     <AdminMenuMobile />
                 </div>
-                <div className={`${styles.container} col-9`}>
+                <div className={`${styles.container} col-12 col-md-9`}>
                     <h2>Edit: {`${employee.employee_first_name} ${employee.employee_last_name}`} <span>____</span></h2>
                     <div className={styles.formContainer}>
                         <h6>Employee email: <strong>{employee.employee_email}</strong></h6>

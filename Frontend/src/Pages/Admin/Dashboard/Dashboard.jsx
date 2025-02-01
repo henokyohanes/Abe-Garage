@@ -16,7 +16,7 @@ const Dashboard = () => {
                 <div className="d-block d-md-none">
                     <AdminMenuMobile />
                 </div>
-                <div className={`${styles.main} col-9`}>
+                <div className={`${styles.main} col-12 col-md-9`}>
                     <h1>Dashboard <span>____</span></h1>
                     <p>
                         Delivering reliable, win-win solutions to keep your vehicle running smoothly. At the end of the day, our proactive approach ensures optimal performance and customer satisfaction. Moving forward, the next generation of automotive care is here, with advanced diagnostics and streamlined repair solutions to get you back on the road quickly and safely.

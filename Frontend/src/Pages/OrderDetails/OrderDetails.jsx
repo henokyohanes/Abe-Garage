@@ -104,20 +104,24 @@ const OrderDetails = () => {
                         </p>
                     </div>
                     <p>You can track the progress of your order using this page. we will constantly update this page to let you know how we are progressing.As soon as we are done with the order, the status will turn green. That means, your car is ready for pick up.</p>
-                    <div className={styles.infoSection}>
-                        <div>
+                    <div className={`${styles.infoSection} row justify-content-between g-0`}>
+                        <div className="col-12 col-md-6 my-3 pe-md-3">
+                            <div className={styles.customerInfo}>
                             <h6>CUSTOMER</h6>
                             <h3>{order.customer_first_name} {order.customer_last_name}</h3>
                             <p><strong>Email:</strong> {order.customer_email}</p>
                             <p><strong>Phone:</strong> {order.customer_phone_number}</p>
                             <p><strong>Active:</strong> {order.active_customer_status ? "Yes" : "No"}</p>
+                            </div>
                         </div>
-                        <div>
+                        <div className="col-12 col-md-6 mb-3 my-md-3 ps-md-3">
+                            <div className={styles.vehicleInfo}>
                             <h6>CAR IN SERVICE</h6>
                             <h3>{order.vehicle_make} {order.vehicle_model} ({order.vehicle_color})</h3>
-                            <p><strong>Tag:</strong> {order.vehicle_model}</p>
+                            <p><strong>Tag:</strong> {order.vehicle_tag}</p>
                             <p><strong>Year:</strong> {order.vehicle_year}</p>
                             <p><strong>Mileage:</strong> {order.vehicle_mileage}</p>
+                            </div>
                         </div>
                     </div>
                     <div className={styles.servicesSection}>
@@ -137,7 +141,7 @@ const OrderDetails = () => {
                         {order.additional_request && <div className={styles.service}>
                             <div>
                                 <h4>Additional Requests</h4>
-                                <p>{order.additional_request}</p>
+                                <p className={styles.additionalRequest}>{order.additional_request}</p>
                             </div>
                             <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`}>{getStatusText(order.additional_requests_completed)}</p>
                         </div>}

@@ -36,7 +36,7 @@
 }
 
 .customerList h2 {
-    font-size: clamp(.8em, 3vw, 1.6em);
+    font-size: clamp(1.1em, 3vw, 1.8em);
     font-weight: bold;
     color: #07184A;
 }
@@ -57,7 +57,7 @@
     width: 100%;
     border: none;
     padding: .5em 1em;
-    font-size: clamp(.8em, 3vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     border-top-left-radius: .4em;
     border-bottom-left-radius: .4em;
 }
@@ -67,23 +67,30 @@
 }
 
 .searchBar input::placeholder {
-    font-size: clamp(.8em, 3vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .searchBar span {
     background-color: #d82323;
     color: #FFFFFF;
-    padding: .4em 1em;
-    font-size: clamp(.9em, 3vw, 1.2em);
+    padding: .5em 1em;
+    font-size: clamp(.9em, 3vw, 1.1em);
     border-top-right-radius: .4em;
     border-bottom-right-radius: .4em;
+}
+
+.tableContainer {
+    display: block;
+    width: 100%;
+    margin: 2vw 0;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .customerTable {
     width: 100%;
     border-collapse: collapse;
-    margin: 2vw 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
 }
 
 .customerTable thead {
@@ -98,12 +105,12 @@
 }
 
 .customerTable th {
-    font-size: clamp(.4em, 1.5vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
 }
 
 .customerTable td {
-    font-size: clamp(.4em, 1.5vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .customerTable tbody tr:hover {
@@ -122,7 +129,7 @@
 }
 
 .noResults {
-    font-size: clamp(1em, 3vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
     color: #d82323;
 }
@@ -134,9 +141,9 @@
     margin: 1em 0;
 }
 
-.pagination button{
+.pagination button {
     width: 7em;
-    font-size: clamp(.5em, 2vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     border: none;
     border-radius: .4em;
     background-color: #d82323;
@@ -156,6 +163,6 @@
 
 .pagination span {
     color: #1D2230;
-    font-size: clamp(.5em, 2vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     margin: 0 1em;
 }

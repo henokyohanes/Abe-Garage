@@ -252,6 +252,7 @@ const NewOrder = () => {
                     {showSearch && <div className={styles.results}>
                         {searchTerm !== "" && Object.keys(filteredCustomers).length > 0 ? (
                             <div>
+                                <div className={styles.tableContainer}>
                                 <table className={styles.customerTable}>
                                     <thead>
                                         <tr>
@@ -282,6 +283,7 @@ const NewOrder = () => {
                                         ))}
                                     </tbody>
                                 </table>
+                                </div>
                                 <div className={styles.pagination}>
                                     <button
                                         onClick={() => handlePageChange("prev")}
@@ -321,8 +323,8 @@ const NewOrder = () => {
                             </div>
                         {/* </div> */}
                         {!showVehicle && <div>
-                            <h2>Choose a Vehicle</h2>
-                            {vehicles.length > 0 ? (<div>
+                            <h2>Choose a Vehicle <span>____</span></h2>
+                            {vehicles.length > 0 ? (<div className={styles.tableContainer}>
                                 <table className={styles.vehicleTable}>
                                     <thead>
                                         <tr>
@@ -383,7 +385,7 @@ const NewOrder = () => {
                     </div>}
                     {services && <div>
                         <div className={styles.services}>
-                            <h2>Choose Services</h2>
+                            <h2>Choose Services <span>____</span></h2>
                             {services.map((service) => (
                                 <div key={service.service_id} className={styles.serviceInfo}>
                                     <div>
@@ -394,10 +396,12 @@ const NewOrder = () => {
                                 </div>))}
                         </div>
                         <div className={styles.orderForm}>
+                            <div className={styles.orderInfo}>
                             <h2>Additional requests <span>____</span></h2>
                             <textarea type="text" value={order.additional_request || ""} placeholder="Service description" onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} />
                             <input type="number" value={order.order_total_price || ""} placeholder="Price" onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} />
                             <button onClick={handleCreateOrder}>Submit Order</button>
+                            </div>
                         </div>
                     </div>}
                 </div>

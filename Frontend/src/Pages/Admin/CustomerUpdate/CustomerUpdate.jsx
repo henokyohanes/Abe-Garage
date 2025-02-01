@@ -64,7 +64,7 @@ const CustomerUpdate = () => {
                 <div className="d-block d-md-none">
                     <AdminMenuMobile />
                 </div>
-                <div className={`${styles.container} col-9`}>
+                <div className={`${styles.container} col-12 col-md-9`}>
                     <h2>Edit: {`${customer.customer_first_name} ${customer.customer_last_name}`} <span>____</span></h2>
                     <div className={styles.formContainer}>
                         <h6>Customer email: <strong>{customer.customer_email}</strong></h6>

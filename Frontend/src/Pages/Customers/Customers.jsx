@@ -165,6 +165,7 @@ const Customers = () => {
               </span>
             </div>
           </div>
+          <div className={styles.tableContainer}>
           <table className={styles.customerTable}>
             <thead>
               <tr>
@@ -206,6 +207,7 @@ const Customers = () => {
               )}
             </tbody>
           </table>
+          </div>
           <div className={styles.pagination}>
             <button
               onClick={() => handlePageChange("prev")}

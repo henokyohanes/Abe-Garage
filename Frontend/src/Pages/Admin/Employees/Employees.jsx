@@ -145,18 +145,19 @@ const EmployeeList = () => {
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
-                <div className="d-none d-xl-block col-2">
+                <div className="d-none d-xxl-block col-2">
                     <AdminMenu />
                 </div>
-                <div className="d-block d-xl-none">
+                <div className="d-block d-xxl-none">
                     <AdminMenuMobile />
                 </div>
 
                 {!showUpdateSection && (
-                    <div className={`${styles.employeeList} col-12 col-xl-10`}>
+                    <div className={`${styles.employeeList} col-12 col-xxl-10`}>
                         <h2>
                             Employees <span>____</span>
                         </h2>
+                        <div className={styles.tableContainer}>
                         <table className={styles.table}>
                             <thead>
                                 <tr>
@@ -204,6 +205,7 @@ const EmployeeList = () => {
                                 )}
                             </tbody>
                         </table>
+                        </div>
                         <div className={styles.pagination}>
                             <button
                                 onClick={() => handlePageChange("prev")}

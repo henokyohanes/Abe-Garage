@@ -36,7 +36,7 @@
 }
 
 .employeeList h2 {
-  font-size: clamp(.8em, 3vw, 1.6em);
+  font-size: clamp(1.1em, 3vw, 1.8em);
   font-weight: bold;
   color: #07184A;
 }
@@ -45,11 +45,22 @@
   color: #d82323;
 }
 
+.tableContainer {
+  display: block;
+  width: 100%;
+  margin: 1vw 0;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1vw 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.table::-webkit-scrollbar {
+  display: none;
 }
 
 .table thead {
@@ -64,12 +75,12 @@
 }
 
 .table th {
-  font-size: clamp(.4em, 1.5vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   font-weight: bold;
 }
 
 .table td {
-  font-size: clamp(.4em, 1.5vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .table tbody tr:hover {
@@ -96,7 +107,7 @@
 
 .pagination button{
     width: 7em;
-    font-size: clamp(.5em, 2vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     border: none;
     border-radius: .4em;
     background-color: #d82323;
@@ -116,38 +127,39 @@
 
 .pagination span {
     color: #1D2230;
-    font-size: clamp(.5em, 2vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     margin: 0 1em;
 }
 
 .employeeList p { 
-  font-size: clamp(.4em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   margin-bottom: 2vw;
 }
 
 .employeeList strong { 
-  font-size: clamp(.4em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   color: #07184A;
 }
 
 .newRecipient label { 
-  font-size: clamp(.4em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   font-weight: bold;
   color: #07184A;
 }
 
 .newRecipient select {
-  font-size: clamp(.4em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
+  padding: .2em;
 }
 
 .newRecipient div { 
   width: 20em;
-  padding: .6em;
+  padding: .5em;
   margin-top: 2vw;
   text-align: center;
   background-color: #d82323;
   color: white;
-  font-size: clamp(.7em, 3vw, 1.2em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   font-weight: bold;
   border: none;
   border-radius: .4em;
@@ -155,6 +167,6 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.newRecipient div { 
-  font-size: clamp(.4em, 2vw, 1em);
+.newRecipient div:hover {
+  background-color: #07184A;
 }

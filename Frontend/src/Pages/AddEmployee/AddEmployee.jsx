@@ -98,7 +98,7 @@ const AddEmployee = () => {
         <div className="d-block d-md-none">
           <AdminMenuMobile />
         </div>
-        <div className="col-9">
+        <div className="col-12 col-md-9">
           <div className={styles.container}>
             <h2>Add a new employee <span>____</span></h2>
             <div className={styles.contactForm}>

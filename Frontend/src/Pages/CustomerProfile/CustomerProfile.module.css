@@ -14,7 +14,7 @@
 }
 
 .title {
-    font-size: clamp(.8em, 3vw, 1.6em);
+    font-size: clamp(1.1em, 3vw, 1.6em);
     font-weight: bold;  
     background-color: #D82323;
     width: 4em;
@@ -23,17 +23,19 @@
     text-align: center;
     align-content: center;
     border-radius: 50%;
+    line-height: 1;
+    aspect-ratio: 1 / 1;
 }
 
 .customerContainer h2 {
-    font-size: clamp(.7em, 3vw, 1.4em);
+    font-size: clamp(1em, 3vw, 1.4em);
     font-weight: bold;
     color: #07184A;
     margin-bottom: .1em;    
 }
 
 .container p {
-    font-size: clamp(.6em, 2vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     margin-bottom: .1em;
 }
 
@@ -47,7 +49,7 @@
     width: 100%;
     margin-top: 1vw;
     margin-bottom: 1em;
-    padding: .3em .8em;
+    padding: 1vw;
     border-radius: .4em;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -58,7 +60,7 @@
     color: #FFFFFF;
     padding: 0.4em .6em;
     margin-top: 1em;
-    font-size: clamp(.1em, 3vw, 1.1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
     border: none;
     border-radius: .4em;
@@ -66,7 +68,7 @@
 }   
 
 .noMessage {
-    background-color: #FFFFFF;
+    background-color: #d82323;
     margin: 1vw 0;
     padding: .4em 1em;
     border-radius: .4em;
@@ -82,8 +84,8 @@
     float: right;
     background-color: #d82323;
     color: #FFFFFF;
-    padding: 0.4em .8em;
-    font-size: clamp(.5em, 2vw, 1em);
+    padding: 0.1em .6em;
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
     border: none;
     border-radius: .4em;
@@ -99,7 +101,7 @@
 }
 
 .vehicleFormContainer input {
-    font-size: clamp(.7em, 2vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     width: 80%;
     padding: .5vw 1vw;
     margin: .5vw 0;
@@ -113,14 +115,14 @@
 }
 
 .vehicleFormContainer input::placeholder {
-    font-size: clamp(.7em, 2vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .vehicleFormContainer button {
     width: 80%;
-    padding: .6em;
+    padding: .5em;
     margin-top: 1em;
-    font-size: clamp(.7em, 3vw, 1.1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
     background-color: #d82323;
     color: white;
@@ -134,9 +136,9 @@
     background-color: #d82323;
     color: #FFFFFF;
     padding: 0 .2em;
-    font-size: clamp(.7em, 2vw, 1.2em);
+    font-size: clamp(1.1em, 3vw, 1.3em);
     font-weight: bold;
     border: none;
-    border-radius: .2em;
+    border-radius: .4em;
     cursor: pointer;
 }
