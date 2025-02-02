@@ -88,10 +88,10 @@ const Orders = () => {
   return (
     <Layout>
       <div className={`${styles.ordersContainer} row g-0`}>
-        <div className="d-none d-xl-block col-3">
+        <div className="d-none d-xxl-block col-3">
           <AdminMenu />
         </div>
-        <div className="d-block d-xl-none">
+        <div className="d-block d-xxl-none">
           <AdminMenuMobile />
         </div>
         {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
@@ -125,65 +125,79 @@ const Orders = () => {
             </Link>
           </div>
         </div> */}
-        <div className={`${styles.ordersList} col-12 col-xl-9`}>
-
+        <div className={`${styles.ordersList} col-12 col-xxl-9`}>
           <h2>
             Orders <span>____</span>
           </h2>
-          <table className={styles.ordersTable}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Vehicle</th>
-                <th>Order Date</th>
-                <th>Received by</th>
-                <th>Order status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedOrders.map((order) => (
-                <tr key={order.order_id}>
-                  <td>{order.order_id}</td>
-                  <td>
-                    <div>
-                      {order.customer_first_name + " " + order.customer_last_name}
-                    </div>
-                    <div>{order.customer_email}</div>
-                    <div>{order.customer_phone_number}</div>
-                  </td>
-                  <td>
-                    <div>{order.vehicle_make + " " + order.vehicle_model}</div>
-                    <div>{order.vehicle_year}</div>
-                    <div>{order.vehicle_tag}</div>
-                  </td>
-                  <td>{order.order_date.split("T")[0]}</td>
-                  <td>
-                    {order.employee_first_name + " " + order.employee_last_name}
-                  </td>
-                  <td>
-                    <span
-                      className={`${styles.statusBadge} ${getStatusClass(
-                        order.order_status
-                      )}`}
-                    >
-                      {getStatusText(order.order_status)}
-                    </span>
-                  </td>
-                  <td>
-                    {(isAdmin || isManager) && <button className={styles.btnViewEdit} onClick={() => handleEditOrder(order.order_id)}>
-                      <FaEdit />
-                    </button>}
-                    <button className={styles.btnViewEdit} onClick={() => handleViewOrder(order.order_id)}>
-                      <GrView />
-                    </button>
-                  </td>
+          <div className={styles.tableContainer}>
+            <table className={styles.ordersTable}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Vehicle</th>
+                  <th>Order Date</th>
+                  <th>Received by</th>
+                  <th>Order status</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
+              </thead>
+              <tbody>
+                {displayedOrders.map((order) => (
+                  <tr key={order.order_id}>
+                    <td>{order.order_id}</td>
+                    <td>
+                      <div>
+                        {order.customer_first_name +
+                          " " +
+                          order.customer_last_name}
+                      </div>
+                      <div>{order.customer_email}</div>
+                      <div>{order.customer_phone_number}</div>
+                    </td>
+                    <td>
+                      <div>
+                        {order.vehicle_make + " " + order.vehicle_model}
+                      </div>
+                      <div>{order.vehicle_year}</div>
+                      <div>{order.vehicle_tag}</div>
+                    </td>
+                    <td>{order.order_date.split("T")[0]}</td>
+                    <td>
+                      {order.employee_first_name +
+                        " " +
+                        order.employee_last_name}
+                    </td>
+                    <td>
+                      <span
+                        className={`${styles.statusBadge} ${getStatusClass(
+                          order.order_status
+                        )}`}
+                      >
+                        {getStatusText(order.order_status)}
+                      </span>
+                    </td>
+                    <td>
+                      {(isAdmin || isManager) && (
+                        <button
+                          className={styles.btnViewEdit}
+                          onClick={() => handleEditOrder(order.order_id)}
+                        >
+                          <FaEdit />
+                        </button>
+                      )}
+                      <button
+                        className={styles.btnViewEdit}
+                        onClick={() => handleViewOrder(order.order_id)}
+                      >
+                        <GrView />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <div className={styles.pagination}>
             <button
               onClick={() => handlePageChange("prev")}

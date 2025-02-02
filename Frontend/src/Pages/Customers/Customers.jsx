@@ -127,10 +127,10 @@ const Customers = () => {
   return (
     <Layout>
       <div className={`${styles.container} row g-0`}>
-        <div className=" d-none d-xl-block col-3">
+        <div className=" d-none d-xxl-block col-3">
           <AdminMenu />
         </div>
-        <div className="d-block d-xl-none">
+        <div className="d-block d-xxl-none">
           <AdminMenuMobile />
         </div>
         {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
@@ -148,7 +148,7 @@ const Customers = () => {
             <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
           </div>
         </div> */}
-        <div className={`${styles.customerList} col-12 col-xl-9`}>
+        <div className={`${styles.customerList} col-12 col-xxl-9`}>
           <div className={styles.header}>
             <h2>
               Customers <span>____</span>

@@ -32,7 +32,7 @@
 } */
 
 .orderList {
-  padding: 3vw;
+  padding: 2vw;
 }
 
 .orderList h2 {
@@ -135,7 +135,7 @@
 }
 
 .customerTable td {
-  font-size: clamp(.9em, 3vw, 1.1em);
+  font-size: clamp(.8em, 3vw, 1em);
 }
 
 .customerTable tbody tr:hover, .vehicleTable tbody tr:hover {
@@ -219,7 +219,7 @@
 }
 
 .vehicleTable td {
-  font-size: clamp(.9em, 3vw, 1.1em);
+  font-size: clamp(.8em, 3vw, 1em);
 }
 
 .services, .orderForm {

@@ -262,32 +262,36 @@ const OrderUpdate = () => {
                             {getStatusText(order.order_status)}
                         </p>
                     </div>
-                    <div className={styles.infoSection}>
-                        <div>
+                    <div className={`${styles.infoSection} row justify-content-between g-0`}>
+                        <div className="col-12 col-md-6 my-3 pe-md-3">
+                            <div className={styles.customerInfo}>
                             <h6>CUSTOMER</h6>
                             <h3>{order.customer_first_name} {order.customer_last_name}</h3>
                             <p><strong>Email:</strong> {order.customer_email}</p>
                             <p><strong>Phone:</strong> {order.customer_phone_number}</p>
                             <p><strong>Active:</strong> {order.active_customer_status ? "Yes" : "No"}</p>
+                            </div>
                         </div>
-                        <div>
+                        <div className="col-12 col-md-6 mb-3 my-md-3 ps-md-3">
+                            <div className={styles.vehicleInfo}>
                             <h6>CAR IN SERVICE</h6>
                             <h3>{order.vehicle_make} {order.vehicle_model} ({order.vehicle_color})</h3>
                             <p><strong>Tag:</strong> {order.vehicle_model}</p>
                             <p><strong>Year:</strong> {order.vehicle_year}</p>
                             <p><strong>Mileage:</strong> {order.vehicle_mileage}</p>
+                            </div>
                         </div>
                     </div>
                     <div className={styles.servicesSection}>
                         <h6>{order.vehicle_make} {order.vehicle_model}</h6>
                         <h3>Edit: Requested Services <span>____</span></h3>
                         {order.services ? (order.services.map((order, index) => (
-                            <div key={order.service_id} className={styles.service}>
-                                <div>
+                            <div key={order.service_id} className={`${styles.service} row align-items-center justify-content-between g-0`}>
+                                <div className="col-12 col-md-9 mb-3 mb-md-0 pe-md-3">
                                     <h4>{order.service_name}</h4>
                                     <p>{order.service_description}</p>
                                 </div>
-                                <select name="service_completed" className={`${styles.status} ${getStatusClass(order.service_completed)}`} value={order.service_completed} onChange={handleChange} data-index={index}>
+                                <select name="service_completed" className={`${styles.status} ${getStatusClass(order.service_completed)} col-12 col-md-3 ps-md-3`} value={order.service_completed} onChange={handleChange} data-index={index}>
                                     <option className={styles.statusReceived} value={0}>Received</option>
                                     <option className={styles.statusInProgress} value={1}>In Progress</option>
                                     <option className={styles.statusCompleted} value={2}>Completed</option>
@@ -295,12 +299,12 @@ const OrderUpdate = () => {
                                 </select>
                             </div>
                         ))) : <p className={styles.noServices}>No services requested or we stop performing the selected services.</p>}
-                        {order.additional_request && (<div className={styles.service}>
-                            <div>
+                        {order.additional_request && (<div className={`${styles.service} row align-items-center justify-content-between g-0`}>
+                            <div className="col-12 col-md-9 mb-3 mb-md-0 pe-md-3">
                                 <h4>Additional Requests</h4>
                                 <textarea type="text" name="additional_request" placeholder="Additional Requests" value={order.additional_request} onChange={handleChange} />
                             </div>
-                            <select name="additional_requests_completed" className={`${styles.status} ${getStatusClass(order.additional_requests_completed)}`} value={order.additional_requests_completed} onChange={handleChange}>
+                            <select name="additional_requests_completed" className={`${styles.status} ${getStatusClass(order.additional_requests_completed)} col-12 col-md-3 ps-md-3`} value={order.additional_requests_completed} onChange={handleChange}>
                                 <option className={styles.statusReceived} value={0}>Received</option>
                                 <option className={styles.statusInProgress} value={1}>In Progress</option>
                                 <option className={styles.statusCompleted} value={2}>Completed</option>
@@ -312,8 +316,8 @@ const OrderUpdate = () => {
                         <h3>Edit: Order Details <span>____</span></h3>
                         <form onSubmit={handleAddOrder}>
                             <div className={styles.formGroup}>
-                                <div className={styles.orderFlexContainer}>
-                                    <div>
+                                <div className={`${styles.orderFlexContainer} row justify-content-between g-0`}>
+                                    <div className="col-12 col-md-6">
                                         <div className={styles.orderFlex}>
                                             <h4>Order Status:</h4>
                                             <select name="order_status" className={`${styles.status} ${getStatusClass(order.order_status)}`} value={order.order_status} onChange={handleChange} >
@@ -332,7 +336,7 @@ const OrderUpdate = () => {
                                             <textarea name="notes_for_customer" type="text" placeholder="Notes for customer" onChange={handleChange} value={order.notes_for_customer || ""} />
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className="col-12 col-md-5">
                                         <div className={styles.orderFlex}>
                                             <h4>Active Order:</h4>
                                             <input

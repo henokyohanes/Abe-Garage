@@ -2,46 +2,17 @@
   background-color: #E6E4E9;
 }
 
-/* .adminMenuContainer {
-    width: 100%;
-    background-color: #222A47;
-    color: #D6D7DE;
-}
-
-.adminMenuTitle {
-    background-color: #1D2230;
-    padding: 1vw 2vw;
-}
-
-.adminMenuTitle h2 {
-    font-size: clamp(.7em, 2vw, 1.3em);
-}
-
-.listGroup {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 2vw;
-}
-
-.listGroupItem {
-    padding: .8vw 0;
-    text-decoration: none;
-    color: #D6D7DE;
-    font-size: clamp(.5em, 2vw, 1em);
-    transition: background-color 0.3s ease, color 0.3s ease;
-} */
-
 .orderDetails {
   padding: 3vw;
 }
 
 .orderDetails p {
-  font-size: clamp(.6em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   margin: 0;
 }
 
 .orderDetails strong {
-  font-size: clamp(.7em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   color: #07184A;
 }
 
@@ -53,7 +24,7 @@
 }
 
 .orderDetails h2 {
-  font-size: clamp(.8em, 3vw, 1.6em);
+  font-size: clamp(1.2em, 3vw, 1.8em);
   font-weight: bold;
   color: #07184A;
 }
@@ -63,37 +34,32 @@
 }
 
 .orderDetails h3 {
-  font-size: clamp(.7em, 2vw, 1.2em);
+  font-size: clamp(1.1em, 3vw, 1.4em);
   font-weight: bold;
   color: #07184A;
   margin-bottom: 1vw;
 }
 
 .orderDetails h4 {
-  font-size: clamp(.6em, 2vw, 1em);
+  font-size: clamp(1em, 3vw, 1.2em);
   font-weight: bold;
   color: #07184A;
   margin-bottom: 0;
 }
 
 .orderDetails h6 {
-  font-size: clamp(.1em, 2vw, .7em);
+  font-size: clamp(.6em, 3vw, .8em);
   color: #07184A;
   margin-bottom: 0;
 }
 
-.infoSection {
-  display: flex;
-  gap: 3vw;
-  margin-top: 3vw;
-}
-
-.infoSection div {
+.customerInfo, .vehicleInfo {
   width: 100%;
   background: white;
-  padding: 1vw;
+  padding: 1em;
   border-radius: .4em;
   border-bottom: .4em solid #d82323;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .servicesSection, .updateSection {
@@ -102,28 +68,23 @@
   border-radius: .4em;
   border-bottom: .4em solid #d82323;
   margin-top: 3vw;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .service {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1vw;
+  padding: .5em;
   margin: 1vw 0;
   border-radius: .4em;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.service div {
-  width: 72%;
-}
-
 .service textarea {
   width: 100%;
+  height: 5em;
   margin-top: .4em;
-  padding: .1em .6em;
-  font-size: clamp(.6em, 2vw, 1em);
+  padding: .1em .5em;
+  font-size: clamp(.9em, 3vw, 1.1em);
   border: 1px solid #ccc;
   border-radius: .4em;
   transition: border-color 0.2s ease-in-out;
@@ -135,11 +96,12 @@
 }
 
 .service textarea::placeholder {
-  font-size: clamp(.6em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .status {
-  font-size: clamp(.6em, 2vw, 1em);
+  width: fit-content;
+  font-size: clamp(.9em, 3vw, 1.1em);
   display: inline-block;
   color: white;
   border: none;
@@ -164,12 +126,6 @@
   background-color: #57595c;
 }
 
-.orderFlexContainer {
-  display: flex;
-  align-items: center;
-  gap: 5vw;
-}
-
 .orderFlex {
   display: flex;
   align-items: center;
@@ -192,8 +148,8 @@
 }
 
 .formGroup input{
-    padding: .1em .6em;
-    font-size: clamp(.6em, 2vw, 1em);
+    padding: .1em .5em;
+    font-size: clamp(.9em, 3vw, 1.1em);
     border: 1px solid #ccc;
     border-radius: .4em;
     transition: border-color 0.2s ease-in-out;
@@ -206,16 +162,15 @@
 }
 
 .formGroup input::placeholder {
-    font-size: clamp(.6em, 2vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .formGroup textarea {
-    width: 25vw;  
+    width: 100%;  
     height: 7em;
-    min-width:  15em;
     margin-top: .5vw;
-    padding: .1em .6em;
-    font-size: clamp(.6em, 2vw, 1em);
+    padding: .1em .5em;
+    font-size: clamp(.9em, 3vw, 1.1em);
     border: 1px solid #ccc;
     border-radius: .4em;
     transition: border-color 0.2s ease-in-out;
@@ -228,16 +183,16 @@
 }
 
 .formGroup textarea::placeholder {
-    font-size: clamp(.6em, 2vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .formGroup button {
-    width: 12em;
-    padding: .6em;
+    width: 15em;
+    padding: .5em;
     margin-top: 1.5vw;
     background-color: #d82323;
     color: white;
-    font-size: clamp(.7em, 2vw, 1.1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
     border: none;
     border-radius: .4em;
@@ -250,6 +205,6 @@
 }
 
 .noServices {
-  font-size: clamp(.6em, 2vw, 1em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   color: #d82323;
 }
