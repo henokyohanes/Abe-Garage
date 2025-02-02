@@ -5,7 +5,6 @@ import Home from "../Pages/Home/Home";
 import Orders from "../Pages/Orders/Orders";
 import Customers from "../Pages/Customers/Customers";
 import AddEmployee from "../Pages/AddEmployee/AddEmployee";
-import Unauthorized from "../pages/Unauthorized/Unauthorized";
 import Login from "../Pages/Login/Login";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import ContactUs from "../Pages/ContactUs/ContactUs";
@@ -29,7 +28,6 @@ const AppRoutes = () => (
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
     <Route path="/about-us" element={<AboutUs />} />
-    <Route path="/unauthorized" element={<Unauthorized />} />
     <Route path="/contact-us" element={<ContactUs />} />
     <Route path="/abe-Services" element={<AbeServices />} />
 

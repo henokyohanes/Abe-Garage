@@ -105,9 +105,9 @@ const ProvideServices = () => {
                             value={newservice.service_description}
                             onChange={handleInputChange}
                         />
-                        <button className={styles.addButton} onClick={handleAddService}>
+                        <div className={styles.addButton} onClick={handleAddService}>
                             Add Service
-                        </button>
+                        </div>
                     </div>}
                 </div>
             </div>

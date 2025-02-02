@@ -129,21 +129,21 @@ const OrderDetails = () => {
                         <h3>Requested Services</h3>
                         {order.services ? (order.services.map((order) => (
                             <div key={order.service_id} className={`${styles.service} row align-items-center justify-content-between g-0`}>
-                                <div className="col-12 col-md-9 mb-3 mb-md-0 pe-md-3">
+                                <div className="col-12 col-md-10 mb-3 mb-md-0 pe-md-3">
                                     <h4>{order.service_name}</h4>
                                     <p>{order.service_description}</p>
                                 </div>
-                                <p className={`${styles.status} ${getStatusClass(order.service_completed)} col-12 col-md-3 ps-md-3`}>
+                                <p className={`${styles.status} ${getStatusClass(order.service_completed)} col-12 col-md-2 ps-md-3`}>
                                     {getStatusText(order.service_completed)}
                                 </p>
                             </div>
                         ))) : <p className={styles.noServices}>No services requested or we stop performing the selected services.</p>}
                         {order.additional_request && <div className={`${styles.service} row align-items-center justify-content-between g-0`}>
-                            <div className="col-12 col-md-9 mb-3 mb-md-0 pe-md-3">
+                            <div className="col-12 col-md-10 mb-3 mb-md-0 pe-md-3">
                                 <h4>Additional Requests</h4>
                                 <p>{order.additional_request}</p>
                             </div>
-                            <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)} col-12 col-md-3 ps-md-3`}>{getStatusText(order.additional_requests_completed)}</p>
+                            <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)} col-12 col-md-2 ps-md-3`}>{getStatusText(order.additional_requests_completed)}</p>
                         </div>}
                     </div>
                 </div>

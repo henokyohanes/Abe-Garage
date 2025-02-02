@@ -84,9 +84,11 @@ const ServiceUpdate = () => {
                         value={service.service_description}
                         onChange={handleChange}
                         />
+                        <div>
                         <button type="submit" className={styles.addButton}>
                             Update
                         </button>
+                        </div>
                     </form>
                 </div>
             </div>

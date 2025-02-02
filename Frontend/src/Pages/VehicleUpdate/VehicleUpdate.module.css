@@ -4,11 +4,11 @@
 
 .container {
     max-width: 40em;
-    padding: 4vw;
+    padding: 3vw;
 }
 
 .container h2 {
-    font-size: clamp(.9em, 3vw, 1.6em);
+    font-size: clamp(1.1em, 3vw, 1.8em);
     font-weight: bold;
     color: #07184A;
 }
@@ -17,13 +17,8 @@
     color: #d82323;
 }
 
-.container h6 {
-    font-size: clamp(.8em, 2vw, 1.2em);
-    margin-bottom: 1em;
-}
-
 .successMessage {
-    font-size: clamp(.8em, 3vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     color: green;
 }
 
@@ -34,11 +29,11 @@
 .form {
     display: flex;
     flex-direction: column;
-    gap: 1vw;
+    gap: 1em;
 }
 
 .formGroup p {
-    font-size: clamp(.7em, 3vw, 1em);
+    font-size: clamp(1em, 3vw, 1.2em);
     font-weight: bold;
     color: #07184A;
     margin-bottom: .1em;
@@ -46,8 +41,8 @@
 
 .formControl {
     width: 100%;
-    padding: .6em;
-    font-size: clamp(.7em, 3vw, 1em);
+    padding: .5em;
+    font-size: clamp(.9em, 3vw, 1.1em);
     border: 1px solid #ccc;
     border-radius: .4em;
     transition: border-color 0.2s ease-in-out;
@@ -60,30 +55,16 @@
 }
 
 .formControl::placeholder {
-    font-size: clamp(.7em, 3vw, 1em);
-}
-
-.label {
-    display: flex;
-    align-items: center;
-    gap: .5em;
-}
-
-.label input {
-    cursor: pointer;
-}
-
-.label div {
-    font-size: clamp(.6em, 3vw, 1em);
+    font-size: clamp(.9em, 3vw, 1.1em);
 }
 
 .updateButton {
     width: 100%;
-    padding: .6em;
+    padding: .5em;
     margin-top: 1em;
     background-color: #d82323;
     color: white;
-    font-size: clamp(.7em, 3vw, 1.2em);
+    font-size: clamp(.9em, 3vw, 1.1em);
     font-weight: bold;
     border: none;
     border-radius: .4em;
