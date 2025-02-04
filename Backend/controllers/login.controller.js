@@ -12,10 +12,7 @@ async function logIn(req, res, next) {
 
     // If the employee is not found
     if (employee.status === "fail") {
-      res.status(403).json({
-        status: employee.status,
-        message: employee.message,
-      });
+      res.status(403).json({status: employee.status, message: employee.message});
     }
     // If successful, send a response to the client
     const payload = {
@@ -24,19 +21,18 @@ async function logIn(req, res, next) {
       employee_role: employee.data.company_role_id,
       employee_first_name: employee.data.employee_first_name,
     };
-    const token = jwt.sign(payload, jwtSecret, {
-      expiresIn: "24h",
-    });
-    const sendBack = {
-      employee_token: token,
-    };
+
+    // Generate a JWT token
+    const token = jwt.sign(payload, jwtSecret, {expiresIn: "24h"});
+    const sendBack = {employee_token: token};
     res.status(200).json({
       status: "success",
       message: "Employee logged in successfully",
       data: sendBack,
     });
   } catch (error) {
-
+    console.log(error);
+    res.status(400).json({error: "Something went wrong!"});
   }
 }
 

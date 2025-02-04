@@ -19,6 +19,7 @@ async function query(sql, params) {
   return rows;
 }
 
+// function to get a connection from the pool
 async function getConnection() {
   return await pool.getConnection();
 }

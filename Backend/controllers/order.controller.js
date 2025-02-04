@@ -40,11 +40,7 @@ const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating order:", error.message);
-    return res.status(500).json({
-      status: "fail",
-      error: "Internal Server Error",
-      message: "There was an issue creating the order. Please try again later.",
-    });
+    return res.status(500).json({status: "fail", message: "There was an issue creating the order."});
   }
 };
 
@@ -54,50 +50,33 @@ const getAllOrders = async (req, res) => {
     // Fetch all orders and their details
     const orders = await orderService.getAllOrders();
 
-    // Return successful response
-    return res.status(200).json({
-      status: 'success',
-      data: orders,
-    });
+    return res.status(200).json({status: 'success', data: orders});
   } catch (error) {
     console.error('Error retrieving orders:', error.message);
-    return res.status(500).json({
-      status: 'fail',
-      error: 'Internal Server Error',
-      message: 'There was an issue retrieving the orders. Please try again later.',
-    });
+    return res.status(500).json({status: 'fail', message: 'There was an issue retrieving the orders.'});
   }
 };
 
 // Get all orders for a specific customer
 const getOrdersByCustomerId = async (req, res) => {
-  try {
-    const { customer_id } = req.params;
+  const { customer_id } = req.params;
 
+  try {
     // Validate customer ID
     if (!customer_id || isNaN(customer_id)) {
-      return res.status(400).json({
-        status: "fail",
-        error: "Bad Request",
-        message: "The customer ID provided is invalid or missing.",
-      });
+      return res.status(400).json({status: "fail", message: "invalid or missing customer ID."});
     }
 
     // Fetch orders for the customer
     const orders = await orderService.getOrdersByCustomerId(customer_id);
 
-    // Return success response
-    return res.status(200).json({
-      status: "success",
-      data: orders,
-    });
+    return res.status(200).json({status: "success", data: orders});
   } catch (error) {
     console.error("Error retrieving orders for customer:", error.message);
     return res.status(500).json({
       status: "fail",
       error: "Internal Server Error",
-      message:
-        "There was an issue retrieving the orders for the customer. Please try again later.",
+      message: "There was an issue retrieving the orders for the customer. Please try again later."
     });
   }
 };
@@ -109,68 +88,49 @@ const getOrderById = async (req, res) => {
 
     // Validate order ID
     if (!id || isNaN(id)) {
-      return res.status(400).json({
-        status: "fail",
-        error: "Bad Request",
-        message: "The order ID provided is invalid or missing.",
-      });
+      return res.status(400).json({status: "fail", message: "invalid or missing order ID."});
     }
 
     // Fetch the order by ID
     const order = await orderService.getOrderById(id);
+
     // Check if the order exists
     if (!order) {
-      return res.status(404).json({
-        status: "fail",
-        error: "Not Found",
-        message: "The order ID provided does not exist.",
-      });
+      return res.status(404).json({status: "fail", message: "The order ID provided does not exist."});
     }
     // Return successful response
-    return res.status(200).json({
-      status: "success",
-      data: order,
-    });
+    return res.status(200).json({status: "success", data: order});
   } catch (error) {
     console.error("Error retrieving order:", error.message);
     return res.status(500).json({
       status: "fail",
       error: "Internal Server Error",
-      message:
-        "There was an issue retrieving the order. Please try again later.",
+      message: "There was an issue retrieving the order. Please try again later."
     });
   }
 };
 
 // get order by employee id
 const getOrdersByEmployeeId = async (req, res) => {
-  try {
-    const { employee_id } = req.params;
+  const { employee_id } = req.params;
 
+  try {
     // Validate employee ID
     if (!employee_id || isNaN(employee_id)) {
-      return res.status(400).json({
-        status: "fail",
-        error: "Bad Request",
-        message: "The employee ID provided is invalid or missing.",
-      });
+      return res.status(400).json({status: "fail", message: "invalid or missing employee ID."});
     }
 
     // Fetch orders for the employee
     const orders = await orderService.getOrdersByEmployeeId(employee_id);
 
     // Return success response
-    return res.status(200).json({
-      status: "success",
-      data: orders,
-    });
+    return res.status(200).json({status: "success", data: orders});
   } catch (error) { 
     console.error("Error retrieving orders for employee:", error.message);
     return res.status(500).json({
       status: "fail", 
       error: "Internal Server Error",
-      message:  
-        "There was an issue retrieving the orders for the employee. Please try again later.",
+      message: "There was an issue retrieving the orders for the employee. Please try again later."
     });
   }
 };
@@ -191,24 +151,18 @@ const updateOrder = async (req, res) => {
       notes_for_internal_use,
       notes_for_customer,
     } = req.body;
+
     // Validate ID and required fields
     if (!id || isNaN(id)) {
-      return res.status(400).json({
-        status: "fail",
-        error: "Bad Request",
-        message: "The order ID provided is invalid or missing.",
-      });
+      return res.status(400).json({status: "fail", message: "invalid or missing order ID."});
     }
     
     // Validate that the order exists
     const orderExists = await orderService.getOrderById(id);
     if (!orderExists) {
-      return res.status(404).json({
-        status: "fail",
-        error: "Not Found",
-        message: "The order ID provided does not exist.",
-      });
+      return res.status(404).json({status: "fail", message: "The order ID provided does not exist."});
     }
+
     // Update order in the database
     const updatedOrder = await orderService.updateOrder({
       id,
@@ -277,10 +231,7 @@ const deleteOrder = async (req, res) => {
     await orderService.deleteOrder(id);
 
     // Return success response
-    return res.status(200).json({
-      status: "success",
-      message: "Order deleted successfully.",
-    });
+    return res.status(200).json({status: "success", message: "Order deleted successfully."});
   } catch (error) {
     console.error("Error deleting order:", error.message);
     return res.status(500).json({
@@ -291,17 +242,13 @@ const deleteOrder = async (req, res) => {
   }
 };
 
-// Controller for deleting a service from an order
+// deleting a service from an order
 const deleteService = async (req, res) => {
   const { orderId, serviceId } = req.params;
 
   // Validate order ID
   if (!orderId || isNaN(orderId)) {
-    return res.status(400).json({
-      status: "fail",
-      error: "Bad Request",
-      message: "The order ID provided is invalid or missing.",
-    });
+    return res.status(400).json({status: "fail", message: "The order ID provided is invalid or missing."});
   }
 
   // Validate that the order exists

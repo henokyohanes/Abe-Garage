@@ -1,18 +1,15 @@
 const e = require("express");
 const employeeService = require("../services/employee.service");
 
-// Create the add employee controller
+// Create employee
 async function createEmployee(req, res, next) {
+
   // Check if employee email already exists in the database
-  const employeeExists = await employeeService.checkIfEmployeeExists(
-    req.body.employee_email
-  );
+  const employeeExists = await employeeService.checkIfEmployeeExists(req.body.employee_email);
 
   // If employee exists, send a response to the client
   if (employeeExists) {
-    res.status(400).json({
-      error: "This email address is already associated with another employee!",
-    });
+    res.status(400).json({error: "This email address is already associated with another employee!"});
   } else {
     try {
       const employeeData = req.body;
@@ -20,50 +17,36 @@ async function createEmployee(req, res, next) {
       // Create the employee
       const employee = await employeeService.createEmployee(employeeData);
       if (!employee) {
-        res.status(400).json({
-          error: "Failed to add the employee!",
-        });
+        res.status(400).json({error: "Failed to add the employee!"});
       } else {
-        res.status(200).json({
-          status: "true",
-        });
+        res.status(200).json({status: "true"});
       }
     } catch (error) {
       console.log(err);
-      res.status(400).json({
-        error: "Something went wrong!",
-      });
+      res.status(400).json({error: "Something went wrong!"});
     }
   }
 }
 
-// Create the getAllEmployees controller
+// Create all employees
 async function getAllEmployees(req, res, next) {
+
   // Call the getAllEmployees method from the employee service
   const employees = await employeeService.getAllEmployees();
   if (!employees) {
-    res.status(400).json({
-      error: "Failed to get all employees!",
-    });
+    res.status(400).json({error: "Failed to get all employees!"});
   } else {
-    res.status(200).json({
-      status: "success",
-      data: employees,
-    });
+    res.status(200).json({status: "success", data: employees});
   }
 }
 
-// Controller for getting an employee by ID
+// get employee by ID
 const getEmployeeById = async (req, res) => {
   const { id } = req.params;
 
   // Validate the ID
   if (!id || isNaN(id)) {
-    return res.status(400).json({
-      status: "fail",
-      error: "Bad Request",
-      message: "The employee ID provided is invalid or missing",
-    });
+    return res.status(400).json({status: "fail", message: "invalid or missing employee ID"});
   }
 
   try {
@@ -72,20 +55,12 @@ const getEmployeeById = async (req, res) => {
 
     // If no employee is found
     if (!employee) {
-      return res.status(404).json({
-        status: "fail",
-        error: "Employee not found",
-        message: "The employee ID provided does not exist",
-      });
+      return res.status(404).json({status: "fail", message: "The employee ID provided does not exist"});
     }
 
     // Return the employee data
-    return res.status(200).json({
-      status: "success",
-      data: employee,
-    });
+    return res.status(200).json({status: "success", data: employee});
   } catch (err) {
-    // Log the error and return an internal server error response
     console.error("Error retrieving employee:", err.message);
     return res.status(500).json({
       status: "fail",
@@ -95,7 +70,7 @@ const getEmployeeById = async (req, res) => {
   }
 };
 
-// Controller for updating an employee
+// update employee
 async function updateEmployee(req, res) {
   const employeeId = req.params.id;
   const employeeData = req.body;
@@ -113,7 +88,7 @@ async function updateEmployee(req, res) {
   }
 }
 
-// Controller for updating an order recipient employee
+// updating an order recipient employee
 async function updateOrderRecipientEmployee(req, res) {
   const id = req.params.id;
   const updatedId = req.params.updatedId;
@@ -131,20 +106,17 @@ async function updateOrderRecipientEmployee(req, res) {
   }
 }
 
-// Controller for deleting an employee
+// delete an employee
 async function deleteEmployee(req, res) {
   const employeeId = req.params.id;
-  console.log(employeeId);
 
   try {
     // Call the service function to delete the employee
     const result = await employeeService.deleteEmployee(employeeId);
 
     if (!result) {
-      // If the employee does not exist, return 404
       return res.status(404).json({ message: "Employee not found." });
     }
-
     res.status(200).json({ message: "Employee deleted successfully." });
   } catch (err) {
     console.error(err);
