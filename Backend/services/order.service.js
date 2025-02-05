@@ -293,27 +293,24 @@ const updateOrder = async (updatedData) => {
 
       // Generate a comma-separated list of service IDs
       const serviceIds = services.map((service) => service.service_id).join(", ");
-      const updateServiceQuery = `
-        UPDATE order_services
+      await connection.query(
+        `UPDATE order_services
         SET service_completed = CASE ${serviceUpdateCases} END
-        WHERE service_id IN (${serviceIds}) AND order_id = ?;
-      `;
-      await connection.query(updateServiceQuery, [order_id]);
+        WHERE service_id IN (${serviceIds}) AND order_id = ?`,
+        [order_id]);
     }
 
     // Update `order_info` table
-    const updateOrderInfoQuery = `
-      UPDATE order_info
-      SET 
+    await connection.query(
+      `UPDATE order_info SET 
         additional_request = ?,
         additional_requests_completed = ?,
         completion_date = ?,
         order_total_price = ?,
         notes_for_internal_use = ?,
         notes_for_customer = ?
-      WHERE order_id = ?;
-    `;
-    await connection.query(updateOrderInfoQuery, [
+      WHERE order_id = ?`,
+      [
       additional_request,
       additional_requests_completed,
       completion_date,
@@ -324,20 +321,16 @@ const updateOrder = async (updatedData) => {
     ]);
 
     // Update `order_status` table
-    const updateOrderStatusQuery = `
-      UPDATE order_status
-      SET order_status = ?
-      WHERE order_id = ?;
-    `;
-    await connection.query(updateOrderStatusQuery, [order_status, order_id]);
+    await connection.query(
+      `UPDATE order_status SET order_status = ? WHERE order_id = ?`,
+      [order_status, order_id]
+    );
 
     // Update `orders` table
-    const updateOrdersQuery = `
-      UPDATE orders
-      SET active_order = ?
-      WHERE order_id = ?;
-    `;
-    await connection.query(updateOrdersQuery, [active_order, order_id]);
+    await connection.query(
+      `UPDATE orders SET active_order = ? WHERE order_id = ?`,
+      [active_order, order_id]
+    );
 
     // Commit the transaction
     await connection.commit();
@@ -354,43 +347,23 @@ const updateOrder = async (updatedData) => {
   }
 };
 
-// Delete an order by ID
+// function to Delete an order by ID
 const deleteOrder = async (id) => {
   const connection = await db.getConnection();
   try {
     await connection.beginTransaction();
 
     // Delete associated services first
-    await connection.query(
-      `
-      DELETE FROM order_services WHERE order_id = ?
-    `,
-      [id]
-    );
+    await connection.query(`DELETE FROM order_services WHERE order_id = ?`, [id]);
 
     // Delete from order_status
-    await connection.query(
-      `
-      DELETE FROM order_status WHERE order_id = ?
-      `,
-      [id]
-    );
+    await connection.query(`DELETE FROM order_status WHERE order_id = ?`, [id]);
 
     // Delete from order_info
-    await connection.query(
-      `
-      DELETE FROM order_info WHERE order_id = ?
-      `,
-      [id]
-    );
+    await connection.query(`DELETE FROM order_info WHERE order_id = ?`, [id]);
 
     // Delete the order
-    const [result] = await connection.query(
-      `
-      DELETE FROM orders WHERE order_id = ?
-      `,
-      [id]
-    );
+    const [result] = await connection.query(`DELETE FROM orders WHERE order_id = ?`, [id]);
 
     // Handle case where no rows were deleted
     if (result.affectedRows === 0) {
@@ -409,8 +382,9 @@ const deleteOrder = async (id) => {
   }
 };
 
-// Service to delete a service from an order
+// function to delete a service from an order
 const deleteService = async (orderId, serviceId) => {
+  // Get a connection from the pool
   const connection = await db.getConnection();
 
   try {

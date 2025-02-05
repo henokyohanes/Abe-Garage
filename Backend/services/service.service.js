@@ -1,16 +1,12 @@
 const db = require("../config/db.config");
 
-// Create a new service
-const createService = async ({
-  service_name,
-  service_description
-}) => {
+// function to create a new service
+const createService = async ({service_name, service_description}) => {
   try {
+    // Insert the service into the database
     const result = await db.query(
-      `
-      INSERT INTO common_services (service_name, service_description)
-      VALUES (?, ?)
-    `,
+      `INSERT INTO common_services (service_name, service_description)
+      VALUES (?, ?)`,
       [service_name, service_description]
     );
 
@@ -21,19 +17,12 @@ const createService = async ({
   }
 };
 
-// Fetch all services
+// function to fetch all services
 const fetchAllServices = async () => {
   try {
-    const rows = await db.query(
-      `
-      SELECT
-        service_id,
-        service_name,
-        service_description
-      FROM
-        common_services
-      `
-    );
+    // Fetch all services
+    const rows = await db.query(`SELECT service_id, service_name, service_description FROM common_services`);
+
     return rows;
   } catch (error) {
     console.error('Error fetching all services:', error.message);
@@ -41,22 +30,17 @@ const fetchAllServices = async () => {
   }
 };
 
-// Fetch a single service by ID
+// function to fetch a single service by ID
 const fetchServiceById = async (id) => {
   try {
+    // Fetch the service
     const rows = await db.query(
-      `
-      SELECT
-        service_id,
-        service_name,
-        service_description
-      FROM
-        common_services
-      WHERE
-        service_id = ?
-      `,
+      `SELECT service_id, service_name, service_description
+      FROM common_services
+      WHERE service_id = ?`,
       [id]
     );
+
     return rows.length > 0 ? rows[0] : null;
   } catch (error) {
     console.error('Error fetching service by ID:', error.message);
@@ -64,15 +48,14 @@ const fetchServiceById = async (id) => {
   }
 };
 
-// Update a service by ID
+// function to Update a service by ID
 const updateServiceById = async (id, service_name, service_description) => {
   try {
+    // Update the service
     const result = await db.query(
-      `
-      UPDATE common_services
+      `UPDATE common_services
       SET service_name = ?, service_description = ?
-      WHERE service_id = ?
-      `,
+      WHERE service_id = ?`,
       [service_name, service_description, id]
     );
 
@@ -83,17 +66,14 @@ const updateServiceById = async (id, service_name, service_description) => {
   }
 };
 
-// Delete a service by ID
+// function to delete a service by ID
 const deleteServiceById = async (id) => {
   try {
-    // Step 1: Delete related records from order_services first
+    // Delete related records from order_services first
     await db.query(`DELETE FROM order_services WHERE service_id = ?`, [id]);
 
-    // Step 2: Delete from common_services
-    const result = await db.query(
-      `DELETE FROM common_services WHERE service_id = ?`,
-      [id]
-    );
+    // Delete from common_services
+    const result = await db.query(`DELETE FROM common_services WHERE service_id = ?`, [id]);
 
     return result.affectedRows > 0;
   } catch (error) {
@@ -101,6 +81,5 @@ const deleteServiceById = async (id) => {
     throw error;
   }
 };
-
 
 module.exports = {createService, fetchAllServices, fetchServiceById, updateServiceById, deleteServiceById};
