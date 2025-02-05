@@ -3,28 +3,28 @@ const router = express.Router();
 const orderController = require("../controllers/order.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
-// Create order endpoint
+// Route to create a new order
 router.post('/api/order', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.createOrder);
 
-// Get all orders endpoint
+// Route to get all orders
 router.get('/api/orders', authMiddleware.verifyToken, orderController.getAllOrders);
 
-// Get orders by customer ID endpoint
+// Route to get orders by employee ID
 router.get('/api/orders/customer/:customer_id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.getOrdersByCustomerId);
 
-// Get single order endpoint
+// Route to get a single order by ID
 router.get('/api/order/:id', authMiddleware.verifyToken, orderController.getOrderById);
 
-// Update order endpoint
+// Route to update an order
 router.put('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.updateOrder);
 
-// Delete order endpoint
+// Route to delete an order
 router.delete('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.deleteOrder);
 
-// Delete service endpoint of an order
+// Route to add a service to an order
 router.delete('/api/order/:orderId/service/:serviceId', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.deleteService);
 
-// Cancel additional request endpoint
+// Route to add an additional request to an order
 router.put('/api/order/:orderId/additional-request', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.cancelAdditionalRequest);
 
 module.exports = router;

@@ -39,7 +39,8 @@ const ProvideServices = () => {
         try {
             await serviceService.addService(newservice);
             alert("Service added successfully!");
-            window.location.reload();
+            fetchAllServices();
+            setNewservice({ service_name: "", service_description: "" });
         } catch (error) {
             console.error("Error adding service:", error);
             alert("Failed to add service");

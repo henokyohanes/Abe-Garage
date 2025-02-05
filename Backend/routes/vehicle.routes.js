@@ -12,10 +12,10 @@ router.get('/api/vehicles/:customer_id', [authMiddleware.verifyToken, authMiddle
 // Route to get a single vehicle by ID
 router.get('/api/vehicle/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], vehicleController.getVehicleById);
 
-// Update vehicle endpoint
+// Route to update a vehicle
 router.put('/api/update-vehicle/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], vehicleController.updateVehicle);
 
-// Delete vehicle endpoint
+// Route to delete a vehicle
 router.delete('/api/delete-vehicle/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], vehicleController.deleteVehicle);
 
 module.exports = router;

@@ -25,13 +25,8 @@ async function logIn(req, res, next) {
     // Generate a JWT token
     const token = jwt.sign(payload, jwtSecret, {expiresIn: "24h"});
     const sendBack = {employee_token: token};
-    res.status(200).json({
-      status: "success",
-      message: "Employee logged in successfully",
-      data: sendBack,
-    });
+    res.status(200).json({status: "success", message: "Employee logged in successfully", data: sendBack});
   } catch (error) {
-    console.log(error);
     res.status(400).json({error: "Something went wrong!"});
   }
 }

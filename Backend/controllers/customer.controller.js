@@ -19,17 +19,18 @@ const customerValidationSchema = checkSchema({
   }
 });
 
-// Middleware for validation
+// Middleware function for validation
 const validateCustomer = async (req, res, next) => {
   await Promise.all(customerValidationSchema.map((validation) => validation.run(req)));
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     return res.status(400).json({ status: 'fail', errors: errors.array() });
   }
   next();
 };
 
-// Create customer
+// function to Create customer
 const createCustomer = async (req, res) => {
   const {
     customer_email,
@@ -41,8 +42,10 @@ const createCustomer = async (req, res) => {
   } = req.body;
 
   try {
+    // Check if customer already exists
     const existingCustomer = await customerService.findCustomerByEmail(customer_email);
 
+    // Return error if customer already exists
     if (existingCustomer.length > 0) {
       return res.status(409).json({ status: "fail", message: "Customer already exists" });
     }
@@ -57,37 +60,27 @@ const createCustomer = async (req, res) => {
       customer_hash
     });
 
-    // Return success response
     return res.status(201).json({ status: "success", message: "Customer created successfully" });
   } catch (err) {
     console.error("Error creating customer:", err.message);
-    return res.status(500).json({
-      status: "fail",
-      message: "Failed to create customer",
-      error: err.message
-    });
+    return res.status(500).json({status: "fail", message: "Failed to create customer"});
   }
 };
 
-// Get all customers
+// function to Get all customers
 const getAllCustomers = async (req, res) => {
   try {
     // Fetch all customers
     const customers = await customerService.getAllCustomers();
 
-    // Return the list of customers
     return res.status(200).json({ status: 'success', data: customers });
   } catch (err) {
     console.error('Error retrieving customers:', err.message);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Failed to retrieve customers',
-      error: err.message
-    });
+    return res.status(500).json({status: 'fail', message: 'Failed to retrieve customers'});
   }
 };
 
-// Get a single customer by ID
+// function to Get a single customer by ID
 const getCustomerById = async (req, res) => {
   const { id } = req.params;
 
@@ -100,23 +93,19 @@ const getCustomerById = async (req, res) => {
     // Fetch the customer by ID
     const customer = await customerService.getCustomerById(id);
 
+    // Check if customer exists
     if (!customer) {
       return res.status(404).json({ status: "fail", message: "The customer ID provided does not exist" });
     }
 
-    // Return the customer data
     return res.status(200).json({ status: "success", data: customer });
   } catch (err) {
     console.error("Error retrieving customer:", err.message);
-    return res.status(500).json({
-      status: "fail",
-      message: "Failed to retrieve customer",
-      error: err.message,
-    });
+    return res.status(500).json({status: "fail", message: "Failed to retrieve customer"});
   }
 };
 
-// Update customer information
+// function to Update customer information
 const updateCustomer = async (req, res) => {
   const { id } = req.params;
   const {
@@ -132,6 +121,7 @@ const updateCustomer = async (req, res) => {
   }
 
   try {
+    // Fetch the customer by ID
     const existingCustomer = await customerService.getCustomerById(id);
 
     // Check if customer exists
@@ -147,19 +137,14 @@ const updateCustomer = async (req, res) => {
       active_customer_status,
     });
 
-    // Send success response
-    return res.status(200).json({
-      status: "success",
-      message: "Customer updated successfully",
-      data: updatedCustomer,
-    });
+    return res.status(200).json({status: "success", message: "Customer updated successfully", data: updatedCustomer});
   } catch (err) {
     console.error("Error updating customer:", err.message);
     return res.status(500).json({status: "fail", message: "There was an issue updating customer."});
   }
 };
 
-// delete customer by ID    
+// function to delete customer by ID    
 const deleteCustomer = async (req, res) => {
   const { id } = req.params;
 
@@ -169,6 +154,7 @@ const deleteCustomer = async (req, res) => {
   }
 
   try {
+    // Fetch the customer by ID
     const existingCustomer = await customerService.getCustomerById(id);
 
     // Check if customer exists
@@ -177,14 +163,11 @@ const deleteCustomer = async (req, res) => {
     }
     // Delete customer
     await customerService.deleteCustomer(id);
+    
     return res.status(200).json({status: "success", message: "Customer deleted successfully"});
   } catch (err) {
     console.error("Error deleting customer:", err.message);
-    return res.status(500).json({
-      status: "fail",
-      error: "Internal Server Error",
-      message: "There was an issue deleting the customer. Please try again later."
-    });
+    return res.status(500).json({status: "fail", message: "There was an issue deleting the customer."});
   }
 };
 

@@ -9,6 +9,7 @@
 }
 
 .benefit {
+    list-style: none;
     font-size: clamp(.9em, 3vw, 1.1em);
     margin: .4em .8em;
 }
@@ -24,6 +25,7 @@
 }
 
 .additionalServices li {
+    list-style: none;
     font-size: clamp(.9em, 3vw, 1.1em);
     margin: .4em .8em;
 }

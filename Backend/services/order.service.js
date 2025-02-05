@@ -1,6 +1,6 @@
 const db = require("../config/db.config");
 
-// Create a new order
+// function to Create a new order
 const createOrder = async (orderData) => {
   const {
     employee_id,
@@ -16,7 +16,8 @@ const createOrder = async (orderData) => {
     order_status,
   } = orderData;
 
-  const connection = await db.getConnection(); // Get a connection from the pool
+  // Get a connection from the pool
+  const connection = await db.getConnection();
 
   try {
     // Start a transaction
@@ -25,42 +26,35 @@ const createOrder = async (orderData) => {
     // Insert the order into the orders table
     const [orderResult] = await connection.query(
       `INSERT INTO orders (employee_id, customer_id, vehicle_id, order_hash, active_order) 
-       VALUES (?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?)`,
       [employee_id, customer_id, vehicle_id, order_hash, active_order]
     );
 
+    // Get the inserted order ID
     const order_id = orderResult.insertId;
 
     // Insert associated order_services into the order_services table
     await connection.query(
       `INSERT INTO order_info (order_id, order_total_price, additional_request, additional_requests_completed)
-       VALUES (?, ?, ?, ?)`,
-      [
-        order_id,
-        order_total_price,
-        additional_request,
-        additional_requests_completed,
-      ]
+      VALUES (?, ?, ?, ?)`,
+      [order_id, order_total_price, additional_request, additional_requests_completed]
     );
 
+    // Insert associated order_services into the order_services table
     const placeholders = service_ids.map(() => "(?, ?, ?)").join(", ");
-    const values = service_ids.flatMap((service_id) => [
-      order_id,
-      service_id,
-      service_completed,
-    ]);
+    const values = service_ids.flatMap((service_id) => [order_id, service_id, service_completed]);
 
     // Execute the query
     await connection.query(
       `INSERT INTO order_services (order_id, service_id, service_completed)
-     VALUES ${placeholders}`,
+      VALUES ${placeholders}`,
       values
     );
 
     // Insert order status into the `order_status` table
     await connection.query(
       `INSERT INTO order_status (order_id, order_status)
-       VALUES (?, ?)`,
+      VALUES (?, ?)`,
       [order_id, order_status]
     );
 
@@ -75,61 +69,61 @@ const createOrder = async (orderData) => {
   } catch (error) {
     // Rollback the transaction on error
     await connection.rollback();
-    connection.release(); // Ensure connection is released in case of an error
+    connection.release();
     throw error;
   }
 };
 
-// Get all orders
+// function to Get all orders
 const getAllOrders = async () => {
   try {
-    // Query to fetch all orders along with associated order services
-    const orders = await db.query(`
-      SELECT 
-    o.order_id,
-    o.customer_id,
-    o.vehicle_id,
-    o.employee_id,
-    o.order_date,
-    ci.customer_first_name,
-    ci.customer_last_name,
-    cid.customer_email,
-    cid.customer_phone_number,
-    cvi.vehicle_make,
-    cvi.vehicle_model,
-    cvi.vehicle_year,
-    cvi.vehicle_tag,
-    ei.employee_first_name,
-    ei.employee_last_name,
-    os.order_status
-FROM 
-    orders o
-LEFT JOIN 
-    customer_info ci ON o.customer_id = ci.customer_id
-LEFT JOIN 
-    customer_identifier cid ON o.customer_id = cid.customer_id
-LEFT JOIN 
-    customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
-LEFT JOIN 
-    employee_info ei ON o.employee_id = ei.employee_id
-LEFT JOIN 
-    order_status os ON o.order_id = os.order_id
-ORDER BY 
-    o.order_date DESC;
+    // Get all orders
+    const orders = await db.query(
+      `SELECT
+        o.order_id,
+        o.customer_id,
+        o.vehicle_id,
+        o.employee_id,
+        o.order_date,
+        ci.customer_first_name,
+        ci.customer_last_name,
+        cid.customer_email,
+        cid.customer_phone_number,
+        cvi.vehicle_make,
+        cvi.vehicle_model,
+        cvi.vehicle_year,
+        cvi.vehicle_tag,
+        ei.employee_first_name,
+        ei.employee_last_name,
+        os.order_status
+      FROM 
+        orders o
+      LEFT JOIN 
+        customer_info ci ON o.customer_id = ci.customer_id
+      LEFT JOIN 
+        customer_identifier cid ON o.customer_id = cid.customer_id
+      LEFT JOIN 
+        customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+      LEFT JOIN 
+        employee_info ei ON o.employee_id = ei.employee_id
+      LEFT JOIN 
+        order_status os ON o.order_id = os.order_id
+      ORDER BY 
+        o.order_date DESC;`
+    );
 
-    `);
     return orders;
   } catch (error) {
     throw error;
   }
 };
 
-// Get all orders for a specific customer
+// function to get all orders for a specific customer
 const getOrdersByCustomerId = async (customer_id) => {
   try {
+    // Get all orders
     const orders = await db.query(
-      `
-      SELECT 
+      `SELECT 
         o.order_id,
         o.customer_id,
         o.vehicle_id,
@@ -139,51 +133,55 @@ const getOrdersByCustomerId = async (customer_id) => {
         cvi.vehicle_year,
         cvi.vehicle_make,
         cvi.vehicle_model
-      FROM orders o
-      LEFT JOIN order_status os ON o.order_id = os.order_id
-      LEFT JOIN order_info oi ON o.order_id = oi.order_id
-      LEFT JOIN customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
-      WHERE o.customer_id = ?
-      ORDER BY o.order_date DESC;
-      `,
+      FROM 
+        orders o
+      LEFT JOIN
+        order_status os ON o.order_id = os.order_id
+      LEFT JOIN 
+        order_info oi ON o.order_id = oi.order_id
+      LEFT JOIN 
+        customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+      WHERE 
+        o.customer_id = ?
+      ORDER BY 
+        o.order_date DESC;`,
       [customer_id]
     );
 
-    return orders; // Return the list of orders
+    return orders;
   } catch (error) {
     console.error("Error retrieving orders for customer:", error);
     throw error;
   }
 };
 
-// Get a single order by ID
+// function to Get a single order by ID
 const getOrderById = async (id) => {
   try {
-    // Query to fetch order details and associated services
+    // Get a single order
     const order = await db.query(
-      `
-      SELECT 
-    o.active_order,
-    ci.customer_first_name,
-    ci.customer_last_name,
-    ci.active_customer_status,
-    cid.customer_email,
-    cid.customer_phone_number,
-    cvi.vehicle_make,
-    cvi.vehicle_model,
-    cvi.vehicle_year,
-    cvi.vehicle_tag,
-    cvi.vehicle_mileage,
-    cvi.vehicle_color,
-    os.order_status,
-    oi.additional_request,
-    oi.additional_requests_completed,
-    oi.order_total_price,
-    DATE_FORMAT(oi.completion_date, '%Y-%m-%d') AS completion_date,
-    oi.notes_for_internal_use,
-    oi.notes_for_customer,
-    (
-        SELECT 
+      `SELECT 
+        o.active_order,
+        ci.customer_first_name,
+        ci.customer_last_name,
+        ci.active_customer_status,
+        cid.customer_email,
+        cid.customer_phone_number,
+        cvi.vehicle_make,
+        cvi.vehicle_model,
+        cvi.vehicle_year,
+        cvi.vehicle_tag,
+        cvi.vehicle_mileage,
+        cvi.vehicle_color,
+        os.order_status,
+        oi.additional_request,
+        oi.additional_requests_completed,
+        oi.order_total_price,
+        DATE_FORMAT(oi.completion_date, '%Y-%m-%d') AS completion_date,
+        oi.notes_for_internal_use,
+        oi.notes_for_customer,
+        (
+          SELECT 
             JSON_ARRAYAGG(
                 JSON_OBJECT(
                     'service_id', cs.service_id,
@@ -192,45 +190,44 @@ const getOrderById = async (id) => {
                     'service_completed', osrv.service_completed
                 )
             )
-        FROM 
+          FROM 
             order_services osrv
-        LEFT JOIN 
+          LEFT JOIN 
             common_services cs ON cs.service_id = osrv.service_id
-        WHERE 
+          WHERE 
             osrv.order_id = o.order_id
-    ) AS services
-FROM 
-    orders o
-LEFT JOIN 
-    customer_info ci ON o.customer_id = ci.customer_id
-LEFT JOIN 
-    customer_identifier cid ON o.customer_id = cid.customer_id
-LEFT JOIN 
-    customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
-LEFT JOIN 
-    employee_info ei ON o.employee_id = ei.employee_id
-LEFT JOIN 
-    order_status os ON o.order_id = os.order_id
-LEFT JOIN 
-    order_info oi ON o.order_id = oi.order_id
-WHERE 
-    o.order_id = ?;
-    `,
+        ) AS services
+      FROM 
+        orders o
+      LEFT JOIN 
+        customer_info ci ON o.customer_id = ci.customer_id
+      LEFT JOIN 
+        customer_identifier cid ON o.customer_id = cid.customer_id
+      LEFT JOIN 
+        customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+      LEFT JOIN 
+        employee_info ei ON o.employee_id = ei.employee_id
+      LEFT JOIN 
+        order_status os ON o.order_id = os.order_id
+      LEFT JOIN 
+        order_info oi ON o.order_id = oi.order_id
+      WHERE 
+        o.order_id = ?;`,
       [id]
     );
-    // If no order is found, return null
+
     return order
   } catch (error) {
     throw error;
   }
 };
 
-//get all orders for a specific employee
+//function to get all orders for a specific employee
 const getOrdersByEmployeeId = async (employee_id) => {
   try {
+    // Get all orders
     const orders = await db.query(
-      `
-      SELECT 
+      `SELECT 
         o.order_id,
         o.customer_id,
         o.vehicle_id,
@@ -240,24 +237,29 @@ const getOrdersByEmployeeId = async (employee_id) => {
         cvi.vehicle_year,
         cvi.vehicle_make,
         cvi.vehicle_model
-      FROM orders o
-      LEFT JOIN order_status os ON o.order_id = os.order_id
-      LEFT JOIN order_info oi ON o.order_id = oi.order_id
-      LEFT JOIN customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
-      WHERE o.employee_id = ? 
-      ORDER BY o.order_date DESC;
-      `,
+      FROM 
+        orders o
+      LEFT JOIN 
+        order_status os ON o.order_id = os.order_id
+      LEFT JOIN 
+        order_info oi ON o.order_id = oi.order_id
+      LEFT JOIN 
+        customer_vehicle_info cvi ON o.vehicle_id = cvi.vehicle_id
+      WHERE 
+        o.employee_id = ? 
+      ORDER BY 
+        o.order_date DESC;`,
       [employee_id]
     );
 
-    return orders; // Return the list of orders
+    return orders;
   } catch (error) {
     console.error("Error retrieving orders for employee:", error);
     throw error;
   }
 };
 
-// Update order and its associated services
+// function to Update order and its associated services
 const updateOrder = async (updatedData) => {
 
   const {
@@ -285,15 +287,12 @@ const updateOrder = async (updatedData) => {
 
     // Update `order_service` table for multiple `service_completed` fields
     if (services && services.length > 0) {
-      const serviceUpdateCases = services
-        .map(
-          (service) =>
-            `WHEN service_id = ${service.service_id} THEN '${service.service_completed}'`
-        )
-        .join(" ");
-      const serviceIds = services
-        .map((service) => service.service_id)
-        .join(", ");
+      const serviceUpdateCases = services.map(
+        (service) => `WHEN service_id = ${service.service_id} THEN "${service.service_completed}"`
+      ).join(" ");
+
+      // Generate a comma-separated list of service IDs
+      const serviceIds = services.map((service) => service.service_id).join(", ");
       const updateServiceQuery = `
         UPDATE order_services
         SET service_completed = CASE ${serviceUpdateCases} END
@@ -412,66 +411,66 @@ const deleteOrder = async (id) => {
 
 // Service to delete a service from an order
 const deleteService = async (orderId, serviceId) => {
-    const connection = await db.getConnection();
+  const connection = await db.getConnection();
 
-    try {
-        // Begin transaction
-        await connection.beginTransaction();
+  try {
+    // Begin transaction
+    await connection.beginTransaction();
 
-        // Delete service from the services table
-        const [result] = await connection.query(
-            'DELETE FROM order_services WHERE order_id = ? AND service_id = ?',
-            [orderId, serviceId]
-        );
+    // Delete service from the services table
+    const [result] = await connection.query(
+      'DELETE FROM order_services WHERE order_id = ? AND service_id = ?',
+      [orderId, serviceId]
+    );
 
-        // If no service was deleted
-        if (result.affectedRows === 0) {
-            await connection.rollback();
-            throw new Error("Service not found.");
-        }
-
-        // Commit transaction
-        await connection.commit();
-        return { success: true, message: "Service deleted successfully." };
-    } catch (error) {
-        console.error("Error deleting service:", error);
-        await connection.rollback();
-        throw new Error("Failed to delete service.");
-    } finally {
-        connection.release();
+    // If no service was deleted
+    if (result.affectedRows === 0) {
+      await connection.rollback();
+      throw new Error("Service not found.");
     }
+
+    // Commit transaction
+    await connection.commit();
+    return { success: true, message: "Service deleted successfully." };
+  } catch (error) {
+    console.error("Error deleting service:", error);
+    await connection.rollback();
+    throw new Error("Failed to delete service.");
+  } finally {
+    connection.release();
+  }
 };
 
 // Service to cancel additional request for an order
 const cancelAdditionalRequest = async (orderId, additionalRequest, additionalRequestsCompleted) => {
-    const connection = await db.getConnection();
+  const connection = await db.getConnection();
 
-    try {
-        // Begin transaction
-        await connection.beginTransaction();
+  try {
+    // Begin transaction
+    await connection.beginTransaction();
 
-        // Update the additional request and status
-        const [result] = await connection.query(
-            'UPDATE order_info SET additional_request = ?, additional_requests_completed = ? WHERE order_id = ?',
-            [additionalRequest, additionalRequestsCompleted, orderId]
-        );
+    // Update the additional request and status
+    const [result] = await connection.query(
+      'UPDATE order_info SET additional_request = ?, additional_requests_completed = ? WHERE order_id = ?',
+      [additionalRequest, additionalRequestsCompleted, orderId]
+    );
 
-        // If the order doesn't exist
-        if (result.affectedRows === 0) {
-            await connection.rollback();
-            throw new Error("Order not found.");
-        }
-
-        // Commit transaction
-        await connection.commit();
-        return { success: true, message: "Additional request canceled successfully." };
-    } catch (error) {
-        console.error("Error canceling additional request:", error);
-        await connection.rollback();
-        throw new Error("Failed to cancel additional request.");
-    } finally {
-        connection.release();
+    // If the order doesn't exist
+    if (result.affectedRows === 0) {
+      await connection.rollback();
+      throw new Error("Order not found.");
     }
+
+    // Commit transaction
+    await connection.commit();
+    return { success: true, message: "Additional request canceled successfully." };
+  } catch (error) {
+    console.error("Error canceling additional request:", error);
+    await connection.rollback();
+    throw new Error("Failed to cancel additional request.");
+  } finally {
+    connection.release();
+  }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, getOrdersByEmployeeId, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};
+module.exports = { createOrder, getAllOrders, getOrderById, getOrdersByEmployeeId, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest };

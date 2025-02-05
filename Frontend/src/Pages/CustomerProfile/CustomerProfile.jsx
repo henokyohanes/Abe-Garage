@@ -63,8 +63,9 @@ const CustomerProfile = () => {
         try {
             await vehicleService.addVehicle(parseInt(id), newVehicle);
             setShowform(false);
-            window.location.reload();
             alert("Vehicle added successfully!");
+            fetchVehicles();
+            setNewVehicle({ vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_type: "", vehicle_color: "", vehicle_mileage: "", vehicle_tag: "", vehicle_serial: "" });
         } catch (error) {
             console.error("Error adding vehicle:", error);
             alert(error || "Failed to add vehicle");

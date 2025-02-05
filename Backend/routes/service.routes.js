@@ -3,19 +3,19 @@ const router = express.Router();
 const serviceController = require("../controllers/service.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 
-// Add Service Endpoint
+// Route to add a new service
 router.post("/api/service", [authMiddleware.verifyToken, authMiddleware.isAdmin], serviceController.addService);
 
-// Get All Services Endpoint
+// Route to get all services
 router.get('/api/services', authMiddleware.verifyToken, serviceController.getAllServices);
 
-// Get Single Service by ID
+// Route to get a single service by ID
 router.get('/api/service/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], serviceController.getServiceById);
 
-// Update Service by ID
+// Route to update a service
 router.put('/api/service/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin], serviceController.updateService);
 
-// Delete Service by ID
+// Route to delete a service
 router.delete('/api/service/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin], serviceController.deleteService);
 
 module.exports = router;
