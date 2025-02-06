@@ -181,7 +181,7 @@ const NewOrder = () => {
             const response = await orderService.addOrder(orderWithHash);
             setOrder(response.data);
             setTimeout(() => {
-                window.location.href = "/orders";
+                navigate(`/order-details/${response.data.order_id}`);
             }, 1000);
         } catch (err) {
             console.error(err);
@@ -201,32 +201,11 @@ const NewOrder = () => {
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
-                <div className=" d-none d-xl-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-xl-none">
-                    <AdminMenuMobile />
-                </div>
-                {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
-                    <div className={styles.adminMenuTitle}>
-                        <h2>Admin Menu</h2>
-                    </div>
-                    <div className={styles.listGroup}>
-                        <Link to="/admin/dashboard" className={styles.listGroupItem}>Dashboard</Link>
-                        <Link to="/admin/orders" className={styles.listGroupItem}>Orders</Link>
-                        <Link to="/admin/new-order" className={styles.listGroupItem}>New order</Link>
-                        <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>
-                        <Link to="/admin/employees" className={styles.listGroupItem}>Employees</Link>
-                        <Link to="/admin/add-customer" className={styles.listGroupItem}>Add customer</Link>
-                        <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
-                        <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
-                    </div>
-                </div> */}
+                <div className=" d-none d-xl-block col-3"><AdminMenu /></div>
+                <div className="d-block d-xl-none"><AdminMenuMobile /></div>
                 <div className={`${styles.orderList} col-12 col-xl-9`}>
                     <div className={styles.header}>
-                        <h2>
-                            Create a New Order <span>____</span>
-                        </h2>
+                        <h2>Create a New Order <span>____</span></h2>
                         {showSearch && <div className={styles.searchBar}>
                             <div className={styles.searchIcon}>
                                 <input
@@ -235,15 +214,10 @@ const NewOrder = () => {
                                     onChange={handleSearch}
                                     placeholder="Search for a customer by name, email, or phone number"
                                 />
-                                <span>
-                                    <FaSearch />
-                                </span>
+                                <span><FaSearch /></span>
                             </div>
                             {searchTerm === "" && (
-                                <button
-                                    onClick={handleAddCustomer}
-                                    className={styles.addButton}
-                                >
+                                <button onClick={handleAddCustomer} className={styles.addButton}>
                                     Add New Customer
                                 </button>
                             )}
@@ -273,8 +247,8 @@ const NewOrder = () => {
                                                 <td>{customer.customer_phone_number}</td>
                                                 <td>
                                                     <button
-                                                        onClick={() => { handleSelectCustomer(customer.customer_id); setShowVehicles(true); }}
                                                         className={styles.selectButton}
+                                                        onClick={() => { handleSelectCustomer(customer.customer_id); setShowVehicles(true); }}
                                                     >
                                                         <FaHandPointUp />
                                                     </button>
@@ -285,33 +259,20 @@ const NewOrder = () => {
                                 </table>
                                 </div>
                                 <div className={styles.pagination}>
-                                    <button
-                                        onClick={() => handlePageChange("prev")}
-                                        disabled={currentPage === 1}
-                                    >
-                                        Previous
-                                    </button>
-                                    <span>
-                                        Page {currentPage} of {totalPages}
-                                    </span>
-                                    <button
-                                        onClick={() => handlePageChange("next")}
-                                        disabled={currentPage === totalPages}
-                                    >
-                                        Next
-                                    </button>
+                                    <button onClick={() => handlePageChange("prev")} disabled={currentPage === 1}>Previous</button>
+                                    <span>Page {currentPage} of {totalPages}</span>
+                                    <button onClick={() => handlePageChange("next")} disabled={currentPage === totalPages}>Next</button>
                                 </div>
                             </div>
-                        ) : searchTerm !== "" ? (
-                            <p className={styles.noResults}>
-                                No customers matched your search.
-                            </p>
-                        ) : null}
+                        ) : searchTerm !== "" ? (<p className={styles.noResults}>No customers matched your search.</p>) : null}
                     </div>
                     }
                     {showCustomer && <div>
-                            {/* <div> */}
-                            <button className={styles.closeButton} onClick={() => { setShowSearch(true); setShowCustomer(false); setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}>x</button>
+                            <button className={styles.closeButton} onClick={() => { setShowSearch(true); setShowCustomer(false); 
+                                setServices(null); setShowVehicle(false); setShowVehicles(false); setVehicles([]); }}
+                            >
+                                x
+                            </button>
                         <div className={styles.customerInfo}>
                                 <h3>{customer.customer_first_name} {customer.customer_last_name}</h3>
                                 <div className={styles.customerDetails}>
@@ -321,7 +282,6 @@ const NewOrder = () => {
                                     <p><strong>Edit Customer Info:</strong> <span onClick={() => navigate(`/edit-customer/${customer.customer_id}`)}><FaEdit /></span></p>
                                 </div>
                             </div>
-                        {/* </div> */}
                         {!showVehicle && <div>
                             <h2>Choose a Vehicle <span>____</span></h2>
                             {vehicles.length > 0 ? (<div className={styles.tableContainer}>
@@ -349,9 +309,8 @@ const NewOrder = () => {
                                                 <td>{vehicle.vehicle_tag}</td>
                                                 <td>{vehicle.vehicle_serial}</td>
                                                 <td>
-                                                    <button
+                                                    <button className={styles.selectButton}
                                                         onClick={() => { handleSelectVehicle(vehicle.vehicle_id); setShowVehicles(false); setShowVehicle(true); }}
-                                                        className={styles.selectButton}
                                                     >
                                                         <FaHandPointUp />
                                                     </button>
@@ -368,9 +327,12 @@ const NewOrder = () => {
                     </div>
                     }
                     {showVehicle && <div>
-                            <button className={styles.closeButton} onClick={() => { setShowVehicle(false); setServices(null); fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}>x</button>
+                            <button className={styles.closeButton} onClick={() => { setShowVehicle(false); setServices(null); 
+                                fetchVehiclesByCustomerId(customer.customer_id); setShowVehicles(true); }}
+                            >
+                                x
+                            </button>
                         <div className={styles.vehicleInfo}>
-                            {/* <div> */}
                                 <h3>{vehicle.vehicle_make} {vehicle.vehicle_model}</h3>
                                 <div className={styles.vehicleDetails}>
                                     <p><strong>Year:</strong> {vehicle.vehicle_year}</p>
@@ -378,10 +340,12 @@ const NewOrder = () => {
                                     <p><strong>Mileage:</strong> {vehicle.vehicle_mileage}</p>
                                     <p><strong>Tag:</strong> {vehicle.vehicle_tag}</p>
                                     <p><strong>Serial:</strong> {vehicle.vehicle_serial}</p>
-                                    <p><strong>Edit Vehicle Info:</strong> <span onClick={() => navigate(`/edit-vehicle/${customer.customer_id}/${vehicle.vehicle_id}`)}><FaEdit /></span></p>
+                                    <p>
+                                        <strong>Edit Vehicle Info:</strong> 
+                                        <span onClick={() => navigate(`/edit-vehicle/${customer.customer_id}/${vehicle.vehicle_id}`)}><FaEdit /></span>
+                                    </p>
                                 </div>
                             </div>
-                        {/* </div> */}
                     </div>}
                     {services && <div>
                         <div className={styles.services}>
@@ -397,10 +361,14 @@ const NewOrder = () => {
                         </div>
                         <div className={styles.orderForm}>
                             <div className={styles.orderInfo}>
-                            <h2>Additional requests <span>____</span></h2>
-                            <textarea type="text" value={order.additional_request || ""} placeholder="Service description" onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} />
-                            <input type="number" value={order.order_total_price || ""} placeholder="Price" onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} />
-                            <button onClick={handleCreateOrder}>Submit Order</button>
+                                <h2>Additional requests <span>____</span></h2>
+                                <textarea type="text" value={order.additional_request || ""} placeholder="Service description" 
+                                    onChange={(e) => setOrder({ ...order, additional_request: e.target.value })} 
+                                />
+                                <input type="number" value={order.order_total_price || ""} placeholder="Price" 
+                                    onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })} 
+                                />
+                                <button onClick={handleCreateOrder}>Submit Order</button>
                             </div>
                         </div>
                     </div>}

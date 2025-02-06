@@ -4,6 +4,8 @@ import orderService from "../../services/order.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import NotFound from "../../Components/NotFound/NotFound";
+import Loader from "../../Components/Loader/Loader";    
 import styles from "./OrderDetails.module.css";
 
 const OrderDetails = () => {
@@ -11,16 +13,18 @@ const OrderDetails = () => {
     const { id } = useParams();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const fetchOrderDetails = async () => {
+            setLoading(true);
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
                 setOrder(response.data[0]);
-                console.log(response.data[0]);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching order details:", error);
-            } finally {
+                setError(true);
                 setLoading(false);
             }
         };
@@ -54,8 +58,6 @@ const OrderDetails = () => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-
     return (
         <Layout>
             <div className={`${styles.orderDetailsContainer} row g-0`}>
@@ -65,38 +67,8 @@ const OrderDetails = () => {
                 <div className="d-block d-xl-none">
                     <AdminMenuMobile /> 
                 </div>
-                {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
-                    <div className={styles.adminMenuTitle}>
-                        <h2>Admin Menu</h2>
-                    </div>
-                    <div className={styles.listGroup}>
-                        <Link to="/admin/dashboard" className={styles.listGroupItem}>
-                            Dashboard
-                        </Link>
-                        <Link to="/admin/orders" className={styles.listGroupItem}>
-                            Orders
-                        </Link>
-                        <Link to="/admin/new-order" className={styles.listGroupItem}>
-                            New order
-                        </Link>
-                        <Link to="/admin/add-employee" className={styles.listGroupItem}>
-                            Add employee
-                        </Link>
-                        <Link to="/admin/employees" className={styles.listGroupItem}>
-                            Employees
-                        </Link>
-                        <Link to="/admin/add-customer" className={styles.listGroupItem}>
-                            Add customer
-                        </Link>
-                        <Link to="/admin/customers" className={styles.listGroupItem}>
-                            Customers
-                        </Link>
-                        <Link to="/admin/services" className={styles.listGroupItem}>
-                            Services
-                        </Link>
-                    </div>
-                </div> */}
-                <div className={`${styles.orderDetails} col-12 col-xl-9`}>
+                <div className="col-12 col-xl-9">
+                    {!loading && !error ? (<div className={styles.orderDetails}>
                     <div className={styles.header}>
                         <h2>{order.customer_first_name} {order.customer_last_name} <span>____</span></h2>
                         <p className={`${styles.status} ${getStatusClass(order.order_status)}`}>
@@ -146,6 +118,7 @@ const OrderDetails = () => {
                             <p className={`${styles.status} ${getStatusClass(order.additional_requests_completed)} col-12 col-md-2 ps-md-3`}>{getStatusText(order.additional_requests_completed)}</p>
                         </div>}
                     </div>
+                    </div>) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>
