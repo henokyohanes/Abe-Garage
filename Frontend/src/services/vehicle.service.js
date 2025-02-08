@@ -21,6 +21,7 @@ export const fetchVehiclesByCustomerId = async (customerId) => {
             `${api_url}/api/vehicles/${customerId}`,
             getAuthHeaders()
         );
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error fetching vehicles:", error);

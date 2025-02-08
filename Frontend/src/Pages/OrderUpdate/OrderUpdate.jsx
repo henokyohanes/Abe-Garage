@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import orderService from "../../services/order.service";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
@@ -18,6 +19,7 @@ const OrderUpdate = () => {
     useEffect(() => {
         const fetchOrderData = async () => {
             setLoading(true);
+            setError(false);
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
                 setOrder(response.data[0]);
@@ -25,6 +27,8 @@ const OrderUpdate = () => {
             } catch (err) {
                 console.error(err);
                 setError(true);
+                setLoading(false);
+            } finally {
                 setLoading(false);
             }
         };
@@ -37,67 +41,157 @@ const OrderUpdate = () => {
         const { name, value, type, checked, dataset } = e.target;
         const index = dataset.index ? parseInt(dataset.index, 10) : null;
 
+        
         if (value === "3" && name === "service_completed" && index !== null) {
-            // Confirmation step
-            const confirmDelete = window.confirm(
-                "Are you sure you want to cancel this service? This action cannot be undone."
-            );
-            if (!confirmDelete) {
-                return; // Exit if the user cancels the confirmation
-            }
+            // const confirmDelete = window.confirm(
+                //     "Are you sure you want to cancel this service? This action cannot be undone."
+                // );
+                // if (!confirmDelete) {
+                    //     return;
+                    // }
+                    
+                    Swal.fire({
+                        title: "Are you sure you want to cancel this service?",
+                        text: "This action cannot be undone.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes !",
+                        customClass: {
+                            confirmButton: styles.confirmButton,
+                            cancelButton: styles.cancelButton,
+                            icon: styles.icon,
+                            title: styles.title,
+                            text: styles.text,
+                        }
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                    setLoading(true);
+                    try {
+                        const serviceId = order.services[index].service_id; // Assume each service has a unique `id`
+                        const orderId = id;
+                        await orderService.deleteService(orderId, serviceId);
+                        // Remove the service if confirmed
+                        setOrder((prevOrder) => {
+                            const updatedServices = [...prevOrder.services];
+                            updatedServices.splice(index, 1); // Remove the service at the selected index
+                            return {
+                                ...prevOrder,
+                                services: updatedServices,    
+                            };
+                        });
+                        setLoading(false);
+                        Swal.fire("Deleted!", "The service has been deleted.", "success");
+                    } catch (error) {
+                        console.error("Error deleting service:", error);
+                        setLoading(false);
+                        Swal.fire("Error", "Failed to delete service.", "error");
+                    } finally {
+                        setLoading(false);
+                    }   
+                }
+            }); 
 
-            try {
-                const serviceId = order.services[index].service_id; // Assume each service has a unique `id`
-                const orderId = id;
-                await orderService.deleteService(orderId, serviceId);
-                // Remove the service if confirmed
-                setOrder((prevOrder) => {
-                    const updatedServices = [...prevOrder.services];
-                    updatedServices.splice(index, 1); // Remove the service at the selected index
-                    return {
-                        ...prevOrder,
-                        services: updatedServices,
-                    };
-                });
-            } catch (error) {
-                console.error("Error deleting service:", error);
-            }
+            // try {
+            //     const serviceId = order.services[index].service_id;
+            //     const orderId = id;
+            //     await orderService.deleteService(orderId, serviceId);
+
+            //     setOrder((prevOrder) => {
+            //         const updatedServices = [...prevOrder.services];
+            //         updatedServices.splice(index, 1);
+            //         return {
+            //             ...prevOrder,
+            //             services: updatedServices,
+            //         };
+            //     });
+            // } catch (error) {
+            //     console.error("Error deleting service:", error);
+            // }
+
         } else if (value === "3" && name === "additional_requests_completed") {
-            const confirmCancel = window.confirm(
-                "Are you sure you want to cancel this additional request? This action cannot be undone."
-            );
-            if (!confirmCancel) {
-                return; // Exit if user cancels confirmation
-            }
+            
+            Swal.fire({
+                title: "Are you sure you want to cancel this additional request?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, cancel it!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setLoading(true);
+                    try {
+                        const orderId = id;
+                        const additionalRequest = { additional_request: null, additional_requests_completed: 0 };
+                        await orderService.deleteAdditionalRequest(orderId, additionalRequest);
+                        // Remove the additional request if confirmed
+                        setOrder((prevOrder) => ({
+                            ...prevOrder,
+                            additional_request: null,
+                            additional_requests_completed: null,
+                        }));
+                        setLoading(false);
+                        Swal.fire("Deleted!", "The additional request has been deleted.", "success");
+                    } catch (error) {    
+                        console.error("Error deleting additional request:", error);
+                        setLoading(false);
+                        Swal.fire("Error", "Failed to delete additional request.", "error");
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            });
 
-            try {
-                const orderId = id;
-                const additionalRequest = { additional_request: null, additional_requests_completed: 0 };
-                await orderService.deleteAdditionalRequest(orderId, additionalRequest);
-                // Remove the additional request if confirmed
-                setOrder((prevOrder) => ({
-                    ...prevOrder,
-                    additional_request: null,
-                    additional_requests_completed: null,
-                }));
-            } catch (error) {
-                console.error("Error deleting additional request:", error);
-            }
+            // try {
+            //     const orderId = id;
+            //     const additionalRequest = { additional_request: null, additional_requests_completed: 0 };
+            //     await orderService.deleteAdditionalRequest(orderId, additionalRequest);
+            //     // Remove the additional request if confirmed
+            //     setOrder((prevOrder) => ({
+            //         ...prevOrder,
+            //         additional_request: null,
+            //         additional_requests_completed: null,
+            //     }));
+            // } catch (error) {
+            //     console.error("Error deleting additional request:", error);
+            // }
         } else if (value === "3" && name === "order_status") {
-            const confirmCancel = window.confirm(
-                "Are you sure you want to cancel this order? This action cannot be undone."
-            );
-            if (!confirmCancel) {
-                return; // Exit if user cancels confirmation
-            }
 
-            try {
-                await orderService.deleteOrder(id);
-                // Remove the order if confirmed
-                navigate("/orders");
-            } catch (error) {
-                console.error("Error deleting order:", error);
-            }
+            Swal.fire({
+                title: "Are you sure you want to cancel this order?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, cancel it!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    setLoading(true);
+                    try {
+                        await orderService.deleteOrder(id);
+                        // Remove the order if confirmed
+                        setLoading(false);
+                        Swal.fire("Deleted!", "The order has been deleted.", "success");
+                        navigate("/orders");
+                    } catch (error) {
+                        console.error("Error deleting order:", error);
+                        setLoading(false);
+                        Swal.fire("Error", "Failed to delete order.", "error");
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            })
+
+            // try {
+            //     await orderService.deleteOrder(id);
+            //     // Remove the order if confirmed
+            //     navigate("/orders");
+            // } catch (error) {
+            //     console.error("Error deleting order:", error);
+            // }
 
         } else {
             setOrder((prevOrder) => {
@@ -123,12 +217,18 @@ const OrderUpdate = () => {
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             await orderService.updateOrder(id, order);
+            setLoading(false);
+            Swal.fire("Updated!", "The order has been updated.", "success");
             setTimeout(() => navigate("/orders"), 2000);
         } catch (err) {
             console.error(err);
-            setError("Failed to update order. Please try again.");
+            setLoading(false);
+            Swal.fire("Error", "Failed to update order.", "error");
+        } finally {
+            setLoading(false);
         }
     };
 

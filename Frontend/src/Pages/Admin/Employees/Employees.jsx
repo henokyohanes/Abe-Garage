@@ -6,8 +6,11 @@ import { MdDelete } from "react-icons/md";
 import employeeService from "../../../services/employee.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
+import NotFound from "../../../Components/NotFound/NotFound";
+import Loader from "../../../Components/Loader/Loader";
 import Layout from "../../../Layout/Layout";
 import styles from "./Employees.module.css";
+import { use } from "react";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
@@ -16,27 +19,52 @@ const EmployeeList = () => {
     const [newOrdersRecipient, setNewOrdersRecipient] = useState("");
     const [showUpdateSection, setShowUpdateSection] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const { isAdmin } = useAuth();
     const navigate = useNavigate();
 
     const itemsPerPage = 10;
 
+    const fetchEmployeesData = async () => {
+        setLoading(true);
+        setError(false);
+        try {
+            const response = await employeeService.fetchEmployees();
+            setEmployees(response.data);
+            setLoading(false);
+        } catch (err) {
+            setError(true);
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchEmployeesData();
     }, []);
 
-    const fetchEmployeesData = async () => {
-        try {
-            const response = await employeeService.fetchEmployees();
-            setEmployees(response.data);
-        } catch (err) {
-            setError(err.message || "Failed to fetch data");
-        } finally {
-            setLoading(false);
+    const formatDate = (date) => {
+        if (!date) return "";
+        const d = new Date(date);
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        const year = d.getFullYear();
+        return `${month}-${day}-${year}`;
+    };
+
+    const handlePageChange = (direction) => {
+        if (direction === "next" && currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        } else if (direction === "prev" && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
         }
     };
+
+    const totalPages = Math.ceil(employees.length / itemsPerPage);
+    const displayedEmployees = employees.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     const handleEdit = (id) => {
         if (!id) {
@@ -45,40 +73,47 @@ const EmployeeList = () => {
         }
         navigate(`/edit-employee/${id}`);
     };
+console.log(loading);
 
-    const handleDelete = async (id) => {
-        try {
-            const response = await employeeService.fetchEmployeeById(id);
-            const employee = response.data;
-            setSelectedEmployee(employee);
-
-            const confirmation = window.confirm(
-                "Are you sure you want to delete this employee?"
-            );
-            if (confirmation) {
-
-                if (employee.order_id) {
-                    if (employee.employee_email === "admin@admin.com") {
-                        alert("You cannot delete this employee.");
-                        return;
-                    }
-
-                    const confirmation = window.confirm(
-                        "Before deleting this employee, you must reassign orders recipient to another employee."
-                    );
-
-                    if (confirmation) {
-                        setShowUpdateSection(true);
-                    }
-                } else {
-                    await employeeService.deleteEmployee(id);
-                    fetchEmployeesData();
-                    alert("Employee deleted successfully.");
-                }
+const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this employee?")) return;
+    
+    setLoading(true);
+    console.log(loading);
+    setError(false);
+    
+    try {
+        const { data: employee } = await employeeService.fetchEmployeeById(id);
+        setSelectedEmployee(employee);
+        
+        if (employee.order_id) {
+            if (employee.employee_email === "admin@admin.com") {
+                alert("You cannot delete this employee.");
+                setLoading(false);
+                return;
             }
-        } catch (err) {
-            alert(err.message || "Failed to fetch employee.");
+            
+            if (window.confirm(
+                "Before deleting this employee, you must reassign orders recipient to another employee."
+            )) {
+                setShowUpdateSection(true);
+                setLoading(false);
+            }
+        } else {
+        await employeeService.deleteEmployee(id);
+        setEmployees((prevEmployees) => prevEmployees.filter((emp) => emp.employee_id !== id));
+        alert("Employee deleted successfully.");
+        setLoading(false);
         }
+        
+        console.log(loading);
+    } catch (err) {
+        console.error(err);
+        setError(true);
+        setLoading(false);
+    } finally {
+        setLoading(false);
+    }
     };
 
     useEffect(() => {
@@ -116,32 +151,6 @@ const EmployeeList = () => {
     };
 
 
-    const handlePageChange = (direction) => {
-        if (direction === "next" && currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        } else if (direction === "prev" && currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const formatDate = (date) => {
-        if (!date) return "";
-        const d = new Date(date);
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        const year = d.getFullYear();
-        return `${month}-${day}-${year}`;
-    };
-
-    const totalPages = Math.ceil(employees.length / itemsPerPage);
-    const displayedEmployees = employees.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
@@ -151,9 +160,10 @@ const EmployeeList = () => {
                 <div className="d-block d-xxl-none">
                     <AdminMenuMobile />
                 </div>
-
+                <div className="col-12 col-xxl-10">
+                {!loading && !error ? (<div>
                 {!showUpdateSection && (
-                    <div className={`${styles.employeeList} col-12 col-xxl-10`}>
+                    <div className={styles.employeeList}>
                         <h2>
                             Employees <span>____</span>
                         </h2>
@@ -227,12 +237,12 @@ const EmployeeList = () => {
                 )}
 
                 {showUpdateSection && (
-                    <div className={`${styles.employeeList} col-12 col-lg-10`}>
+                    <div className={styles.employeeList}>
                         <h2>
                             Update Orders Recipient <span>____</span>
                         </h2>
                         <p>
-                            Reassign all orders associated with 
+                            Please reassign all orders associated with 
                             <strong>
                                 {" "}{selectedEmployee?.employee_first_name}{" "}
                                 {selectedEmployee?.employee_last_name}{" "}
@@ -247,7 +257,6 @@ const EmployeeList = () => {
                                 id="newOrdersRecipient"
                                 value={newOrdersRecipient}
                                 onChange={(e) => setNewOrdersRecipient(e.target.value)}
-                                className={styles.formControl}
                             >
                                 <option value="" disabled>
                                     Select an employee
@@ -264,7 +273,8 @@ const EmployeeList = () => {
                             </div>
                         </div>
                     </div>
-                )}
+                )}</div>) : error ? <NotFound /> : <Loader />}
+                </div>
             </div>
         </Layout>
     );

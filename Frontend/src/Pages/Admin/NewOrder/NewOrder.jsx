@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Contexts/AuthContext";
 import { FaHandPointUp } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import CryptoJS from "crypto-js";
+import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
+import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import customerservice from "../../../services/customer.service";
 import vehicleService from "../../../services/vehicle.service";
 import serviceService from "../../../services/service.service";
 import orderService from "../../../services/order.service";
-import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
-import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
+import Loader from "../../../Components/Loader/Loader";
+import NotFound from "../../../Components/NotFound/NotFound";
 import Layout from "../../../Layout/Layout";
 import styles from "./NewOrder.module.css";
-import { Next } from "react-bootstrap/esm/PageItem";
 
 const NewOrder = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -23,9 +24,10 @@ const NewOrder = () => {
     const [vehicles, setVehicles] = useState([]);
     const [vehicle, setVehicle] = useState([]);
     const [services, setServices] = useState(null);
-    const [order, setOrder] = useState({ additional_request: "", order_total_price: "", order_status: 0, active_order: true, additional_requests_completed: false, service_completed: false, service_ids: [], customer_id: "", vehicle_id: "", employee_id: "" });
+    const [order, setOrder] = useState({ additional_request: "", order_total_price: "", order_status: 0, active_order: true, 
+        additional_requests_completed: false, service_completed: false, service_ids: [], customer_id: "", vehicle_id: "", employee_id: "" });
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
     const [showSearch, setShowSearch] = useState(true);
     const [showCustomer, setShowCustomer] = useState(false);
     const [showVehicle, setShowVehicle] = useState(false);
@@ -36,79 +38,23 @@ const NewOrder = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchCustomers = async () => {
+            setLoading(true);
+            setError(false);
+            try {
+                const response = await customerservice.fetchCustomers();
+                setCustomers(response.data);
+                setFilteredCustomers(response.data);
+                setLoading(false);
+            } catch (err) {
+                console.error(err);
+                setError(true);
+                setLoading(false);
+            }
+        };
+
         fetchCustomers();
     }, []);
-
-    const fetchCustomers = async () => {
-        try {
-            const response = await customerservice.fetchCustomers();
-            setCustomers(response.data);
-            setFilteredCustomers(response.data);
-        } catch (err) {
-            console.error(err);
-            setError("Failed to load customer data.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchCustomerById = async (customerId) => {
-        try {
-            const response = await customerservice.fetchCustomerById(customerId);
-            setCustomer(response.data);
-            setOrder({ ...order, customer_id: customerId });
-        } catch (err) {
-            console.error(err);
-            setError("Failed to load customer data.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchVehiclesByCustomerId = async (customerId) => {
-        try {
-            const response = await vehicleService.fetchVehiclesByCustomerId(
-                customerId
-            );
-            setVehicles(response.data);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchVehiclesById = async (vehicleId) => {
-        try {
-            const response = await vehicleService.fetchVehicleById(vehicleId);
-            setVehicle(response.data);
-            setOrder({ ...order, vehicle_id: vehicleId, employee_id: employeeId });
-        } catch (err) {
-            console.error(err);
-            setError("Failed to load vehicle data.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchAllServices = async () => {
-        try {
-            const response = await serviceService.getAllServices();
-            setServices(response);
-        } catch (err) {
-            console.error(err);
-            setError("Failed to load service data.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const generateorderHash = () => {
-        const dataToHash =
-            order.additional_request +
-            order.order_total_price;
-        return CryptoJS.SHA256(dataToHash).toString(CryptoJS.enc.Base64);
-    };
 
     const handleSearch = (e) => {
         const term = e.target.value.toLowerCase();
@@ -129,22 +75,55 @@ const NewOrder = () => {
     };
 
     const paginatedCustomers = filteredCustomers.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
     );
 
     const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
 
     const handlePageChange = (direction) => {
-      if (direction === "prev" && currentPage > 1) {
-        setCurrentPage((prevPage) => prevPage - 1);
-      } else if (direction === "next" && currentPage < totalPages) {
-        setCurrentPage((prevPage) => prevPage + 1);
-      }
+        if (direction === "prev" && currentPage > 1) {
+            setCurrentPage((prevPage) => prevPage - 1);
+        } else if (direction === "next" && currentPage < totalPages) {
+            setCurrentPage((prevPage) => prevPage + 1);
+        }
     };
 
     const handleAddCustomer = () => {
         navigate("/add-customer");
+    };
+
+    const fetchCustomerById = async (customerId) => {
+        setLoading(true);
+        setError(false);
+        try {
+            const response = await customerservice.fetchCustomerById(customerId);
+            setCustomer(response.data);
+            setOrder({ ...order, customer_id: customerId });
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+            setError(true);
+            setLoading(false);
+        }
+    };
+
+    const fetchVehiclesByCustomerId = async (customerId) => {
+        setLoading(true);
+        setError(false);
+        try {
+            const response = await vehicleService.fetchVehiclesByCustomerId(customerId);
+            setVehicles(response.data);
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            if (err.response.status === 404) {
+                setError(false);
+            } else {
+                setError(true);
+            }
+        }
     };
 
     const handleSelectCustomer = (customerId) => {
@@ -154,9 +133,49 @@ const NewOrder = () => {
         setShowCustomer(true);
     };
 
+    const handleAddVehicle = (id) => {
+        navigate(`/customer-profile/${id}`);
+    };
+
+    const fetchVehicleById = async (vehicleId) => {
+        setLoading(true);
+        setError(false);
+        try {
+            const response = await vehicleService.fetchVehicleById(vehicleId);
+            setVehicle(response.data);
+            setOrder({ ...order, vehicle_id: vehicleId, employee_id: employeeId });
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+            setError(true);
+            setLoading(false);
+        }
+    };
+
+    const fetchAllServices = async () => {
+        setLoading(true);
+        setError(false);
+        try {
+            const response = await serviceService.getAllServices();
+            setServices(response);
+            setLoading(false);
+        } catch (err) {
+            console.error(err);
+            setError(true);
+            setLoading(false);
+        }
+    };
+
     const handleSelectVehicle = (vehicleId) => {
-        fetchVehiclesById(vehicleId);
+        fetchVehicleById(vehicleId);
         fetchAllServices();
+    };
+
+    const generateorderHash = () => {
+        const dataToHash =
+            order.additional_request +
+            order.order_total_price;
+        return CryptoJS.SHA256(dataToHash).toString(CryptoJS.enc.Base64);
     };
 
     const handleAddData = (e, service) => {
@@ -185,25 +204,16 @@ const NewOrder = () => {
             }, 1000);
         } catch (err) {
             console.error(err);
-            setError("Failed to create order.");
-        } finally {
-            setLoading(false);
         }
     };
-
-    const handleAddVehicle = (id) => {
-        navigate(`/customer-profile/${id}`);
-    };
-
-    if (loading) return <p>Loading customers...</p>;
-    if (error) return <p>{error}</p>;
 
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
                 <div className=" d-none d-xl-block col-3"><AdminMenu /></div>
                 <div className="d-block d-xl-none"><AdminMenuMobile /></div>
-                <div className={`${styles.orderList} col-12 col-xl-9`}>
+                <div className="col-12 col-xl-9">
+                    {!loading && !error ? (<div className={styles.orderList}>
                     <div className={styles.header}>
                         <h2>Create a New Order <span>____</span></h2>
                         {showSearch && <div className={styles.searchBar}>
@@ -372,6 +382,7 @@ const NewOrder = () => {
                             </div>
                         </div>
                     </div>}
+                    </div>) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>

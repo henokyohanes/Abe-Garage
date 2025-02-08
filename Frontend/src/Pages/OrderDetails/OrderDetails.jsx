@@ -18,6 +18,7 @@ const OrderDetails = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             setLoading(true);
+            setError(false);
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
                 setOrder(response.data[0]);
@@ -25,6 +26,8 @@ const OrderDetails = () => {
             } catch (error) {
                 console.error("Error fetching order details:", error);
                 setError(true);
+                setLoading(false);
+            } finally {
                 setLoading(false);
             }
         };

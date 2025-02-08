@@ -206,5 +206,9 @@
 
 .noServices {
   font-size: clamp(.9em, 3vw, 1.1em);
+  border: 1px solid #ccc;
+  border-radius: .4em;
+  padding: .5em;
+  text-align: center;
   color: #d82323;
 }

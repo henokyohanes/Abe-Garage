@@ -23,6 +23,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
+      setError(false);
       try {
           const response = await orderService.fetchOrders();
           setOrders(response.data);
@@ -30,6 +31,8 @@ const Orders = () => {
       } catch (error) {
         console.error("Error fetching orders:", error);
         setError(true);
+        setLoading(false);
+      } finally {
         setLoading(false);
       }
     };
