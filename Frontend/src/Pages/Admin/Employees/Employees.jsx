@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Contexts/AuthContext";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
 import employeeService from "../../../services/employee.service";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
@@ -32,9 +33,9 @@ const EmployeeList = () => {
         try {
             const response = await employeeService.fetchEmployees();
             setEmployees(response.data);
-            setLoading(false);
         } catch (err) {
             setError(true);
+        } finally {
             setLoading(false);
         }
     };
@@ -68,18 +69,30 @@ const EmployeeList = () => {
 
     const handleEdit = (id) => {
         if (!id) {
-            alert("Invalid employee ID");
+            Swal.fire("Error", "Invalid employee ID", "error");
             return;
         }
         navigate(`/edit-employee/${id}`);
     };
-console.log(loading);
 
 const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this employee?")) return;
-    
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",    
+        customClass: {
+            confirmButton: styles.confirmButton,
+            cancelButton: styles.cancelButton,
+            icon: styles.icon,
+            title: styles.title,
+            text: styles.text,
+        }
+    })
     setLoading(true);
-    console.log(loading);
     setError(false);
     
     try {
@@ -106,11 +119,9 @@ const handleDelete = async (id) => {
         setLoading(false);
         }
         
-        console.log(loading);
     } catch (err) {
         console.error(err);
         setError(true);
-        setLoading(false);
     } finally {
         setLoading(false);
     }

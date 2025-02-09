@@ -23,11 +23,9 @@ const OrderUpdate = () => {
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
                 setOrder(response.data[0]);
-                setLoading(false);
             } catch (err) {
                 console.error(err);
                 setError(true);
-                setLoading(false);
             } finally {
                 setLoading(false);
             }
@@ -79,11 +77,9 @@ const OrderUpdate = () => {
                                 services: updatedServices,    
                             };
                         });
-                        setLoading(false);
                         Swal.fire("Deleted!", "The service has been deleted.", "success");
                     } catch (error) {
                         console.error("Error deleting service:", error);
-                        setLoading(false);
                         Swal.fire("Error", "Failed to delete service.", "error");
                     } finally {
                         setLoading(false);
@@ -115,9 +111,14 @@ const OrderUpdate = () => {
                 text: "This action cannot be undone.",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, cancel it!",
+                confirmButtonText: "Yes !",
+                customClass: {
+                    confirmButton: styles.confirmButton,
+                    cancelButton: styles.cancelButton,
+                    icon: styles.icon,
+                    title: styles.title,
+                    text: styles.text
+                }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     setLoading(true);
@@ -131,11 +132,9 @@ const OrderUpdate = () => {
                             additional_request: null,
                             additional_requests_completed: null,
                         }));
-                        setLoading(false);
                         Swal.fire("Deleted!", "The additional request has been deleted.", "success");
                     } catch (error) {    
                         console.error("Error deleting additional request:", error);
-                        setLoading(false);
                         Swal.fire("Error", "Failed to delete additional request.", "error");
                     } finally {
                         setLoading(false);
@@ -163,21 +162,24 @@ const OrderUpdate = () => {
                 text: "This action cannot be undone.",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, cancel it!",
+                confirmButtonText: "Yes !",
+                customClass: {
+                    confirmButton: styles.confirmButton,
+                    cancelButton: styles.cancelButton,
+                    icon: styles.icon,
+                    title: styles.title,
+                    text: styles.text
+                }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     setLoading(true);
                     try {
                         await orderService.deleteOrder(id);
                         // Remove the order if confirmed
-                        setLoading(false);
                         Swal.fire("Deleted!", "The order has been deleted.", "success");
                         navigate("/orders");
                     } catch (error) {
                         console.error("Error deleting order:", error);
-                        setLoading(false);
                         Swal.fire("Error", "Failed to delete order.", "error");
                     } finally {
                         setLoading(false);
@@ -220,12 +222,10 @@ const OrderUpdate = () => {
         setLoading(true);
         try {
             await orderService.updateOrder(id, order);
-            setLoading(false);
             Swal.fire("Updated!", "The order has been updated.", "success");
             setTimeout(() => navigate("/orders"), 2000);
         } catch (err) {
             console.error(err);
-            setLoading(false);
             Swal.fire("Error", "Failed to update order.", "error");
         } finally {
             setLoading(false);

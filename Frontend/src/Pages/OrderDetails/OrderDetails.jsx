@@ -22,11 +22,9 @@ const OrderDetails = () => {
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
                 setOrder(response.data[0]);
-                setLoading(false);
             } catch (error) {
                 console.error("Error fetching order details:", error);
                 setError(true);
-                setLoading(false);
             } finally {
                 setLoading(false);
             }

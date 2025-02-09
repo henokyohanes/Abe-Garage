@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Contexts/AuthContext";
 import { FaHandPointUp } from "react-icons/fa";
+import Swal from "sweetalert2";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import CryptoJS from "crypto-js";
@@ -45,10 +46,10 @@ const NewOrder = () => {
                 const response = await customerservice.fetchCustomers();
                 setCustomers(response.data);
                 setFilteredCustomers(response.data);
-                setLoading(false);
             } catch (err) {
                 console.error(err);
                 setError(true);
+            } finally {
                 setLoading(false);
             }
         };
@@ -100,10 +101,10 @@ const NewOrder = () => {
             const response = await customerservice.fetchCustomerById(customerId);
             setCustomer(response.data);
             setOrder({ ...order, customer_id: customerId });
-            setLoading(false);
         } catch (err) {
             console.error(err);
             setError(true);
+        } finally {
             setLoading(false);
         }
     };
@@ -114,15 +115,15 @@ const NewOrder = () => {
         try {
             const response = await vehicleService.fetchVehiclesByCustomerId(customerId);
             setVehicles(response.data);
-            setLoading(false);
         } catch (err) {
             console.error(err);
-            setLoading(false);
             if (err.response.status === 404) {
                 setError(false);
             } else {
                 setError(true);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -144,10 +145,10 @@ const NewOrder = () => {
             const response = await vehicleService.fetchVehicleById(vehicleId);
             setVehicle(response.data);
             setOrder({ ...order, vehicle_id: vehicleId, employee_id: employeeId });
-            setLoading(false);
         } catch (err) {
             console.error(err);
             setError(true);
+        } finally {
             setLoading(false);
         }
     };
@@ -158,10 +159,10 @@ const NewOrder = () => {
         try {
             const response = await serviceService.getAllServices();
             setServices(response);
-            setLoading(false);
         } catch (err) {
             console.error(err);
             setError(true);
+        } finally {
             setLoading(false);
         }
     };
@@ -196,14 +197,20 @@ const NewOrder = () => {
             ...order,
             order_hash: orderHash,
         };
+
+        setLoading(true);
         try {
             const response = await orderService.addOrder(orderWithHash);
             setOrder(response.data);
+            Swal.fire("Success", "Order created successfully", "success");
             setTimeout(() => {
                 navigate(`/order-details/${response.data.order_id}`);
             }, 1000);
         } catch (err) {
             console.error(err);
+            Swal.fire("Error", "Failed to create order", "error");
+        } finally {
+            setLoading(false);
         }
     };
 

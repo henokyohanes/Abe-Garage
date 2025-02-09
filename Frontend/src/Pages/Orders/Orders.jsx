@@ -27,11 +27,9 @@ const Orders = () => {
       try {
           const response = await orderService.fetchOrders();
           setOrders(response.data);
-          setLoading(false);
       } catch (error) {
         console.error("Error fetching orders:", error);
         setError(true);
-        setLoading(false);
       } finally {
         setLoading(false);
       }
