@@ -133,21 +133,6 @@ const Customers = () => {
         <div className="d-block d-xxl-none">
           <AdminMenuMobile />
         </div>
-        {/* <div className={`${styles.adminMenuContainer} d-block d-lg-none`}>
-          <div className={styles.adminMenuTitle}>
-            <h2>Admin Menu</h2>
-          </div>
-          <div className={styles.listGroup}>
-            <Link to="/admin/dashboard" className={styles.listGroupItem}>Dashboard</Link>
-            <Link to="/admin/orders" className={styles.listGroupItem}>Orders</Link>
-            <Link to="/admin/new-order" className={styles.listGroupItem}>New order</Link>
-            <Link to="/admin/add-employee" className={styles.listGroupItem}>Add employee</Link>
-            <Link to="/admin/employees" className={styles.listGroupItem}>Employees</Link>
-            <Link to="/admin/add-customer" className={styles.listGroupItem}>Add customer</Link>
-            <Link to="/admin/customers" className={styles.listGroupItem}>Customers</Link>
-            <Link to="/admin/services" className={styles.listGroupItem}>Services</Link>
-          </div>
-        </div> */}
         <div className={`${styles.customerList} col-12 col-xxl-9`}>
           <div className={styles.header}>
             <h2>

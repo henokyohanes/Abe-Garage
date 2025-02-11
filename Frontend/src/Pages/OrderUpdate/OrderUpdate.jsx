@@ -41,12 +41,6 @@ const OrderUpdate = () => {
 
         
         if (value === "3" && name === "service_completed" && index !== null) {
-            // const confirmDelete = window.confirm(
-                //     "Are you sure you want to cancel this service? This action cannot be undone."
-                // );
-                // if (!confirmDelete) {
-                    //     return;
-                    // }
                     
                     Swal.fire({
                         title: "Are you sure you want to cancel this service?",
@@ -87,23 +81,6 @@ const OrderUpdate = () => {
                 }
             }); 
 
-            // try {
-            //     const serviceId = order.services[index].service_id;
-            //     const orderId = id;
-            //     await orderService.deleteService(orderId, serviceId);
-
-            //     setOrder((prevOrder) => {
-            //         const updatedServices = [...prevOrder.services];
-            //         updatedServices.splice(index, 1);
-            //         return {
-            //             ...prevOrder,
-            //             services: updatedServices,
-            //         };
-            //     });
-            // } catch (error) {
-            //     console.error("Error deleting service:", error);
-            // }
-
         } else if (value === "3" && name === "additional_requests_completed") {
             
             Swal.fire({
@@ -142,19 +119,6 @@ const OrderUpdate = () => {
                 }
             });
 
-            // try {
-            //     const orderId = id;
-            //     const additionalRequest = { additional_request: null, additional_requests_completed: 0 };
-            //     await orderService.deleteAdditionalRequest(orderId, additionalRequest);
-            //     // Remove the additional request if confirmed
-            //     setOrder((prevOrder) => ({
-            //         ...prevOrder,
-            //         additional_request: null,
-            //         additional_requests_completed: null,
-            //     }));
-            // } catch (error) {
-            //     console.error("Error deleting additional request:", error);
-            // }
         } else if (value === "3" && name === "order_status") {
 
             Swal.fire({
@@ -185,15 +149,7 @@ const OrderUpdate = () => {
                         setLoading(false);
                     }
                 }
-            })
-
-            // try {
-            //     await orderService.deleteOrder(id);
-            //     // Remove the order if confirmed
-            //     navigate("/orders");
-            // } catch (error) {
-            //     console.error("Error deleting order:", error);
-            // }
+            });
 
         } else {
             setOrder((prevOrder) => {
