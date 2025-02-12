@@ -63,3 +63,8 @@
 .submitButton:hover {
   background-color: #07184A;
 }
+
+.validationError {
+  color: #d82323;
+  font-size: clamp(.9em, 3vw, 1.1em);
+}
