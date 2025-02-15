@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { useAuth } from "../../Contexts/AuthContext";
-import employeeService from "../../services/employee.service";
-import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import Swal from "sweetalert2";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import employeeService from "../../services/employee.service";
+import Loader from "../../Components/Loader/Loader";
 import Layout from "../../Layout/Layout";
 import styles from "./AddEmployee.module.css";
 
@@ -12,8 +13,7 @@ const AddEmployee = () => {
   const [employee, setEmployee] = useState({employee_email: "", employee_first_name: "", employee_last_name: "",
     employee_phone: "", employee_password: "", active_employee: 1, company_role_id: 1});
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(true);  
-  const [serverError, setServerError] = useState(false);
+  const [loading, setLoading] = useState(false);  
   const navigate = useNavigate();
 
   const { employee: loggedInEmployee } = useAuth();
@@ -21,10 +21,7 @@ const AddEmployee = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployee((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEmployee((prev) => ({...prev, [name]: value}));
   };
 
   const validateForm = () => {
@@ -42,7 +39,7 @@ const AddEmployee = () => {
     }
 
     // Name validation
-    const nameRegex = /^[A-Za-z]+(['-][A-Za-z]+)?$/;
+    const nameRegex = /^[A-Za-z]{2,}([ '-][A-Za-z]+)*$/;
     if (!employee.employee_first_name) {
       newErrors.employee_first_name = "First name is required";
       isValid = false;
@@ -60,7 +57,7 @@ const AddEmployee = () => {
     }
 
     // Phone validation (must be 10 digits)
-    const phoneRegex = /^\d{10}$/; // Only 10 digits
+    const phoneRegex = /^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
     if (!employee.employee_phone) {
       newErrors.employee_phone = "Phone number is required";
       isValid = false;
@@ -79,59 +76,48 @@ const AddEmployee = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
-    employeeService
-      .addEmployee(employee, loggedInEmployeeToken)
-      .then((data) => {
-        if (data.error) {
-          Swal.fire("Error", data.error, "error");
-        } else {
-          Swal.fire("Success", "Employee added successfully", "success");
-          setTimeout(() => navigate("/employees"), 2000);
-        }
-      })
-      .catch((error) => {
-        setServerError(true);
-      });
+    setLoading(true);
+    try {
+      const data = await employeeService.addEmployee(employee, loggedInEmployeeToken);
+
+      if (data.error) {
+        Swal.fire("Error", data.error, "error");
+      } else {
+        Swal.fire("Success", "Employee added successfully", "success").then(() => {
+          navigate("/employees");
+        });
+      }
+    } catch (error) {
+      console.error("Error adding employee:", error);
+      Swal.fire("Error", "Something went wrong. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Layout>
       <div className={`${styles.contactSection} row g-0`}>
-        <div className="d-none d-md-block col-3">
-          <AdminMenu />
-        </div>
-        <div className="d-block d-md-none">
-          <AdminMenuMobile />
-        </div>
+        <div className="d-none d-md-block col-3"><AdminMenu /></div>
+        <div className="d-block d-md-none"><AdminMenuMobile /></div>
         <div className="col-12 col-md-9">
+          {!loading ? (<div>
           <div className={styles.container}>
-            <h2>
-              Add a new employee <span>____</span>
-            </h2>
+            <h2>Add a new employee <span>____</span></h2>
             <div className={styles.contactForm}>
               <div className={styles.innerContainer}>
                 <div className={styles.formContainer}>
                   <div className={styles.form}>
                     <form onSubmit={handleSubmit}>
                       <div className={styles.formGroupContainer}>
-                        {serverError && (
-                          <div className={styles.validationError}>{serverError}</div>
-                        )}
-                        {success && (
-                          <div className="validation-success">
-                            Employee added successfully!
-                          </div>
-                        )}
-
                         <div className={styles.formGroup}>
                           {errors.employee_email && (
-                            <div className={styles.validationError}>
-                              {errors.employee_email}
-                            </div>
+                            <div className={styles.validationError}>{errors.employee_email}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -141,12 +127,9 @@ const AddEmployee = () => {
                             onChange={handleChange}
                           />
                         </div>
-
                         <div className={styles.formGroup}>
                           {errors.employee_first_name && (
-                            <div className={styles.validationError}>
-                              {errors.employee_first_name}
-                            </div>
+                            <div className={styles.validationError}>{errors.employee_first_name}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -157,12 +140,9 @@ const AddEmployee = () => {
                             onChange={handleChange}
                           />
                         </div>
-
                         <div className={styles.formGroup}>
                           {errors.employee_last_name && (
-                            <div className={styles.validationError}>
-                              {errors.employee_last_name}
-                            </div>
+                            <div className={styles.validationError}>{errors.employee_last_name}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -173,12 +153,9 @@ const AddEmployee = () => {
                             onChange={handleChange}
                           />
                         </div>
-
                         <div className={styles.formGroup}>
                           {errors.employee_phone && (
-                            <div className={styles.validationError}>
-                              {errors.employee_phone}
-                            </div>
+                            <div className={styles.validationError}>{errors.employee_phone}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -189,7 +166,6 @@ const AddEmployee = () => {
                             onChange={handleChange}
                           />
                         </div>
-
                         <div className={styles.formGroup}>
                           <div className={styles.selectContainer}>
                             <select
@@ -204,12 +180,9 @@ const AddEmployee = () => {
                             </select>
                           </div>
                         </div>
-
                         <div className={styles.formGroup}>
                           {errors.employee_password && (
-                            <div className={styles.validationError}>
-                              {errors.employee_password}
-                            </div>
+                            <div className={styles.validationError}>{errors.employee_password}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -220,11 +193,8 @@ const AddEmployee = () => {
                             onChange={handleChange}
                           />
                         </div>
-
                         <div className={styles.formGroup}>
-                          <button className={styles.submitButton} type="submit">
-                            Add Employee
-                          </button>
+                          <button className={styles.submitButton} type="submit">Add Employee</button>
                         </div>
                       </div>
                     </form>
@@ -233,6 +203,7 @@ const AddEmployee = () => {
               </div>
             </div>
           </div>
+          </div>) : <Loader />}
         </div>
       </div>
     </Layout>
