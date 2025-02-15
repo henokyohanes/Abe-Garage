@@ -30,13 +30,13 @@ The Abe-Garage App was built with the following objectives in mind:
    Offer employees an intuitive dashboard to view service history, track repairs, and receive real-time updates on customer vehicle’s status.
 
 4. **📈 Boost Business Efficiency**  
-   Optimize workflow with automated job assignments and service tracking to avoid delays and improve profitability.
+   Optimize workflow with automated service tracking to avoid delays and improve profitability.
 
 ---
 
 ## ✨ Key Features
 
-The Evangadi Q&A Platform offers various features tailored to make learning effective and enjoyable:
+The Abe-Garage auto repair shop management system offers various features to make the process effective:
 
 ### 1. 🔑 **User Roles and Authentication**
    - **Admin Panel**: Manage employees, services, and garage operations from a centralized dashboard.
