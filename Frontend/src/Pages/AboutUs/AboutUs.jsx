@@ -1,6 +1,5 @@
 import React from "react";
 import Layout from "../../Layout/Layout";
-import Experience from "../../Components/Experience/Experience";
 import NavBanner from "../../Components/NavBanner/NavBanner";
 import Skill from "../../Components/Skill/Skill";
 import ChooseUs from "../../Components/ChooseUs/ChooseUs";
@@ -13,7 +12,6 @@ const AboutUs = () => {
         <Layout>
             <NavBanner title="About Us" />
             <Skill />
-            <Experience />
             <ChooseUs />
             <Testimonial />
             <Appointment />

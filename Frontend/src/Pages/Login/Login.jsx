@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import loginService from "../../services/login.service";
@@ -8,7 +7,6 @@ import Styles from "./Login.module.css";
 
 const Login = () => {
 
-  const location = useLocation();
   const [employee_email, setEmail] = useState("");
   const [employee_password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -47,18 +45,52 @@ const Login = () => {
       setLoading(true);
       const response = await loginService.logIn(formData);
       if (response.status === "success") {
-        Swal.fire({title: "Good job!", text: "you have logged in successfully", icon: "success"});
+        Swal.fire({
+          title: "Good job!",
+          text: "You have logged in successfully",
+          icon: "success",
+          customClass: {
+            popup: Styles.popup,
+            confirmButton: Styles.confirmButton,
+            icon: Styles.icon,
+            title: Styles.successTitle,
+            content: Styles.text,
+          },
+        });
         if (response.data.employee_token) {
           localStorage.setItem("employee", JSON.stringify(response.data));
         }
         setTimeout(() => {
           window.location.href = "/";
-        }, 2000);
+        }, 1000);
       } else {
-        Swal.fire({title: "Oops!", text: "incorrect email or password. Please try again!", icon: "error"});
+        Swal.fire({
+          title: "Oops!",
+          text: "Incorrect email or password. Please try again!",
+          icon: "error",
+          customClass: {
+            popup: Styles.popup,
+            confirmButton: Styles.confirmButton,
+            icon: Styles.icon,
+            title: Styles.errorTitle,
+            content: Styles.text,
+          },
+        });
       }
     } catch (err) {
-      Swal.fire({title: "error!", text: "unexpected error occured. Please try again!", icon: "error"});
+      console.error(err);
+      Swal.fire({
+        title: "error!",
+        html: "Unexpected error occured. Please try again!",
+        icon: "error",
+        customClass: {
+          popup: Styles.popup,
+          confirmButton: Styles.confirmButton,
+          icon: Styles.icon,
+          title: Styles.errorTitle,
+          htmlContainer: Styles.text
+        },
+      });
     } finally {
       setLoading(false);
     }
@@ -80,7 +112,7 @@ const Login = () => {
                       <div className={Styles.formGroup}>
                         {emailError && <div className={Styles.error} role="alert">{emailError}</div>}
                         <input
-                          type="email" name="employee_email" value={employee_email}
+                          name="employee_email" value={employee_email}
                           onChange={(event) => setEmail(event.target.value)} placeholder="Email"
                         />
                       </div>

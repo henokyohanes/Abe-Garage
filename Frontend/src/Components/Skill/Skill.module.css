@@ -11,3 +11,8 @@
 .introduction p {
     font-size: clamp(.9em, 3vw, 1.1em);
 }
+
+.border {
+    border-bottom: .3em solid #d82323;
+    margin: 3vw;
+}
