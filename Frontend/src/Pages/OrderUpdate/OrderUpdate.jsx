@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import orderService from "../../services/order.service";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -14,8 +14,7 @@ const OrderUpdate = () => {
     const [order, setOrder] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const navigate = useNavigate();
-
+    
     useEffect(() => {
         const fetchOrderData = async () => {
             setLoading(true);
@@ -30,33 +29,32 @@ const OrderUpdate = () => {
                 setLoading(false);
             }
         };
-
+        
         fetchOrderData();
     }, []);
-
-
+    
     const handleChange = async (e) => {
         const { name, value, type, checked, dataset } = e.target;
         const index = dataset.index ? parseInt(dataset.index, 10) : null;
 
-        
         if (value === "3" && name === "service_completed" && index !== null) {
-                    
-                    Swal.fire({
-                        title: "Are you sure you want to cancel this service?",
-                        text: "This action cannot be undone.",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: "Yes !",
-                        customClass: {
-                            confirmButton: styles.confirmButton,
-                            cancelButton: styles.cancelButton,
-                            icon: styles.icon,
-                            title: styles.title,
-                            text: styles.text,
-                        }
-                    }).then(async (result) => {
-                        if (result.isConfirmed) {
+
+            Swal.fire({
+                title: "Are you sure you want to cancel this service?",
+                html: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes !",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    cancelButton: styles.cancelButton,
+                    icon: styles.icon,
+                    title: styles.warningTitle,
+                    htmlContainer: styles.text,
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
                     setLoading(true);
                     try {
                         const serviceId = order.services[index].service_id; // Assume each service has a unique `id`
@@ -68,33 +66,56 @@ const OrderUpdate = () => {
                             updatedServices.splice(index, 1); // Remove the service at the selected index
                             return {
                                 ...prevOrder,
-                                services: updatedServices,    
+                                services: updatedServices,
                             };
                         });
-                        Swal.fire("Deleted!", "The service has been deleted.", "success");
+                        Swal.fire({
+                            title: "Cancelled!",
+                            html: "The service has been cancelled.",
+                            icon: "success",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.successTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
                     } catch (error) {
-                        console.error("Error deleting service:", error);
-                        Swal.fire("Error", "Failed to delete service.", "error");
+                        console.error("Error canceling service:", error);
+                        Swal.fire({
+                            title: "Error!",
+                            html: "Failed to cancel service. Please try again!",
+                            icon: "error",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.errorTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
                     } finally {
                         setLoading(false);
-                    }   
+                    }
                 }
-            }); 
+            });
 
         } else if (value === "3" && name === "additional_requests_completed") {
-            
+
             Swal.fire({
                 title: "Are you sure you want to cancel this additional request?",
-                text: "This action cannot be undone.",
+                html: "This action cannot be undone.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes !",
                 customClass: {
+                    popup: styles.popup,
                     confirmButton: styles.confirmButton,
                     cancelButton: styles.cancelButton,
                     icon: styles.icon,
-                    title: styles.title,
-                    text: styles.text
+                    title: styles.warningTitle,
+                    htmlContainer: styles.text
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {
@@ -109,10 +130,32 @@ const OrderUpdate = () => {
                             additional_request: null,
                             additional_requests_completed: null,
                         }));
-                        Swal.fire("Deleted!", "The additional request has been deleted.", "success");
-                    } catch (error) {    
-                        console.error("Error deleting additional request:", error);
-                        Swal.fire("Error", "Failed to delete additional request.", "error");
+                        Swal.fire({
+                            title: "Cancelled!",
+                            html: "The additional request has been cancelled.",
+                            icon: "success",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.successTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
+                    } catch (error) {
+                        console.error("Error canceling additional request:", error);
+                        Swal.fire({
+                            title: "Error!",
+                            html: "Failed to cancel additional request. Please try again!",
+                            icon: "error",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.errorTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
                     } finally {
                         setLoading(false);
                     }
@@ -123,16 +166,17 @@ const OrderUpdate = () => {
 
             Swal.fire({
                 title: "Are you sure you want to cancel this order?",
-                text: "This action cannot be undone.",
+                html: "This action cannot be undone.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes !",
                 customClass: {
+                    popup: styles.popup,
                     confirmButton: styles.confirmButton,
                     cancelButton: styles.cancelButton,
                     icon: styles.icon,
-                    title: styles.title,
-                    text: styles.text
+                    title: styles.warningTitle,
+                    htmlContainer: styles.text
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {
@@ -140,11 +184,35 @@ const OrderUpdate = () => {
                     try {
                         await orderService.deleteOrder(id);
                         // Remove the order if confirmed
-                        Swal.fire("Deleted!", "The order has been deleted.", "success");
-                        navigate("/orders");
+                        Swal.fire({
+                            title: "Cancelled!",
+                            html: "The order has been cancelled.",
+                            icon: "success",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.successTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/orders";
+                        }, 1000);
                     } catch (error) {
-                        console.error("Error deleting order:", error);
-                        Swal.fire("Error", "Failed to delete order.", "error");
+                        console.error("Error canceling order:", error);
+                        Swal.fire({
+                            title: "Error!",
+                            html: "Failed to cancel order. Please try again!",
+                            icon: "error",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.errorTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
                     } finally {
                         setLoading(false);
                     }
@@ -175,14 +243,30 @@ const OrderUpdate = () => {
 
     const handleAddOrder = async (e) => {
         e.preventDefault();
+
         setLoading(true);
+        setError(false);
+
         try {
             await orderService.updateOrder(id, order);
-            Swal.fire("Updated!", "The order has been updated.", "success");
-            setTimeout(() => navigate("/orders"), 2000);
+            Swal.fire({
+                title: "Updated!",
+                html: "The order has been updated.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton, 
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+            setTimeout(() => {
+                window.location.href = "/order-details/" + id;
+            }, 1000);
         } catch (err) {
             console.error(err);
-            Swal.fire("Error", "Failed to update order.", "error");
+            setError(true);
         } finally {
             setLoading(false);
         }

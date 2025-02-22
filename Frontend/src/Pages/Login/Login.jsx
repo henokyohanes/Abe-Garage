@@ -47,14 +47,14 @@ const Login = () => {
       if (response.status === "success") {
         Swal.fire({
           title: "Good job!",
-          text: "You have logged in successfully",
+          html: "You have logged in successfully",
           icon: "success",
           customClass: {
             popup: Styles.popup,
             confirmButton: Styles.confirmButton,
             icon: Styles.icon,
             title: Styles.successTitle,
-            content: Styles.text,
+            htmlContainer: Styles.text,
           },
         });
         if (response.data.employee_token) {
@@ -66,14 +66,14 @@ const Login = () => {
       } else {
         Swal.fire({
           title: "Oops!",
-          text: "Incorrect email or password. Please try again!",
+          html: "Incorrect email or password. Please try again!",
           icon: "error",
           customClass: {
             popup: Styles.popup,
             confirmButton: Styles.confirmButton,
             icon: Styles.icon,
             title: Styles.errorTitle,
-            content: Styles.text,
+            htmlContainer: Styles.text,
           },
         });
       }
