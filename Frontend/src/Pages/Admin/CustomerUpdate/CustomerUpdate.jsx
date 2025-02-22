@@ -5,9 +5,9 @@ import customerService from "../../../services/customer.service";
 import Layout from "../../../Layout/Layout";
 import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
-import styles from "./CustomerUpdate.module.css";
 import NotFound from "../../../Components/NotFound/NotFound";
 import Loader from "../../../Components/Loader/Loader";
+import styles from "./CustomerUpdate.module.css";
 
 const CustomerUpdate = () => {
     

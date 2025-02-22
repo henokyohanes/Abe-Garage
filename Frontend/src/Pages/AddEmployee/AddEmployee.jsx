@@ -1,20 +1,28 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 import Swal from "sweetalert2";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import employeeService from "../../services/employee.service";
 import Loader from "../../Components/Loader/Loader";
+import NotFound from "../../Components/NotFound/NotFound";
 import Layout from "../../Layout/Layout";
 import styles from "./AddEmployee.module.css";
 
 const AddEmployee = () => {
-  const [employee, setEmployee] = useState({employee_email: "", employee_first_name: "", employee_last_name: "",
-    employee_phone: "", employee_password: "", active_employee: 1, company_role_id: 1});
+
   const [errors, setErrors] = useState({});
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);  
-  const navigate = useNavigate();
+  const [employee, setEmployee] = useState({
+    employee_email: "",
+    employee_first_name: "",
+    employee_last_name: "",
+    employee_phone: "",
+    employee_password: "",
+    active_employee: 1,
+    company_role_id: 1
+  });
 
   const { employee: loggedInEmployee } = useAuth();
   const loggedInEmployeeToken = loggedInEmployee?.employee_token || "";
@@ -82,19 +90,45 @@ const AddEmployee = () => {
     if (!validateForm()) return;
 
     setLoading(true);
+    setError(false);
+
     try {
       const data = await employeeService.addEmployee(employee, loggedInEmployeeToken);
 
-      if (data.error) {
-        Swal.fire("Error", data.error, "error");
-      } else {
-        Swal.fire("Success", "Employee added successfully", "success").then(() => {
-          navigate("/employees");
-        });
-      }
+      Swal.fire({
+        title: "Success!",
+        html: "Employee added successfully",
+        icon: "success",
+        customClass: {
+          popup: styles.popup,
+          confirmButton: styles.confirmButton,
+          icon: styles.icon,
+          title: styles.successTitle,
+          htmlContainer: styles.text,
+        },
+      });
+      setTimeout(() => {
+        window.location.href = "/employees";
+      }, 1000);
     } catch (error) {
       console.error("Error adding employee:", error);
-      Swal.fire("Error", "Something went wrong. Please try again.", "error");
+      if (error.response) {
+        setError(true);
+        Swal.fire({
+          title: "Error!",
+          html: "Failed to add employee. Please try again!",
+          icon: "error",
+          customClass: {
+            popup: styles.popup,
+            confirmButton: styles.confirmButton,
+            icon: styles.icon,
+            title: styles.errorTitle,
+            htmlContainer: styles.text,
+          },
+        });
+      } else {
+        setError(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -106,7 +140,7 @@ const AddEmployee = () => {
         <div className="d-none d-md-block col-3"><AdminMenu /></div>
         <div className="d-block d-md-none"><AdminMenuMobile /></div>
         <div className="col-12 col-md-9">
-          {!loading ? (<div>
+          {!loading && !error ? (<div>
           <div className={styles.container}>
             <h2>Add a new employee <span>____</span></h2>
             <div className={styles.contactForm}>
@@ -203,7 +237,7 @@ const AddEmployee = () => {
               </div>
             </div>
           </div>
-          </div>) : <Loader />}
+          </div>) : error ? <NotFound /> : <Loader />}
         </div>
       </div>
     </Layout>
