@@ -18,6 +18,8 @@ import Layout from "../../../Layout/Layout";
 import styles from "./NewOrder.module.css";
 
 const NewOrder = () => {
+    const navigate = useNavigate();
+    const { employeeId } = useAuth();
     const [searchTerm, setSearchTerm] = useState("");
     const [customer, setCustomer] = useState({});
     const [customers, setCustomers] = useState([]);
@@ -25,8 +27,6 @@ const NewOrder = () => {
     const [vehicles, setVehicles] = useState([]);
     const [vehicle, setVehicle] = useState([]);
     const [services, setServices] = useState(null);
-    const [order, setOrder] = useState({ additional_request: "", order_total_price: "", order_status: 0, active_order: true, 
-        additional_requests_completed: false, service_completed: false, service_ids: [], customer_id: "", vehicle_id: "", employee_id: "" });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [showSearch, setShowSearch] = useState(true);
@@ -34,9 +34,19 @@ const NewOrder = () => {
     const [showVehicle, setShowVehicle] = useState(false);
     const [showVehicles, setShowVehicles] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [order, setOrder] = useState({
+        additional_request: "",
+        order_total_price: "",
+        order_status: 0,
+        active_order: true,
+        additional_requests_completed: false,
+        service_completed: false,
+        service_ids: [],
+        customer_id: "",
+        vehicle_id: "",
+        employee_id: ""
+    });
     const itemsPerPage = 10;
-    const { employeeId } = useAuth();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -91,7 +101,7 @@ const NewOrder = () => {
     };
 
     const handleAddCustomer = () => {
-        navigate("/add-customer");
+        navigate(`/add-customer?redirect=/new-order`);
     };
 
     const fetchCustomerById = async (customerId) => {
@@ -199,16 +209,44 @@ const NewOrder = () => {
         };
 
         setLoading(true);
+        setError(false);
+
         try {
             const response = await orderService.addOrder(orderWithHash);
             setOrder(response.data);
-            Swal.fire("Success", "Order created successfully", "success");
+            Swal.fire({
+                title: "Success!",
+                html: "Order created successfully",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
             setTimeout(() => {
-                navigate(`/order-details/${response.data.order_id}`);
+                window.location.href = "/order-details/" + response.data.order_id;
             }, 1000);
         } catch (err) {
             console.error(err);
-            Swal.fire("Error", "Failed to create order", "error");
+            if (err.response) {
+                Swal.fire({
+                    title: "error!",
+                    html: "Failed to create order. Please try again!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text
+                    },
+                });
+            } else {
+                setError(true);
+            }
         } finally {
             setLoading(false);
         }

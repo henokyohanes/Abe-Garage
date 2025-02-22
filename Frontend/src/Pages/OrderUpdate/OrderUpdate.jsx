@@ -266,6 +266,20 @@ const OrderUpdate = () => {
             }, 1000);
         } catch (err) {
             console.error(err);
+            if (err.response) {
+                Swal.fire({
+                    title: "error!",
+                    html: "Failed to update order. Please try again!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text
+                    },
+                });
+            }
             setError(true);
         } finally {
             setLoading(false);

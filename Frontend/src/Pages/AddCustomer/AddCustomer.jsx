@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -17,6 +17,9 @@ const AddCustomer = () => {
     });
     const [error, setError] = useState({});
     const navigate = useNavigate();
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const redirectUrl = params.get("redirect") || "/customers";
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -72,7 +75,7 @@ const AddCustomer = () => {
             const response = await customerService.addCustomer(formDataWithHash);
             if (response.status === "success") {
                 alert("Customer added successfully!");
-                navigate(`/customers`);
+                navigate(redirectUrl);
             } else {
                 alert("Failed to add customer. Please try again.");
             }
