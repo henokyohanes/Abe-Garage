@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import employeeService from "../../../services/employee.service";
 import Layout from "../../../Layout/Layout";
@@ -11,10 +11,15 @@ import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {
     const { id } = useParams();
-    const [employee, setEmployee] = useState({ employee_first_name: "", employee_last_name: "", employee_email: "", employee_phone: "", employee_role_name: "Employee", active_employee: false });
+    const [employee, setEmployee] = useState({
+        employee_first_name: "",
+        employee_last_name: "",
+        employee_email: "", employee_phone: "",
+        employee_role_name: "Employee",
+        active_employee: false
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEmployeeData = async () => {
@@ -47,6 +52,7 @@ const EmployeeUpdate = () => {
         e.preventDefault();
 
         setLoading(true);
+        setError(false);
         
         try {
             const {
@@ -67,16 +73,38 @@ const EmployeeUpdate = () => {
             });
 
             Swal.fire({
+                title: "Updated!",
+                html: "The employee has been updated.",
                 icon: "success",
-                title: "Success",
-                text: "Employee updated successfully",
-                showConfirmButton: false,
-                timer: 1500,
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
             });
-            setTimeout(() => navigate("/employees"), 1000);
+            setTimeout(() => {
+                window.location.href = "/employees";
+            }, 1000);
         } catch (err) {
             console.error(err);
-            Swal.fire("Error", "Failed to update employee", "error");
+            if (err.response) {
+                Swal.fire({
+                    title: "error!",
+                    html: "Failed to update employee. Please try again!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text
+                    },
+                });
+            } else {
+                setError(true);
+            }
         } finally {
             setLoading(false);
         }

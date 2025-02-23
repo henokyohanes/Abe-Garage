@@ -26,21 +26,22 @@ const EmployeeList = () => {
     const navigate = useNavigate();
 
     const itemsPerPage = 10;
-
-    const fetchEmployeesData = async () => {
-        setLoading(true);
-        setError(false);
-        try {
-            const response = await employeeService.fetchEmployees();
-            setEmployees(response.data);
-        } catch (err) {
-            setError(true);
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    
     useEffect(() => {
+        const fetchEmployeesData = async () => {
+            setLoading(true);
+            setError(false);
+            try {
+                const response = await employeeService.fetchEmployees();
+                setEmployees(response.data);
+            } catch (err) {
+                console.error(err);
+                setError(true);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchEmployeesData();
     }, []);
 
@@ -68,63 +69,89 @@ const EmployeeList = () => {
     );
 
     const handleEdit = (id) => {
-        if (!id) {
-            Swal.fire("Error", "Invalid employee ID", "error");
-            return;
-        }
         navigate(`/edit-employee/${id}`);
     };
 
-const handleDelete = async (id) => {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",    
-        customClass: {
-            confirmButton: styles.confirmButton,
-            cancelButton: styles.cancelButton,
-            icon: styles.icon,
-            title: styles.title,
-            text: styles.text,
-        }
-    })
-    setLoading(true);
-    setError(false);
-    
-    try {
-        const { data: employee } = await employeeService.fetchEmployeeById(id);
-        setSelectedEmployee(employee);
-        
-        if (employee.order_id) {
-            if (employee.employee_email === "admin@admin.com") {
-                alert("You cannot delete this employee.");
-                setLoading(false);
-                return;
+    const handleDelete = async (id) => {
+
+        Swal.fire({
+            title: "Are you sure you want to delete this employee?",
+            html: "This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes !",
+            customClass: {
+                popup: styles.popup,
+                confirmButton: styles.confirmButton,
+                cancelButton: styles.cancelButton,
+                icon: styles.icon,
+                title: styles.warningTitle,
+                htmlContainer: styles.text
             }
-            
-            if (window.confirm(
-                "Before deleting this employee, you must reassign orders recipient to another employee."
-            )) {
-                setShowUpdateSection(true);
-                setLoading(false);
-            }
-        } else {
-        await employeeService.deleteEmployee(id);
-        setEmployees((prevEmployees) => prevEmployees.filter((emp) => emp.employee_id !== id));
-        alert("Employee deleted successfully.");
-        setLoading(false);
-        }
-        
-    } catch (err) {
-        console.error(err);
-        setError(true);
-    } finally {
-        setLoading(false);
-    }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                setError(false);
+                try {
+                    const { data: employee } = await employeeService.fetchEmployeeById(id);
+                    setSelectedEmployee(employee);
+
+                    if (employee.order_id) {
+                        if (employee.employee_email === "admin@admin.com") {
+                            Swal.fire({
+                                title: "Oops!",
+                                html: "You cannot delete this employee!",
+                                icon: "info",
+                                customClass: {
+                                    popup: styles.popup,
+                                    confirmButton: styles.confirmButton,
+                                    icon: styles.icon,
+                                    title: styles.infoTitle,
+                                    htmlContainer: styles.text,
+                                },
+                            });
+                            return;
+                        }
+
+                        Swal.fire({
+                            title: "Reassignment Required!",
+                            html: "Before deleting this employee, you must reassign their orders to another employee.",
+                            icon: "info",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.infoTitle,
+                                htmlContainer: styles.text,
+                            },
+                        }).then(() => {
+                            setShowUpdateSection(true);
+                        });
+                    } else {
+                        await employeeService.deleteEmployee(id);
+                        setEmployees((prevEmployees) => prevEmployees.filter((emp) => emp.employee_id !== id));
+                        Swal.fire({
+                            title: "Deleted!",
+                            html: "Employee has been deleted successfully.",
+                            icon: "success",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.successTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
+                    }
+
+                } catch (err) {
+                    console.error("Error deleting employee:", err);
+                    setError(true);
+                } finally {
+                    setLoading(false);
+                }
+            };
+        });
     };
 
     useEffect(() => {
@@ -138,9 +165,23 @@ const handleDelete = async (id) => {
 
     const handleUpdate = async () => {
         if (!newOrdersRecipient) {
-            alert("Please select a new recipient.");
+            Swal.fire({
+                title: "Missing Recipient!",
+                html: "Please select a new recipient before proceeding.",
+                icon: "error",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.errorTitle,
+                    htmlContainer: styles.text,
+                },
+            });
             return;
         }
+
+        setLoading(true);
+        setError(false);
 
         try {
             // Reassign the orders
@@ -151,13 +192,44 @@ const handleDelete = async (id) => {
 
             // Now, delete the employee after successful reassignment
             await employeeService.deleteEmployee(selectedEmployee?.employee_id);
-            alert("orders reassigned and employee deleted successfully.");
 
-            // Refresh the employee data
-            fetchEmployeesData();
+            // Update the employees list
+            setEmployees((prevEmployees) =>
+                prevEmployees.filter((emp) => emp.employee_id !== selectedEmployee?.employee_id)    
+            );  
             setShowUpdateSection(false);
+            Swal.fire({
+                title: "Deleted!",
+                html: "orders reassigned and employee deleted successfully.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
         } catch (err) {
-            alert(err.message || "Failed to update orders or delete employee.");
+            console.error(err);
+            if(err.response) {
+                Swal.fire({
+                    title: "error!",
+                    html: "Failed to delete employee. Please try again!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text
+                    },
+                });
+            } else {
+                setError(true);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
