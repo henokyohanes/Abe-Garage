@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
@@ -10,12 +9,14 @@ import vehicleService from "../../services/vehicle.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import NotFound from "../../Components/NotFound/NotFound";
+import Loader from "../../Components/Loader/Loader";
 import styles from "./Customers.module.css";
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -23,12 +24,16 @@ const Customers = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+
+      setLoading(true);
+      setError(false);
+
       try {
         const response = await customerService.fetchCustomers();
         setCustomers(response.data);
       } catch (error) {
         console.error("Error fetching customers:", error);
-            setError(err.message || "Failed to fetch data");
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -79,14 +84,10 @@ const Customers = () => {
             const customerData = await customerService.fetchCustomerById(id);
 
             if (customerData.data.order_id) {
-                console.log("customerData.data.order_id", customerData.data.order_id);
-
                 await orderService.deleteOrder(customerData.data.order_id);
             }
 
             if (customerData.data.vehicle_id) {
-                console.log("customerData.data.vehicle_id", customerData.data.vehicle_id);
-
                 await vehicleService.deleteVehicle(customerData.data.vehicle_id);
             }
           } catch (err) {
@@ -103,10 +104,6 @@ const Customers = () => {
   };
 
   const handleProfile = (id) => {
-    if (!id) {
-      alert("Invalid customer ID");
-      return;
-    }
     navigate(`/customer-profile/${id}`);
   };
 
@@ -119,11 +116,6 @@ const Customers = () => {
     return `${month}-${day}-${year}`;
   };
 
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-
   return (
     <Layout>
       <div className={`${styles.container} row g-0`}>
@@ -133,84 +125,87 @@ const Customers = () => {
         <div className="d-block d-xxl-none">
           <AdminMenuMobile />
         </div>
-        <div className={`${styles.customerList} col-12 col-xxl-9`}>
-          <div className={styles.header}>
-            <h2>
-              Customers <span>____</span>
-            </h2>
-            <div className={styles.searchBar}>
-              <input
-                type="text"
-                placeholder="Search for a customer by name, email or phone number"
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-              <span>
-                <FaSearch />
-              </span>
+        <div className="col-12 col-xxl-9">
+          {!loading && !error ? (<div className={styles.customerList}>
+            <div className={styles.header}>
+              <h2>
+                Customers <span>____</span>
+              </h2>
+              <div className={styles.searchBar}>
+                <input
+                  type="text"
+                  placeholder="Search for a customer by name, email or phone number"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                />
+                <span>
+                  <FaSearch />
+                </span>
+              </div>
             </div>
-          </div>
-          <div className={styles.tableContainer}>
-          <table className={styles.customerTable}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Added Date</th>
-                <th>Active</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedCustomers.length > 0 ? (
-                displayedCustomers.map((customer) => (
-                  <tr key={customer.customer_id}>
-                    <td>{customer.customer_id}</td>
-                    <td>{customer.customer_first_name}</td>
-                    <td>{customer.customer_last_name}</td>
-                    <td>{customer.customer_email}</td>
-                    <td>{customer.customer_phone_number}</td>
-                    <td>{formatDate(customer.customer_added_date)}</td>
-                    <td>{customer.active_customer_status ? "Yes" : "No"}</td>
-                    <td>
-                      <button onClick={() => handleProfile(customer.customer_id)}>
-                        <CgProfile />
-                      </button>
-                      <button onClick={() => handleDelete(customer.customer_id)}>
-                        <MdDelete />
-                      </button>
-                    </td>
+            <div className={styles.tableContainer}>
+              <table className={styles.customerTable}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Added Date</th>
+                    <th>Active</th>
+                    <th>Actions</th>
                   </tr>
-                ))
-              ) : (
-                <tr className={styles.noResults}>
-                  <td colSpan="8">No customers matched your search</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          </div>
-          <div className={styles.pagination}>
-            <button
-              onClick={() => handlePageChange("prev")}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange("next")}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
+                </thead>
+                <tbody>
+                  {displayedCustomers.length > 0 ? (
+                    displayedCustomers.map((customer) => (
+                      <tr key={customer.customer_id}>
+                        <td>{customer.customer_id}</td>
+                        <td>{customer.customer_first_name}</td>
+                        <td>{customer.customer_last_name}</td>
+                        <td>{customer.customer_email}</td>
+                        <td>{customer.customer_phone_number}</td>
+                        <td>{formatDate(customer.customer_added_date)}</td>
+                        <td>{customer.active_customer_status ? "Yes" : "No"}</td>
+                        <td>
+                          <button onClick={() => handleProfile(customer.customer_id)}>
+                            <CgProfile />
+                          </button>
+                          <button onClick={() => handleDelete(customer.customer_id)}>
+                            <MdDelete />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className={styles.noResults}>
+                      <td colSpan="8">No customers matched your search</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className={styles.pagination}>
+              <button
+                onClick={() => handlePageChange("prev")}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange("next")}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </div>) : error ? <NotFound /> : <Loader />}
         </div>
+
       </div>
     </Layout>
   );

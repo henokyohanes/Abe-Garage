@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import CryptoJS from "crypto-js";
+import Swal from "sweetalert2";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import customerService from "../../services/customer.service";
+import Loader from "../../Components/Loader/Loader";
+import NotFound from "../../Components/NotFound/NotFound";
 import styles from "./AddCustomer.module.css";
 
 const AddCustomer = () => {
@@ -15,8 +18,9 @@ const AddCustomer = () => {
         customer_phone_number: "",
         active_customer_status: 0,
     });
-    const [error, setError] = useState({});
-    const navigate = useNavigate();
+    const [error, setError] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const redirectUrl = params.get("redirect") || "/customers";
@@ -30,25 +34,49 @@ const AddCustomer = () => {
     };
 
     const validateForm = () => {
-        const errors = {};
-        if (!formData.customer_first_name.trim())
-            errors.customer_first_name = "First name is required.";
-        if (!formData.customer_last_name.trim())
-            errors.customer_last_name = "Last name is required.";
-        if (
-            !formData.customer_email.trim() ||
-            !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.customer_email)
-        )
-            errors.customer_email = "Valid email is required.";
-        if (
-            !formData.customer_phone_number.trim() ||
-            !/^\(\d{3}\) \d{3}-\d{4}$/.test(formData.customer_phone_number)
-        )
-            errors.customer_phone_number =
-                "Phone must be in the format (555) 555-5555.";
+        let isValid = true;
+        let newErrors = {};
 
-        setError(errors);
-        return Object.keys(errors).length === 0;
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!formData.customer_email) {
+            newErrors.email = "Email is required";
+            isValid = false;
+        } else if (!emailRegex.test(formData.customer_email)) {
+            newErrors.email = "Invalid email format";
+            isValid = false;
+        }
+
+        // Name validation
+        const nameRegex = /^[A-Za-z]{2,}([ '-][A-Za-z]+)*$/;
+        if (!formData.customer_first_name) {
+            newErrors.first_name = "First name is required";
+            isValid = false;
+        } else if (!nameRegex.test(formData.customer_first_name)) {
+            newErrors.first_name = "Invalid first name format";
+            isValid = false;
+        }
+
+        if (!formData.customer_last_name) {
+            newErrors.last_name = "Last name is required";
+            isValid = false;
+        } else if (!nameRegex.test(formData.customer_last_name)) {
+            newErrors.last_name = "Invalid last name format";
+            isValid = false;
+        }
+
+        // Phone validation (must be 10 digits) 
+        const phoneRegex = /^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
+        if (!formData.customer_phone_number) {
+            newErrors.phone = "Phone number is required";
+            isValid = false;
+        } else if (!phoneRegex.test(formData.customer_phone_number)) {
+            newErrors.phone = "Phone number must be 10 digits";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
     };
 
     const generateCustomerHash = () => {
@@ -62,26 +90,55 @@ const AddCustomer = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
-
+        
         // Generate the customer hash
         const customerHash = generateCustomerHash();
-
+        
         const formDataWithHash = {
             ...formData,
             customer_hash: customerHash,
         };
+        
+        setLoading(true);
+        setError(false);
 
         try {
             const response = await customerService.addCustomer(formDataWithHash);
-            if (response.status === "success") {
-                alert("Customer added successfully!");
-                navigate(redirectUrl);
-            } else {
-                alert("Failed to add customer. Please try again.");
-            }
+                Swal.fire({
+                    title: "Success!",
+                    html: "Customer added successfully!",
+                    icon: "success",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.successTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1000);
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred.");
+            if (error === "Customer already exists") {
+                Swal.fire({
+                    title: "Error!",
+                    html: "Customer already exists with this email!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+            } else {
+                setError(true);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -95,76 +152,73 @@ const AddCustomer = () => {
                     <AdminMenuMobile />
                 </div>
                 <div className="col-12 col-md-9">
-                    <div className={styles.container}>
-                        <h2>Add a New Customer <span>____</span></h2>
-                        <div className={styles.formContainer}>
-                        <form onSubmit={handleSubmit}>
-                            <div className={styles.formGroupContainer}>
-                            <input
-                                type="text"
-                                name="customer_first_name"
-                                placeholder="Customer first name"
-                                value={formData.customer_first_name}
-                                onChange={handleInputChange}
-                                className={styles.formControl}
-                            />
-                            {error.customer_first_name && (
-                                <p className={styles.error}>{error.customer_first_name}</p>
-                            )}
-
-                            <input
-                                type="text"
-                                name="customer_last_name"
-                                placeholder="Customer last name"
-                                value={formData.customer_last_name}
-                                onChange={handleInputChange}
-                                className={styles.formControl}
-                            />
-                            {error.customer_last_name && (
-                                <p className={styles.error}>{error.customer_last_name}</p>
-                            )}
-
-                            <input
-                                type="email"
-                                name="customer_email"
-                                placeholder="Customer email"
-                                value={formData.customer_email}
-                                onChange={handleInputChange}
-                                className={styles.formControl}
-                            />
-                            {error.customer_email && (
-                                <p className={styles.error}>{error.customer_email}</p>
-                            )}
-
-                            <input
-                                type="text"
-                                name="customer_phone_number"
-                                placeholder="Customer phone (555) 555-5555"
-                                value={formData.customer_phone_number}
-                                onChange={handleInputChange}
-                                className={styles.formControl}
-                            />
-                            {error.customer_phone_number && (
-                                <p className={styles.error}>{error.customer_phone_number}</p>
-                            )}
-
-                            <label className={styles.checkbox}>
-                                <input
-                                    type="checkbox"
-                                    name="active_customer_status"
-                                    checked={formData.active_customer_status === 1}
-                                    onChange={handleInputChange}
-                                />
-                                <div>Active Status</div>
-                            </label>
-
-                            <button type="submit" className={styles.submitButton}>
-                                ADD CUSTOMER
-                            </button>
+                    {!loading && !error ? (<div>
+                        <div className={styles.container}>
+                            <h2>Add a New Customer <span>____</span></h2>
+                            <div className={styles.formContainer}>
+                                <form onSubmit={handleSubmit}>
+                                    <div className={styles.formGroupContainer}>
+                                        <div>
+                                            {errors.first_name && (<div className={styles.error}>{errors.first_name}</div>)}
+                                            <input
+                                                type="text"
+                                                name="customer_first_name"
+                                                placeholder="Customer first name *"
+                                                value={formData.customer_first_name}
+                                                onChange={handleInputChange}
+                                                className={styles.formControl}
+                                            />
+                                        </div>
+                                        <div>
+                                            {errors.last_name && (<div className={styles.error}>{errors.last_name}</div>)}
+                                            <input
+                                                type="text"
+                                                name="customer_last_name"
+                                                placeholder="Customer last name *"
+                                                value={formData.customer_last_name}
+                                                onChange={handleInputChange}
+                                                className={styles.formControl}
+                                            />
+                                        </div>
+                                        <div>
+                                            {errors.email && (<div className={styles.error}>{errors.email}</div>)}
+                                            <input
+                                                type="email"
+                                                name="customer_email"
+                                                placeholder="Customer email *"
+                                                value={formData.customer_email}
+                                                onChange={handleInputChange}
+                                                className={styles.formControl}
+                                            />
+                                        </div>
+                                        <div>
+                                            {errors.phone && (<div className={styles.error}>{errors.phone}</div>)}
+                                            <input
+                                                type="text"
+                                                name="customer_phone_number"
+                                                placeholder="Customer phone (555) 555-5555 *"
+                                                value={formData.customer_phone_number}
+                                                onChange={handleInputChange}
+                                                className={styles.formControl}
+                                            />
+                                        </div>
+                                        <label className={styles.checkbox}>
+                                            <input
+                                                type="checkbox"
+                                                name="active_customer_status"
+                                                checked={formData.active_customer_status === 1}
+                                                onChange={handleInputChange}
+                                            />
+                                            <div>Active Status</div>
+                                        </label>
+                                        <button type="submit" className={styles.submitButton}>
+                                            ADD CUSTOMER
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
                         </div>
-                    </div>
+                    </div>) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>

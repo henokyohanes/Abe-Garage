@@ -9,7 +9,7 @@ async function createEmployee(req, res, next) {
 
   // If employee exists, send a response to the client
   if (employeeExists) {
-    res.status(400).json({error: "This email address is already associated with another employee!"});
+    res.status(400).json({error: "Employee already exists!"});
   } else {
     try {
       const employeeData = req.body;

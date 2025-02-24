@@ -11,7 +11,6 @@ import NotFound from "../../../Components/NotFound/NotFound";
 import Loader from "../../../Components/Loader/Loader";
 import Layout from "../../../Layout/Layout";
 import styles from "./Employees.module.css";
-import { use } from "react";
 
 const EmployeeList = () => {
     const [employees, setEmployees] = useState([]);
@@ -232,7 +231,6 @@ const EmployeeList = () => {
             setLoading(false);
         }
     };
-
 
     return (
         <Layout>

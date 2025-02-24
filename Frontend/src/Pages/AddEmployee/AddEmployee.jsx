@@ -97,7 +97,7 @@ const AddEmployee = () => {
 
       Swal.fire({
         title: "Success!",
-        html: "Employee added successfully",
+        html: "Employee added successfull!",
         icon: "success",
         customClass: {
           popup: styles.popup,
@@ -112,11 +112,10 @@ const AddEmployee = () => {
       }, 1000);
     } catch (error) {
       console.error("Error adding employee:", error);
-      if (error.response) {
-        setError(true);
+      if (error === "Employee already exists!") {
         Swal.fire({
           title: "Error!",
-          html: "Failed to add employee. Please try again!",
+          html: "Employee already exists with this email!",
           icon: "error",
           customClass: {
             popup: styles.popup,
@@ -151,7 +150,7 @@ const AddEmployee = () => {
                       <div className={styles.formGroupContainer}>
                         <div className={styles.formGroup}>
                           {errors.employee_email && (
-                            <div className={styles.validationError}>{errors.employee_email}</div>
+                            <div className={styles.error}>{errors.employee_email}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -163,7 +162,7 @@ const AddEmployee = () => {
                         </div>
                         <div className={styles.formGroup}>
                           {errors.employee_first_name && (
-                            <div className={styles.validationError}>{errors.employee_first_name}</div>
+                            <div className={styles.error}>{errors.employee_first_name}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -176,7 +175,7 @@ const AddEmployee = () => {
                         </div>
                         <div className={styles.formGroup}>
                           {errors.employee_last_name && (
-                            <div className={styles.validationError}>{errors.employee_last_name}</div>
+                            <div className={styles.error}>{errors.employee_last_name}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -189,7 +188,7 @@ const AddEmployee = () => {
                         </div>
                         <div className={styles.formGroup}>
                           {errors.employee_phone && (
-                            <div className={styles.validationError}>{errors.employee_phone}</div>
+                            <div className={styles.error}>{errors.employee_phone}</div>
                           )}
                           <input
                             className={styles.formControl}
@@ -216,7 +215,7 @@ const AddEmployee = () => {
                         </div>
                         <div className={styles.formGroup}>
                           {errors.employee_password && (
-                            <div className={styles.validationError}>{errors.employee_password}</div>
+                            <div className={styles.error}>{errors.employee_password}</div>
                           )}
                           <input
                             className={styles.formControl}
