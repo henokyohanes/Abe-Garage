@@ -39,7 +39,7 @@ export const fetchCustomerById = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching customer:", error);
-        throw error.response?.data?.message || "Failed to fetch customer";
+        throw error.response?.status || "Failed";
     }
 };
 
@@ -83,7 +83,7 @@ export const deleteCustomer = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting customer:", error);
-        throw error.response?.data?.message || "Failed to delete customer";
+        throw error.response?.status || "Failed";
     }
 };
 

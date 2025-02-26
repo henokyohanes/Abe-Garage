@@ -173,4 +173,17 @@ const deleteVehicle = async (req, res) => {
     }
 };
 
-module.exports = { validateVehicle, createVehicle: [validateVehicle, createVehicle], getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle };
+// function to delete all vehicles by customer ID
+const deleteVehiclesByCustomerId = async (req, res) => {
+    const { customer_id } = req.params;
+
+    try {
+        await vehicleService.deleteVehiclesByCustomerId(customer_id);
+        res.status(200).json({ message: "All vehicles deleted successfully for customer" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+module.exports = { validateVehicle, createVehicle: [validateVehicle, createVehicle], getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle, deleteVehiclesByCustomerId };

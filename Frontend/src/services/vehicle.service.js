@@ -87,6 +87,20 @@ export const deleteVehicle = async (vehicleId) => {
     }
 };
 
-const vehicleService = {fetchVehiclesByCustomerId, fetchVehicleById, addVehicle, updateVehicle, deleteVehicle};
+// Function to delete all vehicles for a specific customer
+export const deleteVehiclesByCustomerId = async (customer_id) => {
+    try {
+        const response = await axios.delete(
+            `${api_url}/api/vehicles/customer/${customer_id}`,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting vehicles for customer:", error);
+        throw error.response?.status || "Failed";
+    }
+};
+
+const vehicleService = {fetchVehiclesByCustomerId, fetchVehicleById, addVehicle, updateVehicle, deleteVehicle, deleteVehiclesByCustomerId};
 
 export default vehicleService;

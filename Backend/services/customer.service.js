@@ -159,7 +159,7 @@ const deleteCustomer = async (id) => {
     const result = await db.query(
       `DELETE customer_info, customer_identifier 
       FROM customer_info 
-      INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id
+      INNER JOIN customer_identifier ON customer_info.customer_id = customer_identifier.customer_id 
       WHERE customer_info.customer_id = ?`,
       [id]
     );

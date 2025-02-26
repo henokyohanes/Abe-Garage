@@ -21,7 +21,7 @@ router.put('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdmin
 // Route to delete an order
 router.delete('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.deleteOrder);
 
-// Route to add a service to an order
+// Route to delete a service to an order
 router.delete('/api/order/:orderId/service/:serviceId', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.deleteService);
 
 // Route to add an additional request to an order

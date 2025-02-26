@@ -18,4 +18,7 @@ router.put('/api/update-vehicle/:id', [authMiddleware.verifyToken, authMiddlewar
 // Route to delete a vehicle
 router.delete('/api/delete-vehicle/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], vehicleController.deleteVehicle);
 
+// Route to delete vehicles by customer ID
+router.delete('/api/vehicles/customer/:customer_id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], vehicleController.deleteVehiclesByCustomerId);  
+
 module.exports = router;

@@ -118,4 +118,59 @@ const deleteVehicle = async (vehicleId) => {
     }
 };
 
-module.exports = { createVehicle, findVehicleByTag, getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle };
+// Function to delete all vehicles by customer ID
+const deleteVehiclesByCustomerId = async (customer_id) => {
+  if (!customer_id) {
+    throw new Error("Customer ID is required");
+  }
+
+  const connection = await db.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // Delete dependent records in order_status
+    await connection.query(
+      `DELETE FROM order_status WHERE order_id IN (SELECT order_id FROM orders WHERE vehicle_id IN (SELECT vehicle_id FROM customer_vehicle_info WHERE customer_id = ?))`,
+      [customer_id]
+    );
+
+    // Delete dependent records in order_services
+    await connection.query(
+      `DELETE FROM order_services WHERE order_id IN (SELECT order_id FROM orders WHERE vehicle_id IN (SELECT vehicle_id FROM customer_vehicle_info WHERE customer_id = ?))`,
+      [customer_id]
+    );
+
+    // Delete dependent records in order_info
+    await connection.query(
+      `DELETE FROM order_info WHERE order_id IN (SELECT order_id FROM orders WHERE vehicle_id IN (SELECT vehicle_id FROM customer_vehicle_info WHERE customer_id = ?))`,
+      [customer_id]
+    );
+
+    // Delete orders that reference the customer's vehicles
+    await connection.query(
+      `DELETE FROM orders WHERE vehicle_id IN (SELECT vehicle_id FROM customer_vehicle_info WHERE customer_id = ?)`,
+      [customer_id]
+    );
+
+    // Finally, delete the vehicles
+    const result = await connection.query(
+      `DELETE FROM customer_vehicle_info WHERE customer_id = ?`,
+      [customer_id]
+    );
+
+    await connection.commit();
+    return result;
+  } catch (error) {
+    await connection.rollback();
+    console.error("Error deleting vehicles for customer:", error.message);
+    throw new Error("Failed to delete vehicles for customer");
+  } finally {
+    connection.release();
+  }
+};
+
+
+
+
+module.exports = { createVehicle, findVehicleByTag, getVehiclesByCustomerId, getVehicleById, updateVehicle, deleteVehicle, deleteVehiclesByCustomerId };
