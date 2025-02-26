@@ -44,7 +44,6 @@ export const fetchVehicleById = async (vehicleId) => {
 
 // Function to add a new vehicle for a specific customer
 export const addVehicle = async (customerId, vehicleData) => {
-    console.log("vehicleData from addVehicle", customerId, vehicleData);
     try {
         const response = await axios.post(
             `${api_url}/api/vehicle/${customerId}`,
@@ -54,7 +53,7 @@ export const addVehicle = async (customerId, vehicleData) => {
         return response.data;
     } catch (error) {
         console.error("Error adding vehicle:", error);
-        throw error.response?.data?.message || "Failed to add vehicle";
+        throw error.response?.data?.message || "Failed";
     }
 };
 

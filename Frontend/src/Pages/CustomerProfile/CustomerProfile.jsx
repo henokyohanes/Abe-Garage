@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import vehicleService from "../../services/vehicle.service";
 import customerService from "../../services/customer.service";
 import orderService from "../../services/order.service";
+import NotFound from "../../Components/NotFound/NotFound";
+import Loader from "../../Components/Loader/Loader";
 import styles from "./CustomerProfile.module.css";
 
 const CustomerProfile = () => {
@@ -17,58 +20,75 @@ const CustomerProfile = () => {
     const [vehicles, setVehicles] = useState({});
     const [orders, setOrders] = useState([]);
     const [showform, setShowform] = useState(false);
-    const [newVehicle, setNewVehicle] = useState({ vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_type: "", vehicle_color: "", vehicle_mileage: "", vehicle_tag: "", vehicle_serial: "" });
+    const [newVehicle, setNewVehicle] = useState({
+        vehicle_make: "",
+        vehicle_model: "",
+        vehicle_year: "",
+        vehicle_type: "",
+        vehicle_color: "",
+        vehicle_mileage: "",
+        vehicle_tag: "",
+        vehicle_serial: ""
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!id) return;
         fetchCustomerData();
         fetchVehicles();
         fetchOrders();
-    }, []);
+    }, [id]);
 
     // Fetch customer data
     const fetchCustomerData = async () => {
+
+        setLoading(true);
+        setError(false);
+
         try {
             const customerData = await customerService.fetchCustomerById(parseInt(id));
-            if (!customerData) throw new Error("Customer not found.");
             setCustomer(customerData.data);
-            console.log(customerData.data);
         } catch (error) {
             console.error("Error fetching customer data:", error);
+            setError(true);
+        } finally {
+            setLoading(false);
         }
     };
 
     // Fetch vehicles for the customer
     const fetchVehicles = async () => {
+
+        setLoading(true);
+        setError(false);
+
         try {
             const vehicleData = await vehicleService.fetchVehiclesByCustomerId(parseInt(id));
             setVehicles(vehicleData.data);
         } catch (error) {
             console.error("Error fetching vehicles:,", error);
+            setError(true);
+        } finally {
+            setLoading(false);
         }
     };
 
     // Fetch orders for the customer
     const fetchOrders = async () => {
+
+        setLoading(true);
+        setError(false);
+
         try {
             const orderData = await orderService.fetchCustomerOrders(parseInt(id));
             setOrders(orderData.data);
         } catch (error) {
             console.error("Error fetching orders:", error);
-        }
-    };
-
-    // Add a new vehicle using vehicleService
-    const handleAddVehicle = async () => {
-        try {
-            await vehicleService.addVehicle(parseInt(id), newVehicle);
-            setShowform(false);
-            alert("Vehicle added successfully!");
-            fetchVehicles();
-            setNewVehicle({ vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_type: "", vehicle_color: "", vehicle_mileage: "", vehicle_tag: "", vehicle_serial: "" });
-        } catch (error) {
-            console.error("Error adding vehicle:", error);
-            alert(error || "Failed to add vehicle");
+            setError(true);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -78,13 +98,68 @@ const CustomerProfile = () => {
         setNewVehicle((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Add a new vehicle using vehicleService
+    const handleAddVehicle = async () => {
+
+        setLoading(true);
+        setError(false);
+
+        try {
+            await vehicleService.addVehicle(parseInt(id), newVehicle);
+            setShowform(false);
+            fetchVehicles();
+            setNewVehicle({
+                vehicle_make: "",
+                vehicle_model: "",
+                vehicle_year: "",
+                vehicle_type: "",
+                vehicle_color: "",
+                vehicle_mileage: "",
+                vehicle_tag: "",
+                vehicle_serial: ""
+            });
+            Swal.fire({
+                title: "Success!",
+                html: "Vehicle added successfully.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+        } catch (error) {
+            console.error("Error adding vehicle:", error);
+            if (error === "Failed") {
+                setError(true);
+            } else {
+                Swal.fire({
+                    title: "Error!",
+                    html: `${error}. Please try again.`,
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDeleteVehicle = async (id) => {
         // check if there is order associated with the vehicle
-        const order = orders.find((order) => order.vehicle_id === id);
-        if (order) {
-            alert("This vehicle is associated with an order. Please delete the order first.");
-            return; // stop the function
-        }   
+        // const order = orders.find((order) => order.vehicle_id === id);
+        // if (order) {
+        //     alert("This vehicle is associated with an order. Please delete the order first.");
+        //     return;
+        // }   
         // Confirmation step
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this customer?"
@@ -92,7 +167,7 @@ const CustomerProfile = () => {
         if (confirmDelete) {
             try {
                 await vehicleService.deleteVehicle(id);
-                fetchVehicles();
+                setVehicles(vehicles.filter((vehicle) => vehicle.vehicle_id !== id));
             } catch (err) {
                 alert(err.message || "Failed to delete customer");
             }
@@ -130,8 +205,8 @@ const CustomerProfile = () => {
                 <div className="d-block d-md-none">
                     <AdminMenuMobile />
                 </div>
-                <div className={`${styles.customerContainer} col-12 col-md-9`}>
-
+                <div className="col-12 col-md-9">
+                {!loading && !error ? (<div className={styles.customerContainer}>
                     {/* Info Section */}
                     <div className={styles.container}>
                         <div className={styles.title}>Info</div>
@@ -273,6 +348,7 @@ const CustomerProfile = () => {
                             </div>
                         </div>
                     </div>
+                    </div>) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>
