@@ -113,16 +113,61 @@ const ProvideServices = () => {
     };
 
     const handleDelete = async (id) => {
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this customer?"
-        );
-        if (confirmDelete) {
-            try {
-                await serviceService.deleteService(id);
-                setServices(services.filter((service) => service.service_id !== id));
-            } catch (err) {
-                alert(err.message || "Failed to delete customer");
+        try {
+            const result = await Swal.fire({
+                title: "Are you sure you want to delete this service?",
+                html: "All related data associated with this service will be deleted!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes!",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    cancelButton: styles.cancelButton,
+                    icon: styles.icon,
+                    title: styles.warningTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+            if (!result.isConfirmed) return;
+            setLoading(true);
+            setError(false);
+
+            await serviceService.deleteService(id);
+            setServices(services.filter((service) => service.service_id !== id));
+
+            await Swal.fire({
+                title: "Deleted!",
+                html: "Service and related data deleted successfully.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+        } catch (err) {
+            console.error("Error deleting service:", err);
+            if (err === "Failed") {
+                setError(true);
+            } else {
+                Swal.fire({
+                    title: "Error!",
+                    html: "Failed to delete service. Please try again.",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
             }
+        } finally {
+            setLoading(false);
         }
     };
 

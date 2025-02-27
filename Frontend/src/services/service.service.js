@@ -65,7 +65,7 @@ export const deleteService = async (id) => {
         return response.data;
     } catch (error) {
         console.error(`Error deleting service with ID ${id}:`, error);
-        throw error.response?.data || error;
+        throw error.response?.data.message || "Failed";
     }
 };
 
