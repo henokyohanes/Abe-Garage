@@ -21,7 +21,7 @@ export const addService = async (serviceData) => {
         return response.data;
     } catch (error) {
         console.error("Error adding service:", error);
-        throw error.response?.data || error;
+        throw error.response?.data.error || "Failed";
     }
 };
 
