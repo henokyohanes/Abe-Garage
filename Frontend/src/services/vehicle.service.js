@@ -82,7 +82,7 @@ export const deleteVehicle = async (vehicleId) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting vehicle:", error);
-        throw error.response?.data?.message || "Failed to delete vehicle";
+        throw error.response?.data?.message || "Failed";
     }
 };
 

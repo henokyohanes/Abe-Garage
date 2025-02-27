@@ -109,9 +109,33 @@ const updateVehicle = async (vehicle_id, vehicleData) => {
 const deleteVehicle = async (vehicleId) => {
 
     try {
-        // Delete the vehicle
-        const result = await db.query(`DELETE FROM customer_vehicle_info WHERE vehicle_id = ?`, [vehicleId]);
-        
+        // Delete from order_status
+        await db.query(
+            `DELETE FROM order_status WHERE order_id IN (SELECT order_id FROM orders WHERE vehicle_id = ?)`,
+            [vehicleId]
+        );
+
+        // Delete from order_services
+        await db.query(
+            `DELETE FROM order_services WHERE order_id IN (SELECT order_id FROM orders WHERE vehicle_id = ?)`,
+            [vehicleId]
+        );
+
+        // Delete from order_info 
+        await db.query(
+            `DELETE FROM order_info WHERE order_id IN (SELECT order_id FROM orders WHERE vehicle_id = ?)`,
+            [vehicleId]
+        );
+
+        // Delete related orders
+        await db.query(`DELETE FROM orders WHERE vehicle_id = ?`, [vehicleId]);
+
+        // finally Delete the vehicle
+        const result = await db.query(
+            `DELETE FROM customer_vehicle_info WHERE vehicle_id = ?`,
+            [vehicleId]
+        );
+
         return result;
     } catch (error) {
         console.error("Error deleting vehicle:", error.message);

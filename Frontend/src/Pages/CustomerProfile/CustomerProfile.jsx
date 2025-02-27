@@ -84,6 +84,7 @@ const CustomerProfile = () => {
         try {
             const orderData = await orderService.fetchCustomerOrders(parseInt(id));
             setOrders(orderData.data);
+            console.log(orderData.data);
         } catch (error) {
             console.error("Error fetching orders:", error);
             setError(true);
@@ -154,23 +155,62 @@ const CustomerProfile = () => {
     };
 
     const handleDeleteVehicle = async (id) => {
-        // check if there is order associated with the vehicle
-        // const order = orders.find((order) => order.vehicle_id === id);
-        // if (order) {
-        //     alert("This vehicle is associated with an order. Please delete the order first.");
-        //     return;
-        // }   
-        // Confirmation step
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this customer?"
-        );
-        if (confirmDelete) {
-            try {
-                await vehicleService.deleteVehicle(id);
-                setVehicles(vehicles.filter((vehicle) => vehicle.vehicle_id !== id));
-            } catch (err) {
-                alert(err.message || "Failed to delete customer");
+        try {
+            const result = await Swal.fire({
+                title: "Are you sure you want to delete this vehicle?",
+                html: "All related data associated with this vehicle will be deleted!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes!",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    cancelButton: styles.cancelButton,
+                    icon: styles.icon,
+                    title: styles.warningTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+            if (!result.isConfirmed) return;
+            setLoading(true);
+            setError(false);
+
+            await vehicleService.deleteVehicle(id);
+            setVehicles(vehicles.filter((vehicle) => vehicle.vehicle_id !== id));
+            setOrders(orders.filter((order) => order.vehicle_id !== id));
+
+            await Swal.fire({
+                title: "Deleted!",
+                html: "Vehicle and related data have been deleted successfully.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+        } catch (err) {
+            console.error("Error deleting vehicle:", err);
+            if (err === "Failed") {
+                setError(true);
+            } else {
+                Swal.fire({
+                    title: "Error!",
+                    html: "Failed to delete vehicle. Please try again.",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
             }
+        } finally {
+            setLoading(false);
         }
     };
 
