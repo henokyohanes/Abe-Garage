@@ -68,8 +68,9 @@ const CustomerProfile = () => {
             const vehicleData = await vehicleService.fetchVehiclesByCustomerId(parseInt(id));
             setVehicles(vehicleData.data);
         } catch (error) {
-            console.error("Error fetching vehicles:,", error);
-            setError(true);
+            if (!error.response?.data?.message === "No vehicles found for this customer") {
+                setError(true);
+            }
         } finally {
             setLoading(false);
         }
@@ -84,7 +85,6 @@ const CustomerProfile = () => {
         try {
             const orderData = await orderService.fetchCustomerOrders(parseInt(id));
             setOrders(orderData.data);
-            console.log(orderData.data);
         } catch (error) {
             console.error("Error fetching orders:", error);
             setError(true);
@@ -215,18 +215,62 @@ const CustomerProfile = () => {
     };
 
     const handleDeleteOrder = async (id) => {
-        // Confirmation step
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this order?"
-        );
-        if (confirmDelete) {
-            try {
-                await orderService.deleteOrder(id);
-                fetchOrders();
-            } catch (err) {
-                alert(err.message || "Failed to delete order");
-            }
-        }
+
+        try {
+            const result = await Swal.fire({
+            title: "Are you sure you want to delete this order?",
+            html: "This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes !",
+            customClass: {
+                popup: styles.popup,
+                confirmButton: styles.confirmButton,
+                cancelButton: styles.cancelButton,
+                icon: styles.icon,
+                title: styles.warningTitle,
+                htmlContainer: styles.text,
+            },
+        });
+            if (!result.isConfirmed) return;
+                setLoading(true);
+                setError(false);
+                    await orderService.deleteOrder(id);
+                    setOrders(orders.filter((order) => order.order_id !== id));
+
+                    await Swal.fire({
+                        title: "Deleted!",
+                        html: "The order has been deleted.",
+                        icon: "success",
+                        customClass: {
+                            popup: styles.popup,
+                            confirmButton: styles.confirmButton,
+                            icon: styles.icon,
+                            title: styles.successTitle,
+                            htmlContainer: styles.text,
+                        },
+                    });
+                } catch (error) {
+                    console.error("Error deleting order:", error);
+                    if (error === "Failed") {
+                        setError(true);
+                    } else {             
+                        Swal.fire({
+                            title: "Error!",
+                            html: "Failed to delete order. Please try again!",
+                            icon: "error",
+                            customClass: {
+                                popup: styles.popup,
+                                confirmButton: styles.confirmButton,
+                                icon: styles.icon,
+                                title: styles.errorTitle,
+                                htmlContainer: styles.text,
+                            },
+                        });
+                    }
+                } finally {
+                    setLoading(false);
+                }
     };
 
     function getOrderStatus(status) {

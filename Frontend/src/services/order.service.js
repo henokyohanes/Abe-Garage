@@ -94,7 +94,7 @@ export const deleteOrder = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting order:", error);
-        throw error.response?.data?.message || "Failed to delete order";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
