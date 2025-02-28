@@ -53,7 +53,7 @@ export const addCustomer = async (customerData) => {
         return response.data;
     } catch (error) {
         console.error("Error adding customer:", error);
-        throw error.response?.data?.message || "Failed to add customer";
+        throw error.response?.data?.message || "Failed";
     }
 };
 

@@ -114,34 +114,21 @@ const AddEmployee = () => {
       setTimeout(() => {window.location.href = "/employees";}, 1500);
     } catch (error) {
       console.error("Error adding employee:", error);
-      if (error === "Employee already exists!") {
-        Swal.fire({
-          title: "Error!",
-          html: "Employee already exists with this email!",
-          icon: "error",
-          customClass: {
-            popup: styles.popup,
-            confirmButton: styles.confirmButton,
-            icon: styles.icon,
-            title: styles.errorTitle,
-            htmlContainer: styles.text,
-          },
-        });
-      } else if (error === "Something went wrong!") {
-        Swal.fire({
-          title: "Error!",
-          html: "Failed to add employee. Please try again!",
-          icon: "error",
-          customClass: {
-            popup: styles.popup,
-            confirmButton: styles.confirmButton,
-            icon: styles.icon,
-            title: styles.errorTitle,
-            htmlContainer: styles.text,
-          },
-        });
-      } else {
+      if (error === "Failed") {
         setError(true);
+      } else {
+        Swal.fire({
+          title: "Error!",
+          html: `${error}. Please try again.`,
+          icon: "error",
+          customClass: {
+            popup: styles.popup,
+            confirmButton: styles.confirmButton,
+            icon: styles.icon,
+            title: styles.errorTitle,
+            htmlContainer: styles.text,
+          },
+        });
       }
     } finally {
       setLoading(false);

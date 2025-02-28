@@ -122,37 +122,25 @@ const AddCustomer = () => {
                         htmlContainer: styles.text,
                     },
                 });
-                setTimeout(() => {window.location.href = redirectUrl}, 1000);
+                
+                setTimeout(() => {window.location.href = redirectUrl}, 1500);
         } catch (error) {
             console.error("Error:", error);
-            if (error === "Customer already exists") {
-                Swal.fire({
-                    title: "Error!",
-                    html: "Customer already exists with this email!",
-                    icon: "error",
-                    customClass: {
-                        popup: styles.popup,
-                        confirmButton: styles.confirmButton,
-                        icon: styles.icon,
-                        title: styles.errorTitle,
-                        htmlContainer: styles.text,
-                    },
-                });
-            } else if (error === "Failed to create customer") {
-                Swal.fire({
-                    title: "Error!",
-                    html: "Failed to add customer. Please try again!",
-                    icon: "error",
-                    customClass: {
-                        popup: styles.popup,
-                        confirmButton: styles.confirmButton,
-                        icon: styles.icon,
-                        title: styles.errorTitle,
-                        htmlContainer: styles.text,
-                    },
-                });
-            } else {
+            if (error === "Failed") {
                 setError(true);
+            } else {
+                Swal.fire({
+                    title: "Error!",
+                    html: `${error}. Please try again!`,
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
             }
         } finally {
             setLoading(false);

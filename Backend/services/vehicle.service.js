@@ -14,7 +14,7 @@ const createVehicle = async (vehicleData) => {
 
     try {
         const query = `INSERT
-         INTO customer_vehicle_info 
+        INTO customer_vehicle_info 
         (customer_id, 
         vehicle_year, 
         vehicle_make, 

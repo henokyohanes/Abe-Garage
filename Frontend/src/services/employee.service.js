@@ -25,7 +25,7 @@ export const addEmployee = async (employeeData) => {
         return response.data;
     } catch (error) {
         console.error("Error adding employee:", error);
-        throw error.response?.data?.error || "Failed to add employee";
+        throw error.response?.data?.message || "Failed";
     }
 };
 

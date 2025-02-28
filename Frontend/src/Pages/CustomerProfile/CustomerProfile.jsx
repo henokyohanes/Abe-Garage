@@ -34,6 +34,7 @@ const CustomerProfile = () => {
     const [error, setError] = useState(false);
     const navigate = useNavigate();
 
+    // Fetch customer data, vehicles, and orders when id changes
     useEffect(() => {
         if (!id) return;
         fetchCustomerData();
@@ -154,6 +155,7 @@ const CustomerProfile = () => {
         }
     };
 
+    // Delete a vehicle of the customer
     const handleDeleteVehicle = async (id) => {
         try {
             const result = await Swal.fire({
@@ -214,6 +216,7 @@ const CustomerProfile = () => {
         }
     };
 
+    // Delete an order of the customer
     const handleDeleteOrder = async (id) => {
 
         try {
@@ -273,6 +276,7 @@ const CustomerProfile = () => {
                 }
     };
 
+    // Get the order status
     function getOrderStatus(status) {
         if (status === 0) return "Received";
         if (status === 1) return "In Progress";
@@ -283,156 +287,174 @@ const CustomerProfile = () => {
     return (
         <Layout>
             <div className={`${styles.customerProfile} row g-0`}>
-                <div className="d-none d-md-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-md-none">
-                    <AdminMenuMobile />
-                </div>
+                <div className="d-none d-md-block col-3"><AdminMenu /></div>
+                <div className="d-block d-md-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-md-9">
-                {!loading && !error ? (<div className={styles.customerContainer}>
-                    {/* Info Section */}
-                    <div className={styles.container}>
-                        <div className={styles.title}>Info</div>
-                        <div className={styles.allInfo}>
-                            <h2>Customer: {customer?.customer_first_name} {customer?.customer_last_name}</h2>
-                            {customer ? (<div className={styles.customerInfo}>
-                                <p><strong>Email:</strong> {customer.customer_email}</p>
-                                <p><strong>Phone Number:</strong> {customer.customer_phone_number}</p>
-                                <p><strong>Active Customer:</strong> {customer.active_customer_status ? "Yes" : "No"}</p>
-                                <p><strong>Edit Customer Info:</strong> <span onClick={() => navigate(`/edit-customer/${customer.customer_id}`)}><FaEdit /></span></p>
-                            </div>) : (<p>Loading customer data...</p>)}
-                        </div>
-                    </div>
+                    {!loading && !error ? (
+                        <div className={styles.customerContainer}>
 
-                    {/* Vehicles Section */}
-                    <div className={styles.container}>
-                        <div className={styles.title}>Cars</div>
-                        <div className={styles.allInfo}>
-                            <h2>Vehicles of {customer?.customer_first_name}</h2>
-                            <div className={styles.vehicleInfo}>
-                                {vehicles && Object.keys(vehicles).length > 0 ? (
-                                    Object.values(vehicles).map((vehicle, index) => (
-                                        <div key={index}>
-                                            <div className={styles.deleteIcon} onClick={() => handleDeleteVehicle(vehicle.vehicle_id)}>
-                                                <MdDelete />
-                                            </div>
-                                            <div className={styles.vehicleCard}>
-                                                <p>
-                                                    <strong>Vehicle:</strong> {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
-                                                </p>
-                                                <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
-                                                <p><strong>Mileage:</strong> {vehicle.vehicle_mileage}</p>
-                                                <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
-                                                <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
-                                                <p><strong>Edit Vehicle Info:</strong> <span onClick={() => navigate(`/edit-vehicle/${customer.customer_id}/${vehicle.vehicle_id}`)}><FaEdit /></span></p>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className={styles.noMessage}>No vehicles found</p>
-                                )}
-                                {!showform && <button onClick={() => setShowform(true)}>Add New Vehicle</button>}
+                            {/* customer Info Section */}
+                            <div className={styles.container}>
+                                <div className={styles.title}>Info</div>
+                                <div className={styles.allInfo}>
+                                    <h2>Customer: {customer?.customer_first_name} {customer?.customer_last_name}</h2>
+                                    {customer ? (<div className={styles.customerInfo}>
+                                        <p><strong>Email:</strong> {customer.customer_email}</p>
+                                        <p><strong>Phone Number:</strong> {customer.customer_phone_number}</p>
+                                        <p><strong>Active Customer:</strong> {customer.active_customer_status ? "Yes" : "No"}</p>
+                                        <p>
+                                            <strong>Edit Customer Info:</strong>
+                                            <span onClick={() => navigate(`/edit-customer/${customer.customer_id}`)}>
+                                                <FaEdit />
+                                            </span>
+                                        </p>
+                                    </div>) : (<p>Loading customer data...</p>)}
+                                </div>
+                            </div>
+
+                            {/* Vehicles Section */}
+                            <div className={styles.container}>
+                                <div className={styles.title}>Cars</div>
+                                <div className={styles.allInfo}>
+                                    <h2>Vehicles of {customer?.customer_first_name}</h2>
+                                    <div className={styles.vehicleInfo}>
+                                        {vehicles && Object.keys(vehicles).length > 0 ? (
+                                            Object.values(vehicles).map((vehicle, index) => (
+                                                <div key={index}>
+                                                    <div className={styles.deleteIcon} onClick={() => handleDeleteVehicle(vehicle.vehicle_id)}>
+                                                        <MdDelete />
+                                                    </div>
+                                                    <div className={styles.vehicleCard}>
+                                                        <p>
+                                                            <strong>Vehicle:</strong>
+                                                            {vehicle.vehicle_make} {vehicle.vehicle_model} ({vehicle.vehicle_year})
+                                                        </p>
+                                                        <p><strong>Color:</strong> {vehicle.vehicle_color}</p>
+                                                        <p><strong>Mileage:</strong> {vehicle.vehicle_mileage}</p>
+                                                        <p><strong>License Plate:</strong> {vehicle.vehicle_tag}</p>
+                                                        <p><strong>VIN:</strong> {vehicle.vehicle_serial}</p>
+                                                        <p>
+                                                            <strong>Edit Vehicle Info:</strong>
+                                                            <span onClick={() => navigate(`/edit-vehicle/${customer.customer_id}/${vehicle.vehicle_id}`)}>
+                                                                <FaEdit />
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className={styles.noMessage}>No vehicles found</p>
+                                        )}
+                                        {!showform && <button onClick={() => setShowform(true)}>Add New Vehicle</button>}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* vehicle form */}
+                            {showform && (
+                                <div className={styles.vehicleForm}>
+                                    <div className={styles.closeBtn} onClick={() => setShowform(false)}>X</div>
+                                    <div className={styles.vehicleFormContainer}>
+                                        <h2>Add a New Vehicle <span>____</span></h2>
+                                        <input
+                                            type="text"
+                                            name="vehicle_year"
+                                            placeholder="Vehicle year"
+                                            value={newVehicle.vehicle_year}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_make"
+                                            placeholder="Vehicle make"
+                                            value={newVehicle.vehicle_make}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_model"
+                                            placeholder="Vehicle model"
+                                            value={newVehicle.vehicle_model}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_type"
+                                            placeholder="Vehicle type"
+                                            value={newVehicle.vehicle_type}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_color"
+                                            placeholder="Vehicle color"
+                                            value={newVehicle.vehicle_color}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_mileage"
+                                            placeholder="Vehicle mileage"
+                                            value={newVehicle.vehicle_mileage}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_tag"
+                                            placeholder="Vehicle tag"
+                                            value={newVehicle.vehicle_tag}
+                                            onChange={handleInputChange}
+                                        />
+                                        <input
+                                            type="text"
+                                            name="vehicle_serial"
+                                            placeholder="VIN Number"
+                                            value={newVehicle.vehicle_serial}
+                                            onChange={handleInputChange}
+                                        />
+                                        <button onClick={handleAddVehicle}>Add Vehicle</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Orders Section */}
+                            <div className={styles.container}>
+                                <div className={styles.title}>Orders</div>
+                                <div className={styles.allInfo}>
+                                    <h2>Orders of {customer?.customer_first_name}</h2>
+                                    <div className={styles.orderInfo}>
+                                        {orders && orders.length > 0 ? (
+                                            orders.map((order, index) => (
+                                                <div key={index}>
+                                                    <div className={styles.deleteIcon} onClick={() => handleDeleteOrder(order.order_id)}>
+                                                        <MdDelete />
+                                                    </div>
+                                                    <div className={styles.orderCard}>
+                                                        <p><strong>Order #: </strong>{order.order_id}</p>
+                                                        <p>
+                                                            <strong>Vehicle: </strong>
+                                                            {order.vehicle_year} {order.vehicle_make} {order.vehicle_model}
+                                                        </p>
+                                                        <p><strong>Date: </strong>{order.order_date.split("T")[0]}</p>
+                                                        <p><strong>Status: </strong>{getOrderStatus(order.order_status)}</p>
+                                                        <p><strong>Total: </strong>${order.order_total_price}</p>
+                                                        <p>
+                                                            <strong>Edit Order Info:</strong>
+                                                            <span onClick={() => navigate(`/edit-order/${order.order_id}`)}>
+                                                                <FaEdit />
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className={styles.noMessage}>No orders found</p>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    {/* vehicle form */}
-                    {showform && (
-                        <div className={styles.vehicleForm}>
-                            <div className={styles.closeBtn} onClick={() => setShowform(false)}>X</div>
-                            <div className={styles.vehicleFormContainer}>
-                                <h2>Add a New Vehicle <span>____</span></h2>
-                                <input
-                                    type="text"
-                                    name="vehicle_year"
-                                    placeholder="Vehicle year"
-                                    value={newVehicle.vehicle_year}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_make"
-                                    placeholder="Vehicle make"
-                                    value={newVehicle.vehicle_make}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_model"
-                                    placeholder="Vehicle model"
-                                    value={newVehicle.vehicle_model}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_type"
-                                    placeholder="Vehicle type"
-                                    value={newVehicle.vehicle_type}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_color"
-                                    placeholder="Vehicle color"
-                                    value={newVehicle.vehicle_color}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_mileage"
-                                    placeholder="Vehicle mileage"
-                                    value={newVehicle.vehicle_mileage}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_tag"
-                                    placeholder="Vehicle tag"
-                                    value={newVehicle.vehicle_tag}
-                                    onChange={handleInputChange}
-                                />
-                                <input
-                                    type="text"
-                                    name="vehicle_serial"
-                                    placeholder="VIN Number"
-                                    value={newVehicle.vehicle_serial}
-                                    onChange={handleInputChange}
-                                />
-                                <button onClick={handleAddVehicle}>Add Vehicle</button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Orders Section */}
-                    <div className={styles.container}>
-                        <div className={styles.title}>Orders</div>
-                        <div className={styles.allInfo}>
-                            <h2>Orders of {customer?.customer_first_name}</h2>
-                            <div className={styles.orderInfo}>
-                                {orders && orders.length > 0 ? (
-                                    orders.map((order, index) => (
-                                        <div key={index}>
-                                        <div className={styles.deleteIcon} onClick={() => handleDeleteOrder(order.order_id)}>
-                                                <MdDelete />
-                                            </div>
-                                        <div className={styles.orderCard}>
-                                            <p><strong>Order #: </strong>{order.order_id}</p>
-                                            <p><strong>Vehicle: </strong>{order.vehicle_year} {order.vehicle_make} {order.vehicle_model}</p>
-                                            <p><strong>Date: </strong>{order.order_date.split("T")[0]}</p>
-                                            <p><strong>Status: </strong>{getOrderStatus(order.order_status)}</p>
-                                            <p><strong>Total: </strong>${order.order_total_price}</p>
-                                            <p><strong>Edit Order Info:</strong> <span onClick={() => navigate(`/edit-order/${order.order_id}`)}><FaEdit /></span></p>
-                                        </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className={styles.noMessage}>No orders found</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    </div>) : error ? <NotFound /> : <Loader />}
+                    ) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>
