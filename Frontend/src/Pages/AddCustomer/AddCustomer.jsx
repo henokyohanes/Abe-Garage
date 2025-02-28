@@ -162,12 +162,8 @@ const AddCustomer = () => {
     return (
         <Layout>
             <div className={`${styles.background} row g-0`}>
-                <div className="d-none d-md-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-md-none">
-                    <AdminMenuMobile />
-                </div>
+                <div className="d-none d-md-block col-3"><AdminMenu /></div>
+                <div className="d-block d-md-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-md-9">
                     {!loading && !error ? (<div>
                         <div className={styles.container}>
@@ -176,7 +172,9 @@ const AddCustomer = () => {
                                 <form onSubmit={handleSubmit}>
                                     <div className={styles.formGroupContainer}>
                                         <div>
-                                            {errors.first_name && (<div className={styles.error}>{errors.first_name}</div>)}
+                                            {errors.first_name && (
+                                                <div className={styles.error}>{errors.first_name}</div>
+                                            )}
                                             <input
                                                 type="text"
                                                 name="customer_first_name"
@@ -187,7 +185,9 @@ const AddCustomer = () => {
                                             />
                                         </div>
                                         <div>
-                                            {errors.last_name && (<div className={styles.error}>{errors.last_name}</div>)}
+                                            {errors.last_name && (
+                                                <div className={styles.error}>{errors.last_name}</div>
+                                            )}
                                             <input
                                                 type="text"
                                                 name="customer_last_name"
@@ -198,7 +198,9 @@ const AddCustomer = () => {
                                             />
                                         </div>
                                         <div>
-                                            {errors.email && (<div className={styles.error}>{errors.email}</div>)}
+                                            {errors.email && (
+                                                <div className={styles.error}>{errors.email}</div>
+                                            )}
                                             <input
                                                 type="email"
                                                 name="customer_email"
@@ -209,7 +211,9 @@ const AddCustomer = () => {
                                             />
                                         </div>
                                         <div>
-                                            {errors.phone && (<div className={styles.error}>{errors.phone}</div>)}
+                                            {errors.phone && (
+                                                <div className={styles.error}>{errors.phone}</div>
+                                            )}
                                             <input
                                                 type="text"
                                                 name="customer_phone_number"

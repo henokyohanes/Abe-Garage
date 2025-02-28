@@ -48,7 +48,8 @@ async function createEmployee(employee) {
     // construct to the employee object to return
     createdEmployee = {employee_id: employee_id};
   } catch (err) {
-    console.log(err);
+    console.error("Error creating employee:", err);
+    throw new Error("Failed to create employee");
   }
 
   return createdEmployee;

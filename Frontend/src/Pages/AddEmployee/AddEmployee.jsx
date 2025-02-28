@@ -24,14 +24,17 @@ const AddEmployee = () => {
     company_role_id: 1
   });
 
+  // Get the logged in employee
   const { employee: loggedInEmployee } = useAuth();
   const loggedInEmployeeToken = loggedInEmployee?.employee_token || "";
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEmployee((prev) => ({...prev, [name]: value}));
   };
 
+  // Validate form
   const validateForm = () => {
     let isValid = true;
     let newErrors = {};
@@ -84,6 +87,7 @@ const AddEmployee = () => {
     return isValid;
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -94,7 +98,6 @@ const AddEmployee = () => {
 
     try {
       const data = await employeeService.addEmployee(employee, loggedInEmployeeToken);
-
       Swal.fire({
         title: "Success!",
         html: "Employee added successfull!",
@@ -107,15 +110,27 @@ const AddEmployee = () => {
           htmlContainer: styles.text,
         },
       });
-      setTimeout(() => {
-        window.location.href = "/employees";
-      }, 1000);
+      
+      setTimeout(() => {window.location.href = "/employees";}, 1500);
     } catch (error) {
       console.error("Error adding employee:", error);
       if (error === "Employee already exists!") {
         Swal.fire({
           title: "Error!",
           html: "Employee already exists with this email!",
+          icon: "error",
+          customClass: {
+            popup: styles.popup,
+            confirmButton: styles.confirmButton,
+            icon: styles.icon,
+            title: styles.errorTitle,
+            htmlContainer: styles.text,
+          },
+        });
+      } else if (error === "Something went wrong!") {
+        Swal.fire({
+          title: "Error!",
+          html: "Failed to add employee. Please try again!",
           icon: "error",
           customClass: {
             popup: styles.popup,
