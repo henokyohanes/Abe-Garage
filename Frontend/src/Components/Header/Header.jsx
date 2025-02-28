@@ -19,6 +19,7 @@ const Header = () => {
         setIsLogged(false);
     };
 
+    // Function to get the role text
     const getRoleText = () => {
         if (isAdmin) return "Admin";
         if (isManager) return "Manager";
@@ -38,22 +39,25 @@ const Header = () => {
                 </div>
                 <div>
                     {isLogged ? (
-                        <div className={Style.contactInfo}>Welcome: <strong>{employee?.employee_first_name}</strong></div>
+                        <div className={Style.contactInfo}>
+                            Welcome: <strong>{employee?.employee_first_name}</strong>
+                        </div>
                     ) : (
-                        <div className={Style.contactInfo}>Call: <strong>1800 456 7890</strong></div>
+                        <div className={Style.contactInfo}>
+                            Call: <strong>1800 456 7890</strong>
+                        </div>
                     )}
                 </div>
             </div>
             <div className={Style.mainHeader}>
-                <NavDropdown
-                    title={<FaBars size={35} />}
-                    className="d-md-none"
-                >
+                <NavDropdown title={<FaBars size={35} />} className="d-md-none">
                     <NavDropdown.Item as={Link} to="/">Home</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/about-us">About Us</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/abe-services">Services</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/contact-us">Contact Us</NavDropdown.Item>
-                    {isLogged && (<NavDropdown.Item as={Link} to="/dashboard">{getRoleText()}</NavDropdown.Item>)}
+                    {isLogged && (
+                        <NavDropdown.Item as={Link} to="/dashboard">{getRoleText()}</NavDropdown.Item>
+                    )}
                 </NavDropdown>
                 <Link to="/"><img src={logo} alt="ABE Garage Logo" /></Link>
                 <div className={Style.navMenu}>
@@ -62,7 +66,9 @@ const Header = () => {
                         <li><Link to="/about-us">About Us</Link></li>
                         <li><Link to="/abe-services">Services</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
-                        {isLogged && (<li><Link to="/dashboard">{getRoleText()}</Link></li>)}
+                        {isLogged && (
+                            <li><Link to="/dashboard">{getRoleText()}</Link></li>
+                        )}
                     </ul>
                     <div>
                         {isLogged ? (

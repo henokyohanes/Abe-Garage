@@ -8,12 +8,14 @@ const AdminMenuMobile = () => {
     // Access the authentication context
     const { isAdmin, isManager } = useAuth();
 
+    // Function to get the role text
     const getRoleText = () => {
         if (isAdmin) return "Admin";
         if (isManager) return "Manager";
         return "Mechanic";
     };
 
+    // Function to handle the class
     const handleclass = () => {
         if (isAdmin || isManager) {
             return styles.listGroup;
@@ -23,7 +25,6 @@ const AdminMenuMobile = () => {
     }
 
     return (
-
         <div className={styles.adminMenuContainer}>
             <div className={styles.adminMenuTitle}>
                 <h2>{getRoleText()} Menu</h2>

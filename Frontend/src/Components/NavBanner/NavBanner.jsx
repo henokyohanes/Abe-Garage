@@ -9,7 +9,9 @@ const NavBanner = ({ title }) => {
             <div className={styles.bannerContent}>
                 <h1>{title}</h1>
                 <nav className={styles.nav}>
-                    <span className={styles.home}>Home</span> <IoIosArrowForward /> <span>{title}</span>
+                    <span className={styles.home}>Home</span>
+                    <IoIosArrowForward />
+                    <span>{title}</span>
                 </nav>
             </div>
         </section>

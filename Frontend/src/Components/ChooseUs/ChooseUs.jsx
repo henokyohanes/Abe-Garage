@@ -6,7 +6,6 @@ const ChooseUs = () => {
 
     return (
         <section className="row justify-content-center g-0">
-
             {/* Why Choose Us Section */}
             <div className={`${style.whyChooseUs} ps-lg-4 col-11 col-md-5 col-lg-4`}>
                 <h2>Why Choose Us <span>____</span></h2>
@@ -24,7 +23,6 @@ const ChooseUs = () => {
                     ))}
                 </ul>
             </div>
-
             {/* Additional Services Section */}
             <div className={`${style.additionalServices} col-11 col-md-6 col-lg-8 col-xl-7 col-xxl-6`}>
                 <h2>Additional Services <span>____</span></h2>

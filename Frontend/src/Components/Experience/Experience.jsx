@@ -9,9 +9,7 @@ const Experience = () => {
         <section className={`${style.experience} row justify-content-center g-0`}>
             <img className="d-none d-lg-block m-2 col-lg-3" src={engine} alt="Left" />
             <div className="m-2 col-11 col-lg-8 col-xl-7">
-                <h2>
-                    We have 24 years of experience <span>____</span>
-                </h2>
+                <h2>We have 24 years of experience <span>____</span></h2>
                 <p>
                     At <strong>ABE GARAGE</strong>, our skilled technicians have provided
                     top-quality repairs, maintenance, and customer service.From routine

@@ -8,14 +8,14 @@ function AdminMenu() {
   // Access the authentication context
   const { isAdmin, isManager } = useAuth();
 
+  // Function to get the role text
   const getRoleText = () => {
     if (isAdmin) return "Admin";
     if (isManager) return "Manager";
     return "Mechanic";
   };
 
-  return (
-    
+  return (   
     <div className={Styles.adminMenuContainer}>
       <div className={Styles.adminMenuTitle}>
         <h2>{getRoleText()} Menu</h2>

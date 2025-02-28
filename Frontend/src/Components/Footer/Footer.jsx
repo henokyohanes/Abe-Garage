@@ -9,33 +9,22 @@ const Footer = () => {
             <div className={`${styles.contactDetails} row`}>
                 <div className="col-md-4 col-12">
                     <i className="fas fa-map-marker-alt"></i>
-                    <p>
-                        1234 Tailstoi Street
-                        <br />
-                        Houston, TX 12345
-                    </p>
+                    <p>1234 Tailstoi Street<br />Houston, TX 12345</p>
                 </div>
                 <div className="col-md-4 col-12">
                     <i className="fas fa-envelope"></i>
-                    <p>
-                        Email us:
-                        <br />
-                        <a href="mailto:henokyohanes8@gmail.com">contact@abe.com</a>
-                    </p>
+                    <p>Email us:<br /><a href="mailto:henokyohanes8@gmail.com">contact@abe.com</a></p>
                 </div>
                 <div className="col-md-4 col-12">
                     <i className="fas fa-phone"></i>
-                    <p>
-                        Call us: <br />
-                        <a href="tel:+18325160930">+1 800 456 7890</a>
-                    </p>
+                    <p>Call us: <br /><a href="tel:+18325160930">+1 800 456 7890</a></p>
                 </div>
             </div>
-
             {/* Footer Bottom Section */}
             <div className={`${styles.footerBottom} row`}>
                 <p className="d-none d-lg-block col-lg-4">
-                    we offer expert auto repair, maintenance, and customization services for all vehicles.<br /><strong>Your ride, our pride!</strong>
+                    we offer expert auto repair, maintenance, and customization services for all vehicles.<br />
+                    <strong>Your ride, our pride!</strong>
                 </p>
                 <div className="col-5 col-md-3 col-lg-2">
                     <h4>Useful Links</h4>
@@ -47,7 +36,6 @@ const Footer = () => {
                         <li><Link to="/contact-us">Contact Us</Link></li>
                     </ul>
                 </div>
-
                 <div className="col-7 col-md-4 col-lg-3">
                     <h4>Our Services</h4>
                     <ul>
@@ -58,7 +46,6 @@ const Footer = () => {
                         <li>Tyre & Wheels</li>
                     </ul>
                 </div>
-
                 <div className="col-sm-12 col-md-5 col-lg-3">
                     <h4>Newsletter</h4>
                     <p>Get the latest updates and offers.</p>

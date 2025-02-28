@@ -11,6 +11,7 @@ export const useAuth = () => {
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
+
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isManager, setIsManager] = useState(false);
@@ -19,6 +20,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchAuth = async () => {
+
+      // Fetch authentication details
       try {
         const loggedInEmployee = await getAuth();
         if (loggedInEmployee?.employee_token) {
@@ -33,8 +36,6 @@ export const AuthProvider = ({ children }) => {
           if (loggedInEmployee.employee_role === 2) {
             setIsManager(true);
           }
-
-          // Set the employee object
           setEmployee(loggedInEmployee);
         }
       } catch (error) {
@@ -48,10 +49,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Memoize the context value to avoid unnecessary re-renders
-  const value = useMemo(
-    () => ({isLogged, isAdmin, isManager, setIsAdmin, setIsLogged, employee, loading, employeeId: employee?.employee_id}),
+  const value = useMemo(() => ({
+    isLogged,
+    isAdmin,
+    isManager,
+    setIsAdmin,
+    setIsLogged,
+    employee,
+    loading,
+    employeeId: employee?.employee_id
+  }),
     [isLogged, isAdmin, employee, loading]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  )
 };
