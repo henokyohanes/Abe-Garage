@@ -14,7 +14,6 @@ export const logIn = async (formData) => {
     );
     return response.data;
   } catch (error) {
-    console.log("error", error);
     if (error.response.status === 403) {
       return { status: "fail", message: error.response.data.message };
     }else {

@@ -13,6 +13,7 @@ async function logIn(req, res, next) {
     // If the employee is not found
     if (employee.status === "fail") {
       res.status(403).json({status: employee.status, message: employee.message});
+      return;
     }
     // If successful, send a response to the client
     const payload = {

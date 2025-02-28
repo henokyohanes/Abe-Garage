@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { PulseLoader } from "react-spinners";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import NotFound from "../../Components/NotFound/NotFound";
 import loginService from "../../services/login.service";
 import Layout from "../../Layout/Layout";
 import Styles from "./Login.module.css";
@@ -11,8 +13,11 @@ const Login = () => {
   const [employee_password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -41,12 +46,17 @@ const Login = () => {
 
     const formData = { employee_email, employee_password };
 
+    // Make the API call
     try {
+
       setLoading(true);
+      setError(false);
+
       const response = await loginService.logIn(formData);
+
       if (response.status === "success") {
         Swal.fire({
-          title: "Good job!",
+          title: "Success!",
           html: "You have logged in successfully",
           icon: "success",
           customClass: {
@@ -57,15 +67,29 @@ const Login = () => {
             htmlContainer: Styles.text,
           },
         });
+
+        // Store the employee data in localStorage
         if (response.data.employee_token) {
           localStorage.setItem("employee", JSON.stringify(response.data));
         }
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
+
+        setTimeout(() => {window.location.href = "/"}, 1500);
+      } else if (response.message === "Something went wrong") {
+        Swal.fire({
+          title: "error!",
+          html: "Unexpected error occured. Please try again!",
+          icon: "error",
+          customClass: {
+            popup: Styles.popup,
+            confirmButton: Styles.confirmButton,
+            icon: Styles.icon,
+            title: Styles.errorTitle,
+            htmlContainer: Styles.text,
+          },
+        });
       } else {
         Swal.fire({
-          title: "Oops!",
+          title: "Error!",
           html: "Incorrect email or password. Please try again!",
           icon: "error",
           customClass: {
@@ -79,18 +103,22 @@ const Login = () => {
       }
     } catch (err) {
       console.error(err);
-      Swal.fire({
-        title: "error!",
-        html: "Unexpected error occured. Please try again!",
-        icon: "error",
-        customClass: {
-          popup: Styles.popup,
-          confirmButton: Styles.confirmButton,
-          icon: Styles.icon,
-          title: Styles.errorTitle,
-          htmlContainer: Styles.text
-        },
-      });
+      if (!err.error) {
+        setError(true);
+      } else {
+        Swal.fire({
+          title: "error!",
+          html: "Unexpected error occured. Please try again!",
+          icon: "error",
+          customClass: {
+            popup: Styles.popup,
+            confirmButton: Styles.confirmButton,
+            icon: Styles.icon,
+            title: Styles.errorTitle,
+            htmlContainer: Styles.text
+          },
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -98,33 +126,59 @@ const Login = () => {
 
   return (
     <Layout>
-      <section className={Styles.contactSection}>
+      {!error ? (<section className={Styles.contactSection}>
         <div className={Styles.container}>
           <div className={Styles.sectionTitle}>
             <h2>Login to your account <span>___</span></h2>
           </div>
           <div className={Styles.contactForm}>
             <div className={Styles.innerContainer}>
-              <div className={Styles.formContainer} >
+              <div className={Styles.formContainer}>
                 <div className={Styles.form}>
                   <form onSubmit={handleSubmit}>
                     <div className={Styles.formGroupContainer}>
                       <div className={Styles.formGroup}>
-                        {emailError && <div className={Styles.error} role="alert">{emailError}</div>}
+                        {emailError && (
+                          <div className={Styles.error} role="alert">{emailError}</div>
+                        )}
                         <input
-                          name="employee_email" value={employee_email}
-                          onChange={(event) => setEmail(event.target.value)} placeholder="Email"
+                          type="email"
+                          name="employee_email"
+                          value={employee_email}
+                          placeholder="Email"
+                          onChange={(event) => setEmail(event.target.value)}
                         />
                       </div>
                       <div className={Styles.formGroup}>
-                        {passwordError && <div className={Styles.error} role="alert">{passwordError}</div>}
-                        <input type="password" name="employee_password" value={employee_password}
-                          onChange={(event) => setPassword(event.target.value)} placeholder="Password"
-                        />
+                        {passwordError && (
+                          <div className={Styles.error} role="alert">{passwordError}</div>
+                        )}
+                        <div className={Styles.passwordContainer}>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="employee_password"
+                            value={employee_password}
+                            placeholder="Password"
+                            autoComplete="current-password"
+                            onChange={(event) => setPassword(event.target.value)}
+                          />
+                          <button
+                            type="button"
+                            className={Styles.togglePassword}
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                          </button>
+                        </div>
                       </div>
                       <div className={Styles.formGroup}>
-                        <button type="submit" data-loading-text="Please wait..." disabled={loading}>
-                          {loading ? <PulseLoader color="white" size={12} /> : "Login"}
+                        <button
+                          className={Styles.logInButton}
+                          type="submit"
+                          data-loading-text="Please wait..."
+                          disabled={loading}
+                        >
+                          {loading ? (<PulseLoader color="white" size={12} />) : ("Login")}
                         </button>
                       </div>
                     </div>
@@ -134,7 +188,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section>) : <NotFound />}
     </Layout>
   );
 }

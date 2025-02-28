@@ -6,7 +6,7 @@
 .container {
   max-width: 30em;
   margin: 0 auto;
-  padding: 2em;
+  padding: 2vw;
   background-color: white;
   border-radius: .6em;
   box-shadow: 0 .6em 1em rgba(0, 0, 0, 0.1);
@@ -14,7 +14,7 @@
 
 .sectionTitle {
   text-align: center;
-  margin-bottom: 2em;
+  margin-bottom: 2vw;
 }
 
 .sectionTitle h2 {
@@ -42,7 +42,26 @@
   flex-direction: column;
 }
 
+.passwordContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.togglePassword {
+  position: absolute;
+  right: .5em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(1em, 3vw, 1.4em);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .formGroup input {
+  width: 100%;
   padding: .5em .8em;
   font-size: clamp(.9em, 3vw, 1.1em);
   border: 1px solid #ccc;
@@ -59,7 +78,7 @@
   outline: none;
 }
 
-.formGroup button {
+.logInButton {
   padding: .5em;  
   background-color: #d82323;
   color: white;
@@ -71,8 +90,8 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.formGroup button:hover {
-  background-color: #d82323;
+.logInButton:hover {
+  background-color: #07184A;
 }
 
 .error {

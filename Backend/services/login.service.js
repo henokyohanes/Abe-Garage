@@ -30,7 +30,8 @@ async function logIn(employeeData) {
     returnData = {status: "success", data: employee[0]};
     return returnData;
   } catch (error) {
-    console.log(error);
+    console.error("Error logging in:", error);
+    return {status: "fail", message: "Something went wrong"};
   }
 }
 
