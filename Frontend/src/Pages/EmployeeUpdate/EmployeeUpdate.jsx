@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import employeeService from "../../../services/employee.service";
-import Layout from "../../../Layout/Layout";
-import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
-import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
-import NotFound from "../../../Components/NotFound/NotFound";
-import Loader from "../../../Components/Loader/Loader";
+import employeeService from "../../services/employee.service";
+import Layout from "../../Layout/Layout";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import NotFound from "../../Components/NotFound/NotFound";
+import Loader from "../../Components/Loader/Loader";
 import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {

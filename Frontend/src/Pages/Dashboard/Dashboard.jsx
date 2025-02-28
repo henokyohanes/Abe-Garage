@@ -1,7 +1,7 @@
 import React from "react";
-import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
-import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
-import Layout from "../../../Layout/Layout";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import Layout from "../../Layout/Layout";
 import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {

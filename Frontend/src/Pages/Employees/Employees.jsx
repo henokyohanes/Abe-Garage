@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../Contexts/AuthContext";
+import { useAuth } from "../../Contexts/AuthContext";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
-import employeeService from "../../../services/employee.service";
-import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
-import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
-import NotFound from "../../../Components/NotFound/NotFound";
-import Loader from "../../../Components/Loader/Loader";
-import Layout from "../../../Layout/Layout";
+import employeeService from "../../services/employee.service";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import NotFound from "../../Components/NotFound/NotFound";
+import Loader from "../../Components/Loader/Loader";
+import Layout from "../../Layout/Layout";
 import styles from "./Employees.module.css";
 
 const EmployeeList = () => {

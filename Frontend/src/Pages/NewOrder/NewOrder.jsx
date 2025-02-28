@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../Contexts/AuthContext";
+import { useAuth } from "../../Contexts/AuthContext";
 import { FaHandPointUp } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { FaSearch } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import CryptoJS from "crypto-js";
-import AdminMenuMobile from "../../../Components/AdminMenuMobile/AdminMenuMobile";
-import AdminMenu from "../../../Components/AdminMenu/AdminMenu";
-import customerservice from "../../../services/customer.service";
-import vehicleService from "../../../services/vehicle.service";
-import serviceService from "../../../services/service.service";
-import orderService from "../../../services/order.service";
-import Loader from "../../../Components/Loader/Loader";
-import NotFound from "../../../Components/NotFound/NotFound";
-import Layout from "../../../Layout/Layout";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import customerservice from "../../services/customer.service";
+import vehicleService from "../../services/vehicle.service";
+import serviceService from "../../services/service.service";
+import orderService from "../../services/order.service";
+import Loader from "../../Components/Loader/Loader";
+import NotFound from "../../Components/NotFound/NotFound";
+import Layout from "../../Layout/Layout";
 import styles from "./NewOrder.module.css";
 
 const NewOrder = () => {
