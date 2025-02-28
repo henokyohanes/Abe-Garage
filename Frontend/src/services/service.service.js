@@ -17,7 +17,10 @@ const getAuthHeaders = () => {
 // function to add a service
 export const addService = async (serviceData) => {
     try {
-        const response = await axios.post(`${api_url}/api/service`, serviceData, getAuthHeaders());
+        const response = await axios.post(`${api_url}/api/service`,
+            serviceData,
+            getAuthHeaders()
+        );
         return response.data;
     } catch (error) {
         console.error("Error adding service:", error);
@@ -28,7 +31,9 @@ export const addService = async (serviceData) => {
 // function to fetch all services
 export const getAllServices = async () => {
     try {
-        const response = await axios.get(`${api_url}/api/services`, getAuthHeaders());
+        const response = await axios.get(`${api_url}/api/services`,
+            getAuthHeaders()
+        );
         return response.data.services;
     } catch (error) {
         console.error("Error fetching services:", error);
@@ -39,7 +44,9 @@ export const getAllServices = async () => {
 // function to fetch a service by ID
 export const getServiceById = async (id) => {
     try {
-        const response = await axios.get(`${api_url}/api/service/${id}`, getAuthHeaders());
+        const response = await axios.get(`${api_url}/api/service/${id}`,
+            getAuthHeaders()
+        );
         return response.data.service;
     } catch (error) {
         console.error(`Error fetching service with ID ${id}:`, error);
@@ -50,7 +57,10 @@ export const getServiceById = async (id) => {
 // function to update a service
 export const updateService = async (id, serviceData) => {
     try {
-        const response = await axios.put(`${api_url}/api/service/${id}`, serviceData, getAuthHeaders());
+        const response = await axios.put(`${api_url}/api/service/${id}`,
+            serviceData,
+            getAuthHeaders()
+        );
         return response.data;
     } catch (error) {
         console.error(`Error updating service with ID ${id}:`, error);
@@ -61,7 +71,9 @@ export const updateService = async (id, serviceData) => {
 // function to delete a service
 export const deleteService = async (id) => {
     try {
-        const response = await axios.delete(`${api_url}/api/service/${id}`, getAuthHeaders());
+        const response = await axios.delete(`${api_url}/api/service/${id}`,
+            getAuthHeaders()
+        );
         return response.data;
     } catch (error) {
         console.error(`Error deleting service with ID ${id}:`, error);
@@ -69,6 +81,6 @@ export const deleteService = async (id) => {
     }
 };
 
-const serviceService = {addService, getAllServices, getServiceById, updateService, deleteService};
+const serviceService = { addService, getAllServices, getServiceById, updateService, deleteService };
 
 export default serviceService;

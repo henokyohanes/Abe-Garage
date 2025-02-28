@@ -6,7 +6,6 @@ const api_url = import.meta.env.VITE_API_URL;
 const getAuthHeaders = () => {
     const storedToken = JSON.parse(localStorage.getItem("employee"));
     const token = storedToken?.employee_token;
-    // console.log("token", token);
     return {
         headers: {
             "Content-Type": "application/json",
@@ -75,7 +74,6 @@ export const updateEmployee = async (id, updatedData) => {
 
 // Function to update orders associated with an employee
 export const updateEmployeeOrders = async (id, updatedId) => {
-    console.log("updatedData", updatedId, "id", id);
     try {
         const response = await axios.put(
             `${api_url}/api/employee/orders/${id}/${updatedId}`,
@@ -84,7 +82,6 @@ export const updateEmployeeOrders = async (id, updatedId) => {
         );
         return response.data;
     } catch (error) {
-        console.log("error", error);
         console.error("Error updating employee orders:", error);
         throw error.response?.data?.message || "Failed to update employee orders";
     }
@@ -104,7 +101,6 @@ export const deleteEmployee = async (id) => {
     }
 };
 
-// Export the functions as a default object
 const employeeService = {fetchEmployees, fetchEmployeeById, deleteEmployee, updateEmployee, addEmployee, updateEmployeeOrders};
 
 export default employeeService;

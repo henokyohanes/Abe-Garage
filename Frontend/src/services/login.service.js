@@ -8,9 +8,7 @@ export const logIn = async (formData) => {
     const response = await axios.post(
       `${api_url}/api/employee/login`,
       formData,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
+      {headers: { "Content-Type": "application/json" }}
     );
     return response.data;
   } catch (error) {
@@ -28,5 +26,4 @@ export const logOut = () => {
   localStorage.removeItem("employee");
 };
 
-// Export the functions
 export default { logIn, logOut };

@@ -17,7 +17,9 @@ const getAuthHeaders = () => {
 // function to fetch all orders
 export const fetchOrders = async () => {
     try {
-        const response = await axios.get(`${api_url}/api/orders`, getAuthHeaders());
+        const response = await axios.get(`${api_url}/api/orders`,
+            getAuthHeaders()
+        );
         return response.data;
     } catch (error) {
         console.error("Error fetching orders:", error);
@@ -76,7 +78,6 @@ export const updateOrder = async (id, updatedData) => {
             updatedData,
             getAuthHeaders()
         );
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error("Error updating order:", error);
@@ -116,7 +117,8 @@ export const deleteService = async (orderId, serviceId) => {
 export const deleteAdditionalRequest = async (orderId, additionalRequest) => {
     try {
         const response = await axios.put(
-            `${api_url}/api/order/${orderId}/additional-request`, additionalRequest,
+            `${api_url}/api/order/${orderId}/additional-request`,
+            additionalRequest,
             getAuthHeaders()
         );
         return response.data;
@@ -126,6 +128,6 @@ export const deleteAdditionalRequest = async (orderId, additionalRequest) => {
     }
 };
 
-const orderService = {fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders, deleteService, deleteAdditionalRequest};
+const orderService = { fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders, deleteService, deleteAdditionalRequest };
 
 export default orderService;

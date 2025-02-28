@@ -11,6 +11,7 @@ import NotFound from "../../Components/NotFound/NotFound";
 import styles from "./AddCustomer.module.css";
 
 const AddCustomer = () => {
+
     const [formData, setFormData] = useState({
         customer_first_name: "",
         customer_last_name: "",
@@ -25,6 +26,7 @@ const AddCustomer = () => {
     const params = new URLSearchParams(location.search);
     const redirectUrl = params.get("redirect") || "/customers";
 
+    // Handle form input changes
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -33,6 +35,7 @@ const AddCustomer = () => {
         });
     };
 
+    // Validate form
     const validateForm = () => {
         let isValid = true;
         let newErrors = {};
@@ -65,7 +68,7 @@ const AddCustomer = () => {
             isValid = false;
         }
 
-        // Phone validation (must be 10 digits) 
+        // Phone validation
         const phoneRegex = /^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
         if (!formData.customer_phone_number) {
             newErrors.phone = "Phone number is required";
@@ -79,6 +82,7 @@ const AddCustomer = () => {
         return isValid;
     };
 
+    // Generate the customer hash
     const generateCustomerHash = () => {
         const dataToHash =
             formData.customer_first_name +
@@ -87,6 +91,7 @@ const AddCustomer = () => {
         return CryptoJS.SHA256(dataToHash).toString(CryptoJS.enc.Base64);
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
@@ -102,6 +107,7 @@ const AddCustomer = () => {
         setLoading(true);
         setError(false);
 
+        // Add the customer
         try {
             const response = await customerService.addCustomer(formDataWithHash);
                 Swal.fire({
@@ -116,15 +122,26 @@ const AddCustomer = () => {
                         htmlContainer: styles.text,
                     },
                 });
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 1000);
+                setTimeout(() => {window.location.href = redirectUrl}, 1000);
         } catch (error) {
             console.error("Error:", error);
             if (error === "Customer already exists") {
                 Swal.fire({
                     title: "Error!",
                     html: "Customer already exists with this email!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+            } else if (error === "Failed to create customer") {
+                Swal.fire({
+                    title: "Error!",
+                    html: "Failed to add customer. Please try again!",
                     icon: "error",
                     customClass: {
                         popup: styles.popup,
