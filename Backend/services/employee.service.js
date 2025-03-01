@@ -163,14 +163,10 @@ async function deleteEmployee(employeeId) {
   if (rows.length === 0) { return false };
 
   // Delete related records from child tables first
-  const deleteEmployeeInfoQuery = `DELETE FROM employee_info WHERE employee_id = ?`;
-  const deleteEmployeePassQuery = `DELETE FROM employee_pass WHERE employee_id = ?`;
-  const deleteEmployeeRoleQuery = `DELETE FROM employee_role WHERE employee_id = ?`;
-
   try {
-    await db.query(deleteEmployeeInfoQuery, [employeeId]);
-    await db.query(deleteEmployeePassQuery, [employeeId]);
-    await db.query(deleteEmployeeRoleQuery, [employeeId]);
+    await db.query(`DELETE FROM employee_info WHERE employee_id = ?`, [employeeId]);
+    await db.query(`DELETE FROM employee_pass WHERE employee_id = ?`, [employeeId]);
+    await db.query(`DELETE FROM employee_role WHERE employee_id = ?`, [employeeId]);
 
     // Delete the employee record from the parent table
     const result = await db.query(`DELETE FROM employee WHERE employee_id = ?`, [employeeId]);
@@ -182,5 +178,13 @@ async function deleteEmployee(employeeId) {
   }
 }
 
-
-module.exports = {checkIfEmployeeExists, createEmployee, getEmployeeByEmail, getEmployeeById, getAllEmployees, updateEmployee, deleteEmployee, updateOrderRecipientEmployee};
+module.exports = {
+  checkIfEmployeeExists,
+  createEmployee,
+  getEmployeeByEmail,
+  getEmployeeById,
+  getAllEmployees,
+  updateEmployee,
+  deleteEmployee,
+  updateOrderRecipientEmployee
+};

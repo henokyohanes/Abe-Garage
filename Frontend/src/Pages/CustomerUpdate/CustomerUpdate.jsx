@@ -21,6 +21,7 @@ const CustomerUpdate = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    // Fetch customer data
     useEffect(() => {
         const fetchCustomerData = async () => {
 
@@ -41,7 +42,7 @@ const CustomerUpdate = () => {
         fetchCustomerData();
     }, []);
 
-
+    // Handle input changes
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setCustomer((prevCustomer) => ({
@@ -50,6 +51,7 @@ const CustomerUpdate = () => {
         }));
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -70,12 +72,12 @@ const CustomerUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {
-                window.location.href = "/customer-profile/" + id;
-            }, 1000);
+            setTimeout(() => {window.location.href = "/customer-profile/" + id}, 1500);
         } catch (err) {
             console.error(err);
-            if (err.response) {
+            if (err === "Failed") {
+                setError(true);
+            } else {
                 Swal.fire({
                     title: "error!",
                     html: "Failed to update customer. Please try again!",
@@ -88,8 +90,6 @@ const CustomerUpdate = () => {
                         htmlContainer: styles.text,
                     },
                 });
-            } else {
-                setError(true);
             }
         } finally {
             setLoading(false);
@@ -99,42 +99,67 @@ const CustomerUpdate = () => {
     return (
         <Layout>
             <section className={`${styles.updateSection} row g-0`}>
-                <div className="d-none d-md-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-md-none">
-                    <AdminMenuMobile />
-                </div>
+                <div className="d-none d-md-block col-3"><AdminMenu /></div>
+                <div className="d-block d-md-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-md-9">
-                    {!loading && !error ? (<div className={styles.container}>
-                        <h2>Edit: {`${customer.customer_first_name} ${customer.customer_last_name}`} <span>____</span></h2>
-                        <div className={styles.formContainer}>
-                            <h6>Customer email: <strong>{customer.customer_email}</strong></h6>
-                            <form onSubmit={handleSubmit} className={styles.form}>
-                                <div className={styles.formGroup}>
-                                    <p>First Name:</p>
-                                    <input className={styles.formControl} type="text" name="customer_first_name" value={customer.customer_first_name} onChange={handleChange} placeholder="First Name" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <p>Last Name:</p>
-                                    <input className={styles.formControl} type="text" name="customer_last_name" value={customer.customer_last_name} onChange={handleChange} placeholder="Last Name" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <p>Phone Number:</p>
-                                    <input className={styles.formControl} type="text" name="customer_phone_number" value={customer.customer_phone_number} onChange={handleChange} placeholder="Phone Number" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>
-                                        <input type="checkbox" name="active_customer_status" checked={customer.active_customer_status} onChange={handleChange} />
-                                        <div className={styles.checkmark}>Is active customer</div>
-                                    </label>
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <button className={styles.updateButton} type="submit"> Update </button>
-                                </div>
-                            </form>
+                    {!loading && !error ? (
+                        <div className={styles.container}>
+                            <h2>
+                                Edit: {`${customer.customer_first_name} ${customer.customer_last_name}`} 
+                                <span>____</span>
+                            </h2>
+                            <div className={styles.formContainer}>
+                                <h6>Customer email: <strong>{customer.customer_email}</strong></h6>
+                                <form onSubmit={handleSubmit} className={styles.form}>
+                                    <div className={styles.formGroup}>
+                                        <p>First Name:</p>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="customer_first_name"
+                                            value={customer.customer_first_name}
+                                            onChange={handleChange}
+                                            placeholder="First Name"
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <p>Last Name:</p>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="customer_last_name"
+                                            value={customer.customer_last_name}
+                                            onChange={handleChange}
+                                            placeholder="Last Name"
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <p>Phone Number:</p>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="customer_phone_number"
+                                            value={customer.customer_phone_number}
+                                            onChange={handleChange}
+                                            placeholder="Phone Number" />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>
+                                            <input
+                                                type="checkbox"
+                                                name="active_customer_status"
+                                                checked={customer.active_customer_status}
+                                                onChange={handleChange} />
+                                            <div className={styles.checkmark}>Is active customer</div>
+                                        </label>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <button className={styles.updateButton} type="submit"> Update </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>) : error ? <NotFound /> : <Loader />}
+                    ) : error ? <NotFound /> : <Loader />}
                 </div>
             </section>
         </Layout>

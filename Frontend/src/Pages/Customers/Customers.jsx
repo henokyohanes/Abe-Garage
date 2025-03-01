@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
 import customerService from "../../services/customer.service";
-import orderService from "../../services/order.service";
 import vehicleService from "../../services/vehicle.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -23,6 +22,7 @@ const Customers = () => {
   const itemsPerPage = 10;
   const navigate = useNavigate();
 
+  // Fetch customers
   useEffect(() => {
     const fetchData = async () => {
 
@@ -43,9 +43,10 @@ const Customers = () => {
     fetchData();
   }, []);
 
+  // Search customers
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1);
   };
 
   // Filter customers based on search query
@@ -62,12 +63,14 @@ const Customers = () => {
     );
   });
 
+  // Pagination
   const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
   const displayedCustomers = filteredCustomers.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // Handle page change
   const handlePageChange = (direction) => {
     if (direction === "next" && currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -76,6 +79,7 @@ const Customers = () => {
     }
   };
 
+  // function to Delete customer
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
@@ -100,6 +104,7 @@ const Customers = () => {
       const { data } = await customerService.fetchCustomerById(id);
       const deletionTasks = [];
 
+      // Delete vehicles associated with the customer
       if (data.vehicle_id) {
         deletionTasks.push(
           vehicleService.deleteVehiclesByCustomerId(data.customer_id)
@@ -108,6 +113,7 @@ const Customers = () => {
 
       await Promise.all(deletionTasks);
 
+      // Delete customer
       await customerService.deleteCustomer(id);
       setCustomers(customers.filter((customer) => customer.customer_id !== id));
 
@@ -146,10 +152,12 @@ const Customers = () => {
     }
   };
 
+  // function to view customer profile
   const handleProfile = (id) => {
     navigate(`/customer-profile/${id}`);
   };
 
+  // Function to format date
   const formatDate = (date) => {
     if (!date) return "";
     const d = new Date(date);
@@ -162,93 +170,81 @@ const Customers = () => {
   return (
     <Layout>
       <div className={`${styles.container} row g-0`}>
-        <div className=" d-none d-xxl-block col-3">
-          <AdminMenu />
-        </div>
-        <div className="d-block d-xxl-none">
-          <AdminMenuMobile />
-        </div>
+        <div className=" d-none d-xxl-block col-3"><AdminMenu /></div>
+        <div className="d-block d-xxl-none"><AdminMenuMobile /></div>
         <div className="col-12 col-xxl-9">
-          {!loading && !error ? (<div className={styles.customerList}>
-            <div className={styles.header}>
-              <h2>
-                Customers <span>____</span>
-              </h2>
-              <div className={styles.searchBar}>
-                <input
-                  type="text"
-                  placeholder="Search for a customer by name, email or phone number"
-                  value={searchQuery}
-                  onChange={handleSearch}
-                />
-                <span>
-                  <FaSearch />
-                </span>
+          {!loading && !error ? (
+            <div className={styles.customerList}>
+              <div className={styles.header}>
+                <h2>Customers <span>____</span></h2>
+                <div className={styles.searchBar}>
+                  <input
+                    type="text"
+                    placeholder="Search for a customer by name, email or phone number"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                  />
+                  <span><FaSearch /></span>
+                </div>
+              </div>
+              <div className={styles.tableContainer}>
+                <table className={styles.customerTable}>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Added Date</th>
+                      <th>Active</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {displayedCustomers.length > 0 ? (
+                      displayedCustomers.map((customer) => (
+                        <tr key={customer.customer_id}>
+                          <td>{customer.customer_id}</td>
+                          <td>{customer.customer_first_name}</td>
+                          <td>{customer.customer_last_name}</td>
+                          <td>{customer.customer_email}</td>
+                          <td>{customer.customer_phone_number}</td>
+                          <td>{formatDate(customer.customer_added_date)}</td>
+                          <td>{customer.active_customer_status ? "Yes" : "No"}</td>
+                          <td>
+                            <button onClick={() => handleProfile(customer.customer_id)}>
+                              <CgProfile />
+                            </button>
+                            <button onClick={() => handleDelete(customer.customer_id)}>
+                              <MdDelete />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className={styles.noResults}>
+                        <td colSpan="8">No customers matched your search</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <div className={styles.pagination}>
+                <button onClick={() => handlePageChange("prev")} disabled={currentPage === 1}>
+                  Previous
+                </button>
+                <span>Page {currentPage} of {totalPages}</span>
+                <button
+                  onClick={() => handlePageChange("next")}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
               </div>
             </div>
-            <div className={styles.tableContainer}>
-              <table className={styles.customerTable}>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Added Date</th>
-                    <th>Active</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayedCustomers.length > 0 ? (
-                    displayedCustomers.map((customer) => (
-                      <tr key={customer.customer_id}>
-                        <td>{customer.customer_id}</td>
-                        <td>{customer.customer_first_name}</td>
-                        <td>{customer.customer_last_name}</td>
-                        <td>{customer.customer_email}</td>
-                        <td>{customer.customer_phone_number}</td>
-                        <td>{formatDate(customer.customer_added_date)}</td>
-                        <td>{customer.active_customer_status ? "Yes" : "No"}</td>
-                        <td>
-                          <button onClick={() => handleProfile(customer.customer_id)}>
-                            <CgProfile />
-                          </button>
-                          <button onClick={() => handleDelete(customer.customer_id)}>
-                            <MdDelete />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr className={styles.noResults}>
-                      <td colSpan="8">No customers matched your search</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className={styles.pagination}>
-              <button
-                onClick={() => handlePageChange("prev")}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange("next")}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          </div>) : error ? <NotFound /> : <Loader />}
+          ) : error ? <NotFound /> : <Loader />}
         </div>
-
       </div>
     </Layout>
   );

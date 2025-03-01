@@ -68,7 +68,7 @@ export const updateCustomer = async (id, updatedData) => {
         return response.data;
     } catch (error) {
         console.error("Error updating customer:", error);
-        throw error.response?.data?.message || "Failed to update customer";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
@@ -82,7 +82,7 @@ export const deleteCustomer = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting customer:", error);
-        throw error.response?.status || "Failed";
+        throw error.response?.data?.message || "Failed";
     }
 };
 

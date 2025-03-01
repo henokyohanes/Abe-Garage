@@ -53,7 +53,7 @@ export const fetchEmployeeById = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error fetching customer:", error);
-        throw error.response?.data?.message || "Failed to fetch customer";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
@@ -83,7 +83,7 @@ export const updateEmployeeOrders = async (id, updatedId) => {
         return response.data;
     } catch (error) {
         console.error("Error updating employee orders:", error);
-        throw error.response?.data?.message || "Failed to update employee orders";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
@@ -97,7 +97,7 @@ export const deleteEmployee = async (id) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting employee:", error);
-        throw error.response?.data?.message || "Failed to delete employee";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
