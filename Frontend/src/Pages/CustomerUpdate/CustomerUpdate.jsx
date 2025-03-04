@@ -120,6 +120,7 @@ const CustomerUpdate = () => {
                                             value={customer.customer_first_name}
                                             onChange={handleChange}
                                             placeholder="First Name"
+                                            required
                                         />
                                     </div>
                                     <div className={styles.formGroup}>
@@ -131,6 +132,7 @@ const CustomerUpdate = () => {
                                             value={customer.customer_last_name}
                                             onChange={handleChange}
                                             placeholder="Last Name"
+                                            required
                                         />
                                     </div>
                                     <div className={styles.formGroup}>
@@ -141,7 +143,9 @@ const CustomerUpdate = () => {
                                             name="customer_phone_number"
                                             value={customer.customer_phone_number}
                                             onChange={handleChange}
-                                            placeholder="Phone Number" />
+                                            placeholder="Phone Number"
+                                            required
+                                        />
                                     </div>
                                     <div className={styles.formGroup}>
                                         <label className={styles.label}>
@@ -149,7 +153,8 @@ const CustomerUpdate = () => {
                                                 type="checkbox"
                                                 name="active_customer_status"
                                                 checked={customer.active_customer_status}
-                                                onChange={handleChange} />
+                                                onChange={handleChange} 
+                                            />
                                             <div className={styles.checkmark}>Is active customer</div>
                                         </label>
                                     </div>

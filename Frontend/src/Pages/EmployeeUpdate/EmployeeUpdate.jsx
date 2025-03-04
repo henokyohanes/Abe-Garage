@@ -10,6 +10,7 @@ import Loader from "../../Components/Loader/Loader";
 import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {
+
     const { id } = useParams();
     const [employee, setEmployee] = useState({
         employee_first_name: "",
@@ -21,6 +22,7 @@ const EmployeeUpdate = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    // Fetch employee data
     useEffect(() => {
         const fetchEmployeeData = async () => {
 
@@ -40,6 +42,7 @@ const EmployeeUpdate = () => {
         fetchEmployeeData();
     }, []);
 
+    // Handle input changes
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setEmployee((prevEmployee) => ({
@@ -48,6 +51,7 @@ const EmployeeUpdate = () => {
         }));
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -71,7 +75,6 @@ const EmployeeUpdate = () => {
                 company_role_id,
                 active_employee,
             });
-
             Swal.fire({
                 title: "Updated!",
                 html: "The employee has been updated.",
@@ -84,12 +87,12 @@ const EmployeeUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {
-                window.location.href = "/employees";
-            }, 1000);
+            setTimeout(() => {window.location.href = "/employees"}, 1500);
         } catch (err) {
             console.error(err);
-            if (err.response) {
+            if (err === "Failed") {
+                setError(true);
+            } else {
                 Swal.fire({
                     title: "error!",
                     html: "Failed to update employee. Please try again!",
@@ -102,8 +105,6 @@ const EmployeeUpdate = () => {
                         htmlContainer: styles.text
                     },
                 });
-            } else {
-                setError(true);
             }
         } finally {
             setLoading(false);
@@ -113,47 +114,84 @@ const EmployeeUpdate = () => {
     return (
         <Layout>
             <section className={`${styles.updateSection} row g-0`}>
-                <div className="d-none d-md-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-md-none">
-                    <AdminMenuMobile />
-                </div>
+                <div className="d-none d-md-block col-3"><AdminMenu /></div>
+                <div className="d-block d-md-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-md-9">
-                    {!loading && !error ? (<div className={styles.container}>
-                    <h2>Edit: {`${employee.employee_first_name} ${employee.employee_last_name}`} <span>____</span></h2>
-                    <div className={styles.formContainer}>
-                        <h6>Employee email: <strong>{employee.employee_email}</strong></h6>
-                        <form onSubmit={handleSubmit} className={styles.form}>
-                            <div className={styles.formGroup}>
-                                <input className={styles.formControl} type="text" name="employee_first_name" value={employee.employee_first_name} onChange={handleChange} placeholder="First Name" required />
+                    {!loading && !error ? (
+                        <div className={styles.container}>
+                            <h2>
+                                Edit: {`${employee.employee_first_name} ${employee.employee_last_name}`}
+                                <span>____</span>
+                            </h2>
+                            <div className={styles.formContainer}>
+                                <h6>Employee email: <strong>{employee.employee_email}</strong></h6>
+                                <form onSubmit={handleSubmit} className={styles.form}>
+                                    <div className={styles.formGroup}>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="employee_first_name"
+                                            value={employee.employee_first_name}
+                                            onChange={handleChange}
+                                            placeholder="First Name"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="employee_last_name"
+                                            value={employee.employee_last_name}
+                                            onChange={handleChange}
+                                            placeholder="Last Name"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="employee_phone"
+                                            value={employee.employee_phone}
+                                            onChange={handleChange}
+                                            placeholder="Phone Number"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <select
+                                            name="company_role_id"
+                                            value={employee.company_role_id}
+                                            onChange={handleChange}
+                                            className={styles.formControl}
+                                        >
+                                            <option value="1">Employee</option>
+                                            <option value="2">Manager</option>
+                                            <option value="3">Admin</option>
+                                        </select>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>
+                                            <input
+                                                type="checkbox"
+                                                name="active_employee"
+                                                checked={employee.active_employee}
+                                                onChange={handleChange}
+                                            />
+                                            <div className={styles.checkmark}>Is active employee</div>
+                                        </label>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <button className={styles.updateButton} type="submit">
+                                            Update
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <div className={styles.formGroup}>
-                                <input className={styles.formControl} type="text" name="employee_last_name" value={employee.employee_last_name} onChange={handleChange} placeholder="Last Name" required />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <input className={styles.formControl} type="text" name="employee_phone" value={employee.employee_phone} onChange={handleChange} placeholder="Phone Number" required />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <select name="company_role_id" value={employee.company_role_id} onChange={handleChange} className={styles.formControl} >
-                                    <option value="1">Employee</option>
-                                    <option value="2">Manager</option>
-                                    <option value="3">Admin</option>
-                                </select>
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>
-                                    <input type="checkbox" name="active_employee" checked={employee.active_employee} onChange={handleChange} />
-                                    <div className={styles.checkmark}>Is active employee</div>
-                                </label>
-                            </div>
-                            <div className={styles.formGroup}>
-                                <button className={styles.updateButton} type="submit"> Update </button>
-                            </div>
-                        </form>
-                    </div>
-                    {error && <p className={styles.errorMessage}>{error}</p>}
-                </div>) : error ? <NotFound /> : <Loader />}
+                            {error && <p className={styles.errorMessage}>{error}</p>}
+                        </div>
+                    ) : error ? <NotFound /> : <Loader />}
                 </div>
             </section>
         </Layout>

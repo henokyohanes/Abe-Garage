@@ -68,7 +68,7 @@ export const updateEmployee = async (id, updatedData) => {
         return response.data;
     } catch (error) {
         console.error("Error updating employee:", error);
-        throw error.response?.data?.message || "Failed to update employee";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
