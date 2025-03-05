@@ -66,7 +66,7 @@ export const addOrder = async (orderData) => {
         return response.data;
     } catch (error) {
         console.error("Error adding order:", error);
-        throw error.response?.data?.message || "Failed to add order";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
