@@ -20,13 +20,16 @@ const Orders = () => {
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
+  // Fetch orders when the component mounts
   useEffect(() => {
     const fetchOrders = async () => {
+
       setLoading(true);
       setError(false);
+
       try {
-          const response = await orderService.fetchOrders();
-          setOrders(response.data);
+        const response = await orderService.fetchOrders();
+        setOrders(response.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
         setError(true);
@@ -38,8 +41,7 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
-
-
+  // Helper functions to get status class
   const getStatusClass = (status) => {
     switch (status) {
       case 2:
@@ -53,6 +55,7 @@ const Orders = () => {
     }
   };
 
+  // Helper function to get status text
   const getStatusText = (status) => {
     switch (status) {
       case 2:
@@ -66,6 +69,7 @@ const Orders = () => {
     }
   };
 
+  // Pagination
   const totalPages = Math.ceil(orders.length / itemsPerPage);
   const displayedOrders = orders.slice(
     (currentPage - 1) * itemsPerPage,
@@ -80,10 +84,12 @@ const Orders = () => {
     }
   };
 
+  // navigate to order details
   const handleViewOrder = (orderId) => {
     navigate(`/order-details/${orderId}`);
   };
 
+  // navigate to edit order
   const handleEditOrder = (orderId) => {
     navigate(`/edit-order/${orderId}`);
   };
@@ -94,59 +100,69 @@ const Orders = () => {
         <div className="d-none d-xxl-block col-3"><AdminMenu /></div>
         <div className="d-block d-xxl-none"><AdminMenuMobile /></div>
         <div className="col-12 col-xxl-9">
-          {!loading && !error ? (<div className={styles.ordersList}>
-            <h2>Orders <span>____</span></h2>
-            <div className={styles.tableContainer}>
-              <table className={styles.ordersTable}>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Vehicle</th>
-                    <th>Order Date</th>
-                    <th>Received by</th>
-                    <th>Order status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayedOrders.map((order) => (
-                    <tr key={order.order_id}>
-                      <td>{order.order_id}</td>
-                      <td>
-                        <div>{order.customer_first_name + " " + order.customer_last_name}</div>
-                        <div>{order.customer_email}</div>
-                        <div>{order.customer_phone_number}</div>
-                      </td>
-                      <td>
-                        <div>{order.vehicle_make + " " + order.vehicle_model}</div>
-                        <div>{order.vehicle_year}</div>
-                        <div>{order.vehicle_tag}</div>
-                      </td>
-                      <td>{order.order_date.split("T")[0]}</td>
-                      <td>{order.employee_first_name + " " + order.employee_last_name}</td>
-                      <td>
-                        <span className={`${styles.statusBadge} ${getStatusClass(order.order_status)}`}>
-                          {getStatusText(order.order_status)}
-                        </span>
-                      </td>
-                      <td>
-                        {(isAdmin || isManager) && (
-                          <button className={styles.btnViewEdit} onClick={() => handleEditOrder(order.order_id)}><FaEdit /></button>
-                        )}
-                        <button className={styles.btnViewEdit} onClick={() => handleViewOrder(order.order_id)}><GrView /></button>
-                      </td>
+          {!loading && !error ? (
+            <div className={styles.ordersList}>
+              <h2>Orders <span>____</span></h2>
+              <div className={styles.tableContainer}>
+                <table className={styles.ordersTable}>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Customer</th>
+                      <th>Vehicle</th>
+                      <th>Order Date</th>
+                      <th>Received by</th>
+                      <th>Order status</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {displayedOrders.map((order) => (
+                      <tr key={order.order_id}>
+                        <td>{order.order_id}</td>
+                        <td>
+                          <div>{order.customer_first_name + " " + order.customer_last_name}</div>
+                          <div>{order.customer_email}</div>
+                          <div>{order.customer_phone_number}</div>
+                        </td>
+                        <td>
+                          <div>{order.vehicle_make + " " + order.vehicle_model}</div>
+                          <div>{order.vehicle_year}</div>
+                          <div>{order.vehicle_tag}</div>
+                        </td>
+                        <td>{order.order_date.split("T")[0]}</td>
+                        <td>{order.employee_first_name + " " + order.employee_last_name}</td>
+                        <td>
+                          <span className={`${styles.statusBadge} ${getStatusClass(order.order_status)}`}>
+                            {getStatusText(order.order_status)}
+                          </span>
+                        </td>
+                        <td>
+                          {(isAdmin || isManager) && (
+                            <button className={styles.btnViewEdit} onClick={() => handleEditOrder(order.order_id)}>
+                              <FaEdit />
+                            </button>
+                          )}
+                          <button className={styles.btnViewEdit} onClick={() => handleViewOrder(order.order_id)}>
+                            <GrView />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className={styles.pagination}>
+                <button onClick={() => handlePageChange("prev")} disabled={currentPage === 1}>
+                  Previous
+                </button>
+                <span>Page {currentPage} of {totalPages}</span>
+                <button onClick={() => handlePageChange("next")} disabled={currentPage === totalPages}>
+                  Next
+                </button>
+              </div>
             </div>
-            <div className={styles.pagination}>
-              <button onClick={() => handlePageChange("prev")} disabled={currentPage === 1}>Previous</button>
-              <span>Page {currentPage} of {totalPages}</span>
-              <button onClick={() => handlePageChange("next")} disabled={currentPage === totalPages}>Next</button>
-            </div>
-          </div>) : error ? <NotFound /> : <Loader />}
+          ) : error ? <NotFound /> : <Loader />}
         </div>
       </div>
     </Layout>
