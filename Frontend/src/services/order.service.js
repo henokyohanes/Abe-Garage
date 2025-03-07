@@ -81,7 +81,7 @@ export const updateOrder = async (id, updatedData) => {
         return response.data;
     } catch (error) {
         console.error("Error updating order:", error);
-        throw error.response?.data?.message || "Failed to update order";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
@@ -109,7 +109,7 @@ export const deleteService = async (orderId, serviceId) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting service:", error);
-        throw error.response?.data?.message || "Failed to delete service";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
@@ -124,7 +124,7 @@ export const deleteAdditionalRequest = async (orderId, additionalRequest) => {
         return response.data;
     } catch (error) {
         console.error("Error deleting additional request:", error);
-        throw error.response?.data?.message || "Failed to delete additional request";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
