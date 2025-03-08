@@ -1,95 +1,130 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 import serviceService from "../../services/service.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import NotFound from "../../Components/NotFound/NotFound";
+import Loader from "../../Components/Loader/Loader";
 import styles from "./ServiceUpdate.module.css";
 
 
 const ServiceUpdate = () => {
 
     const { id } = useParams();
-    const [service, setService] = useState({service_name: "", service_description: ""});
+    const [service, setService] = useState({ service_name: "", service_description: "" });
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
-    const navigate = useNavigate();
+    const [error, setError] = useState(false);
 
-
+    // Fetch service data when the component mounts
     useEffect(() => {
+
+        setLoading(true);
+        setError(false);
+
+        const fetchServiceData = async () => {
+            try {
+                const response = await serviceService.getServiceById(parseInt(id));
+                setService(response);
+            } catch (err) {
+                console.error(err);
+                setError(true);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchServiceData();
     }, []);
 
-    const fetchServiceData = async () => {
+    // Handle input changes
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setService((prevService) => ({
+            ...prevService,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    // Handle form submission for updating the service
+    const handleUpdateService = async (e) => {
+        e.preventDefault();
+
+        setLoading(true);
+        setError(false);
+
         try {
-            const response = await serviceService.getServiceById(parseInt(id));
-            if (!response) throw new Error("Service not found.");
-            setService(response);
+            await serviceService.updateService(id, service);
+            Swal.fire({
+                title: "Success!",
+                html: "Service updated successfully.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+            setTimeout(() => {window.location.href = "/services"}, 1500);
         } catch (err) {
             console.error(err);
-            setError("Failed to fetch service data.");
+            if (err === "Failed") {
+                setError(true);
+            } else {                
+                Swal.fire({
+                    title: "error!",
+                    html: "Failed to update service. Please try again!",
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+            }
         } finally {
             setLoading(false);
         }
     };
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setService((prevService) => ({
-            ...prevService, 
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
-
-    const handleAddService = async (e) => {
-        e.preventDefault();
-
-        try {
-            await serviceService.updateService(id, service);
-            setSuccess(true);
-            setTimeout(() => navigate("/services"), 1000);
-        } catch (err) {
-            console.error(err);
-            setError("Failed to update service. Please try again.");
-        }
-    };
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-
     return (
         <Layout>
             <div className={`${styles.container} row g-0`}>
-                <div className="d-none d-md-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-md-none">
-                    <AdminMenuMobile />
-                </div>
-                <div className={`${styles.content} col-12 col-md-9`}>
-                    <h1>Update Service <span>___</span></h1>
-                        {success && (<p className={styles.successMessage}>Employee updated successfully!</p>)}
-                    <form onSubmit={handleAddService}>
-                        <input
-                            type="text"
-                            name="service_name"
-                            placeholder="Service Name"
-                        value={service.service_name}
-                        onChange={handleChange}
-                        />
-                        <textarea
-                            name="service_description"
-                            placeholder="Service Description"
-                        value={service.service_description}
-                        onChange={handleChange}
-                        />
-                        <div>
-                        <button type="submit" className={styles.addButton}>
-                            Update
-                        </button>
+                <div className="d-none d-md-block col-3"><AdminMenu /></div>
+                <div className="d-block d-md-none"><AdminMenuMobile /></div>
+                <div className="col-12 col-md-9">
+                    {!loading && !error ? (
+                        <div className={styles.content}>
+                            <h2>Update Service <span>___</span></h2>
+                            <form onSubmit={handleUpdateService}>
+                                <input
+                                    type="text"
+                                    name="service_name"
+                                    placeholder="Service Name"
+                                    value={service.service_name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <textarea
+                                    name="service_description"
+                                    placeholder="Service Description"
+                                    value={service.service_description}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <div>
+                                    <button type="submit" className={styles.addButton}>
+                                        Update
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    ) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>

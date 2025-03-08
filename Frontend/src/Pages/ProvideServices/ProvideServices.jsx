@@ -22,6 +22,7 @@ const ProvideServices = () => {
     const { isAdmin } = useAuth();
     const navigate = useNavigate();
 
+    // Fetch all services when the component mounts
     const fetchAllServices = async () => {
 
         setLoading(true);
@@ -41,7 +42,7 @@ const ProvideServices = () => {
     useEffect(() => {
         fetchAllServices();
     }, []);
-    
+
     // Handle form input changes
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -49,6 +50,7 @@ const ProvideServices = () => {
         setErrors({ ...errors, [name]: "" });
     };
 
+    // Add a new service
     const handleAddService = async () => {
 
         let newErrors = {};
@@ -108,10 +110,12 @@ const ProvideServices = () => {
         }
     };
 
+    // redirect to edit page
     const handleEdit = (id) => {
         navigate(`/edit-service/${id}`);
     };
 
+    // Delete a service
     const handleDelete = async (id) => {
         try {
             const result = await Swal.fire({
@@ -174,52 +178,61 @@ const ProvideServices = () => {
     return (
         <Layout>
             <div className={`${styles.provideServices} row g-0`}>
-                <div className="d-none d-xl-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-xl-none">
-                    <AdminMenuMobile />
-                </div>
+                <div className="d-none d-xl-block col-3"><AdminMenu /></div>
+                <div className="d-block d-xl-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-xl-9">
-                {!loading && !error ? (<div className={styles.container}>
-                    <h1>Service We Provide <span>____</span></h1>
-                    <p> Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal has evolved from generation experiences.</p>
-                    <div className={styles.serviceList}>
-                        {services.map((service, index) => (
-                            <div key={service.service_id || index} className={styles.service}>
-                                <div className={styles.details}>
-                                    <h2>{service.service_name}</h2>
-                                    <p>{service.service_description}</p>
-                                </div>
-                                {isAdmin && <div className={styles.actions}>
-                                    <button onClick={() => handleEdit(service.service_id)}><FaEdit /></button>
-                                    <button onClick={() => handleDelete(service.service_id)}><MdDelete /></button>
-                                </div>}
+                    {!loading && !error ? (
+                        <div className={styles.container}>
+                            <h1>Service We Provide <span>____</span></h1>
+                            <p> Bring to the table win-win survival strategies to ensure proactive
+                                domination. At the end of the day, going forward, a new normal has
+                                evolved from generation experiences.
+                            </p>
+                            <div className={styles.serviceList}>
+                                {services.map((service, index) => (
+                                    <div key={service.service_id || index} className={styles.service}>
+                                        <div className={styles.details}>
+                                            <h2>{service.service_name}</h2>
+                                            <p>{service.service_description}</p>
+                                        </div>
+                                        {isAdmin && <div className={styles.actions}>
+                                            <button onClick={() => handleEdit(service.service_id)}>
+                                                <FaEdit />
+                                            </button>
+                                            <button onClick={() => handleDelete(service.service_id)}>
+                                                <MdDelete />
+                                            </button>
+                                        </div>}
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                    {isAdmin && <div className={styles.form}>
-                        <h1>Add a new Service <span>____</span></h1>
-                        {errors.service_name && <div className={styles.error}>{errors.service_name}</div>}
-                        <input
-                            type="text"
-                            name="service_name"
-                            placeholder="Service Name"
-                            value={newservice.service_name}
-                            onChange={handleInputChange}
-                        />
-                        {errors.service_description && <div className={styles.error}>{errors.service_description}</div>}
-                        <textarea
-                            name="service_description"
-                            placeholder="Service Description"
-                            value={newservice.service_description}
-                            onChange={handleInputChange}
-                        />
-                        <div className={styles.addButton} onClick={handleAddService}>
-                            Add Service
+                            {isAdmin && <div className={styles.form}>
+                                <h1>Add a new Service <span>____</span></h1>
+                                {errors.service_name && <div className={styles.error}>
+                                    {errors.service_name}
+                                </div>}
+                                <input
+                                    type="text"
+                                    name="service_name"
+                                    placeholder="Service Name"
+                                    value={newservice.service_name}
+                                    onChange={handleInputChange}
+                                />
+                                {errors.service_description && <div className={styles.error}>
+                                    {errors.service_description}
+                                </div>}
+                                <textarea
+                                    name="service_description"
+                                    placeholder="Service Description"
+                                    value={newservice.service_description}
+                                    onChange={handleInputChange}
+                                />
+                                <div className={styles.addButton} onClick={handleAddService}>
+                                    Add Service
+                                </div>
+                            </div>}
                         </div>
-                    </div>}
-                </div>) : error ? <NotFound /> : <Loader />}
+                    ) : error ? <NotFound /> : <Loader />}
                 </div>
             </div>
         </Layout>
@@ -227,3 +240,4 @@ const ProvideServices = () => {
 };
 
 export default ProvideServices;
+

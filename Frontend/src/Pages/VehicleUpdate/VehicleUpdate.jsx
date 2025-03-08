@@ -10,12 +10,14 @@ import Loader from "../../Components/Loader/Loader";
 import styles from "./VehicleUpdate.module.css";
 
 const VehicleUpdate = () => {
-    
+
     const { customer_id, vehicle_id } = useParams();
-    const [vehicle, setVehicle] = useState({vehicle_color: "", vehicle_mileage: "", vehicle_tag: ""});
+    const [vehicle, setVehicle] = useState({ vehicle_color: "", vehicle_mileage: "", vehicle_tag: "" });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
+    //fetch vehicle data on page load
     useEffect(() => {
         const fetchVehicleData = async () => {
 
@@ -36,12 +38,17 @@ const VehicleUpdate = () => {
         fetchVehicleData();
     }, []);
 
-
+    // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         //validate mileage length on input
-        if (name === "vehicle_mileage" && value.length > 9) return;
+        if (name === "vehicle_mileage" && value.length > 9) {
+            setErrorMessage("Mileage cannot exceed 9 digits");
+            return;
+        } else {
+            setErrorMessage("");
+        }
 
         setVehicle((prevVehicle) => ({
             ...prevVehicle,
@@ -49,6 +56,7 @@ const VehicleUpdate = () => {
         }));
     };
 
+    // Handle form submission to update vehicle
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -75,12 +83,14 @@ const VehicleUpdate = () => {
             });
             setTimeout(() => {
                 window.location.href = "/customer-profile/" + customer_id;
-            }, 1000);
+            }, 1500);
         } catch (err) {
             console.error(err);
-            if (err.response) {
+            if (err === "Failed") {
+                setError(true);
+            } else {
                 Swal.fire({
-                    title: "error!",
+                    title: "Error!",
                     html: "Failed to update vehicle. Please try again!",
                     icon: "error",
                     customClass: {
@@ -91,8 +101,6 @@ const VehicleUpdate = () => {
                         htmlContainer: styles.text,
                     },
                 });
-            } else {
-                setError(true);
             }
         } finally {
             setLoading(false);
@@ -102,35 +110,71 @@ const VehicleUpdate = () => {
     return (
         <Layout>
             <section className={`${styles.updateSection} row g-0`}>
-                <div className="d-none d-md-block col-3">
-                    <AdminMenu />
-                </div>
-                <div className="d-block d-md-none">
-                    <AdminMenuMobile />
-                </div>
+                <div className="d-none d-md-block col-3"><AdminMenu /></div>
+                <div className="d-block d-md-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-md-9">
-                    {!loading && !error ? (<div className={styles.container}>
-                        <h2>Edit: {`${vehicle.vehicle_make} ${vehicle.vehicle_model} ${vehicle.vehicle_year}`} <span>____</span></h2>
-                        <div className={styles.formContainer}>
-                            <form onSubmit={handleSubmit} className={styles.form}>
-                                <div className={styles.formGroup}>
-                                    <p>Vehicle Color:</p>
-                                    <input className={styles.formControl} type="text" name="vehicle_color" value={vehicle.vehicle_color} onChange={handleChange} placeholder="Color" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <p>Vehicle Mileage:</p>
-                                    <input className={styles.formControl} type="text" name="vehicle_mileage" value={vehicle.vehicle_mileage} onChange={handleChange} placeholder="Mileage" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <p>Vehicle Tag:</p>
-                                    <input className={styles.formControl} type="text" name="vehicle_tag" value={vehicle.vehicle_tag} onChange={handleChange} placeholder="Tag" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <button className={styles.updateButton} type="submit"> Update </button>
-                                </div>
-                            </form>
+                    {!loading && !error ? (
+                        <div className={styles.container}>
+                            <h2>
+                                Edit: {`
+                                    ${vehicle.vehicle_make} 
+                                    ${vehicle.vehicle_model} 
+                                    ${vehicle.vehicle_year}
+                                `}
+                                <span>____</span>
+                            </h2>
+                            <div className={styles.formContainer}>
+                                <form onSubmit={handleSubmit} className={styles.form}>
+                                    <div className={styles.formGroup}>
+                                        <h3>Vehicle Color:</h3>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="vehicle_color"
+                                            value={vehicle.vehicle_color}
+                                            onChange={handleChange}
+                                            placeholder="Color"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <h3>Vehicle Mileage:</h3>
+                                        {errorMessage &&
+                                            <div className={styles.errorMessage}>
+                                                {errorMessage}
+                                            </div>
+                                        }
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="vehicle_mileage"
+                                            value={vehicle.vehicle_mileage}
+                                            onChange={handleChange}
+                                            placeholder="Mileage"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <h3>Vehicle Tag:</h3>
+                                        <input
+                                            className={styles.formControl}
+                                            type="text"
+                                            name="vehicle_tag"
+                                            value={vehicle.vehicle_tag}
+                                            onChange={handleChange}
+                                            placeholder="Tag"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <button className={styles.updateButton} type="submit">
+                                            Update
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>) : error ? <NotFound /> : <Loader />}
+                    ) : error ? <NotFound /> : <Loader />}
                 </div>
             </section>
         </Layout>

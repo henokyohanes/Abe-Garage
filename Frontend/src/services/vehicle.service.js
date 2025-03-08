@@ -68,7 +68,7 @@ export const updateVehicle = async (vehicleId, updatedData) => {
         return response.data;
     } catch (error) {
         console.error("Error updating vehicle:", error);
-        throw error.response?.data?.message || "Failed to update vehicle";
+        throw error.response?.data?.message || "Failed";
     }
 };
 
