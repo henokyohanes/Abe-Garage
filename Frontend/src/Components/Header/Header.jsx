@@ -59,7 +59,7 @@ const Header = () => {
                         <NavDropdown.Item as={Link} to="/dashboard">{getRoleText()}</NavDropdown.Item>
                     )}
                 </NavDropdown>
-                <Link to="/"><img src={logo} alt="ABE Garage Logo" /></Link>
+                <Link to="/"><img src={logo} alt="ABE Garage Logo" loading="lazy"/></Link>
                 <div className={Style.navMenu}>
                     <ul className="d-none d-md-flex">
                         <li><Link to="/">Home</Link></li>

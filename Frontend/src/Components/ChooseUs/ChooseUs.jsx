@@ -27,7 +27,7 @@ const ChooseUs = () => {
             <div className={`${style.additionalServices} col-11 col-md-6 col-lg-8 col-xl-7 col-xxl-6`}>
                 <h2>Additional Services <span>____</span></h2>
                 <div className="row justify-content-center g-0">
-                    <img className="d-none d-lg-block col-lg-5" src={additional} alt="Additional Service" />
+                    <img className="d-none d-lg-block col-lg-5" src={additional} alt="Additional Service" loading="lazy"/>
                     <ul className="col-lg-7">
                         <li>General Auto Repair & Maintenance</li>
                         <li>Transmission Repair & Replacement</li>
