@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import vehicleService from "../../services/vehicle.service";
 import Layout from "../../Layout/Layout";
@@ -16,6 +16,7 @@ const VehicleUpdate = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
 
     //fetch vehicle data on page load
     useEffect(() => {
@@ -25,7 +26,7 @@ const VehicleUpdate = () => {
             setError(false);
 
             try {
-                const response = await vehicleService.fetchVehicleById(parseInt(vehicle_id));
+                const response = await vehicleService.fetchVehicleById(parseInt(vehicle_id, 10));
                 setVehicle(response.data);
             } catch (err) {
                 console.error(err);
@@ -36,16 +37,22 @@ const VehicleUpdate = () => {
         };
 
         fetchVehicleData();
-    }, []);
+    }, [vehicle_id]);
 
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         //validate mileage length on input
-        if (name === "vehicle_mileage" && value.length > 9) {
-            setErrorMessage("Mileage cannot exceed 9 digits");
-            return;
+        if (name === "vehicle_mileage") {
+            if (!/^\d*$/.test(value)) {
+                setErrorMessage("Mileage must be a number");
+                return;
+            }
+            if (value.length > 9) {
+                setErrorMessage("Mileage cannot exceed 9 digits");
+                return;
+            }
         } else {
             setErrorMessage("");
         }
@@ -81,9 +88,7 @@ const VehicleUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {
-                window.location.href = "/customer-profile/" + customer_id;
-            }, 1500);
+            setTimeout(() => { navigate(`/customer-profile/${customer_id}`)}, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {

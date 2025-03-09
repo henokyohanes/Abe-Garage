@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import orderService from "../../services/order.service";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -14,6 +14,7 @@ const OrderUpdate = () => {
     const [order, setOrder] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const navigate = useNavigate();
 
     // Fetch order data on component mount
     useEffect(() => {
@@ -23,7 +24,7 @@ const OrderUpdate = () => {
             setError(false);
 
             try {
-                const response = await orderService.fetchOrderById(parseInt(id));
+                const response = await orderService.fetchOrderById(parseInt(id, 10));
                 setOrder(response.data[0]);
             } catch (err) {
                 console.error(err);
@@ -34,7 +35,7 @@ const OrderUpdate = () => {
         };
 
         fetchOrderData();
-    }, []);
+    }, [id]);
 
     // Handle input changes and service cancellations
     const handleChange = async (e) => {
@@ -218,7 +219,7 @@ const OrderUpdate = () => {
                                 htmlContainer: styles.text,
                             },
                         });
-                        setTimeout(() => {window.location.href = "/orders"}, 1500);
+                        setTimeout(() => { navigate("/orders")}, 1500);
                     } catch (error) {
                         console.error("Error canceling order:", error);
                         if (error === "Failed") {
@@ -287,7 +288,7 @@ const OrderUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {window.location.href = "/order-details/" + id}, 1500);
+            setTimeout(() => { navigate(`/order-details/${id}`)}, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {

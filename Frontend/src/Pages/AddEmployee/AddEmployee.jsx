@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 import Swal from "sweetalert2";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
@@ -23,6 +24,7 @@ const AddEmployee = () => {
     active_employee: 1,
     company_role_id: 1
   });
+  const navigate = useNavigate();
 
   // Get the logged in employee
   const { employee: loggedInEmployee } = useAuth();
@@ -111,7 +113,7 @@ const AddEmployee = () => {
         },
       });
       
-      setTimeout(() => {window.location.href = "/employees";}, 1500);
+      setTimeout(() => { navigate("/employees")}, 1500);
     } catch (error) {
       console.error("Error adding employee:", error);
       if (error === "Failed") {

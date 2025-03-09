@@ -111,9 +111,7 @@ const ProvideServices = () => {
     };
 
     // redirect to edit page
-    const handleEdit = (id) => {
-        navigate(`/edit-service/${id}`);
-    };
+    const handleEdit = (id) => { navigate(`/edit-service/${id}`)};
 
     // Delete a service
     const handleDelete = async (id) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import serviceService from "../../services/service.service";
 import Layout from "../../Layout/Layout";
@@ -16,6 +16,7 @@ const ServiceUpdate = () => {
     const [service, setService] = useState({ service_name: "", service_description: "" });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const navigate = useNavigate();
 
     // Fetch service data when the component mounts
     useEffect(() => {
@@ -25,7 +26,7 @@ const ServiceUpdate = () => {
 
         const fetchServiceData = async () => {
             try {
-                const response = await serviceService.getServiceById(parseInt(id));
+                const response = await serviceService.getServiceById(parseInt(id, 10));
                 setService(response);
             } catch (err) {
                 console.error(err);
@@ -36,7 +37,7 @@ const ServiceUpdate = () => {
         };
 
         fetchServiceData();
-    }, []);
+    }, [id]);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -68,7 +69,7 @@ const ServiceUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {window.location.href = "/services"}, 1500);
+            setTimeout(() => { navigate("/services")}, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {

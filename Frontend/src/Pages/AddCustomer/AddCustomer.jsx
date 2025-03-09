@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import Swal from "sweetalert2";
 import Layout from "../../Layout/Layout";
@@ -23,6 +23,7 @@ const AddCustomer = () => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
     const params = new URLSearchParams(location.search);
     const redirectUrl = params.get("redirect") || "/customers";
 
@@ -123,7 +124,7 @@ const AddCustomer = () => {
                     },
                 });
                 
-                setTimeout(() => {window.location.href = redirectUrl}, 1500);
+                setTimeout(() => { navigate(redirectUrl)}, 1500);
         } catch (error) {
             console.error("Error:", error);
             if (error === "Failed") {

@@ -160,7 +160,7 @@ const NewOrder = () => {
 
     // Add vehicle function for redirect
     const handleAddVehicle = (id) => {
-        navigate(`/customer-profile/${id}`);
+        navigate(`/customer-profile/${id}?redirect=/new-order`);
     };
 
     // Fetch vehicle by id
@@ -250,9 +250,7 @@ const NewOrder = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {
-                window.location.href = "/order-details/" + response.data.order_id;
-            }, 1500);
+            setTimeout(() => { navigate(`/order-details/${response.data.order_id}`)}, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {

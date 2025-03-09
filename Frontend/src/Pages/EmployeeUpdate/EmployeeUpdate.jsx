@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import employeeService from "../../services/employee.service";
 import Layout from "../../Layout/Layout";
@@ -21,6 +21,7 @@ const EmployeeUpdate = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const navigate = useNavigate();
 
     // Fetch employee data
     useEffect(() => {
@@ -29,7 +30,7 @@ const EmployeeUpdate = () => {
             setLoading(true);
             setError(false);
             try {
-                const response = await employeeService.fetchEmployeeById(parseInt(id));
+                const response = await employeeService.fetchEmployeeById(parseInt(id, 10));
                 setEmployee(response.data);
             } catch (err) {
                 console.error(err);
@@ -40,7 +41,7 @@ const EmployeeUpdate = () => {
         };
 
         fetchEmployeeData();
-    }, []);
+    }, [id]);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -87,7 +88,7 @@ const EmployeeUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => {window.location.href = "/employees"}, 1500);
+            setTimeout(() => { navigate("/employees")}, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {

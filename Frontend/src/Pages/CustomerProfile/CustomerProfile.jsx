@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
@@ -33,6 +33,9 @@ const CustomerProfile = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const redirectUrl = params.get("redirect");
 
     // Fetch customer data, vehicles, and orders when id changes
     useEffect(() => {
@@ -49,7 +52,7 @@ const CustomerProfile = () => {
         setError(false);
 
         try {
-            const customerData = await customerService.fetchCustomerById(parseInt(id));
+            const customerData = await customerService.fetchCustomerById(parseInt(id, 10));
             setCustomer(customerData.data);
         } catch (error) {
             console.error("Error fetching customer data:", error);
@@ -132,6 +135,9 @@ const CustomerProfile = () => {
                     htmlContainer: styles.text,
                 },
             });
+            if (redirectUrl) {
+                setTimeout(() => { navigate(redirectUrl) }, 1500);
+            }
         } catch (error) {
             console.error("Error adding vehicle:", error);
             if (error === "Failed") {
