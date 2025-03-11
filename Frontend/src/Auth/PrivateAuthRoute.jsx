@@ -5,7 +5,6 @@ import getAuth from "../util/auth";
 const PrivateAuthRoute = ({ roles = [], children }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {

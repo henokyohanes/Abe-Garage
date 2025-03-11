@@ -175,8 +175,6 @@ const Login = () => {
                         <button
                           className={Styles.logInButton}
                           type="submit"
-                          data-loading-text="Please wait..."
-                          disabled={loading}
                         >
                           {loading ? (<PulseLoader color="white" size={12} />) : ("Login")}
                         </button>

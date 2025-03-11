@@ -5,9 +5,7 @@ import getAuth from "../util/auth";
 const AuthContext = createContext();
 
 // Create a custom hook to use the context
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
@@ -24,6 +22,7 @@ export const AuthProvider = ({ children }) => {
       // Fetch authentication details
       try {
         const loggedInEmployee = await getAuth();
+        
         if (loggedInEmployee?.employee_token) {
           setIsLogged(true);
 
