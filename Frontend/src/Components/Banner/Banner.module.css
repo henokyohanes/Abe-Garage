@@ -1,6 +1,6 @@
 .banner {
     background: url('../../assets/Images/banner.jpg') no-repeat center center/cover;
-    padding: 8vw 12vw;
+    padding: 5vw 12vw;
     color: white;
 }
 
@@ -17,12 +17,17 @@
 .bannerButtons {
     display: flex;
     align-items: center;
+    margin-bottom: 2vw;
 }
 
 .bannerButtons i {
     font-size: clamp(2.8em, 10vw, 4.4em);
     color:  #d82323;
     cursor: pointer;
+}
+
+.bannerButtons i:hover {
+    color: white;
 }
 
 .banner p {
@@ -33,4 +38,19 @@
 
 .bannerButtons p {
     margin: 0 2em;
+}
+
+.appointment {
+    text-decoration: none;
+    padding: .5em 2em;
+    background-color: #d82323;
+    color: white;
+    font-size: clamp(.8em, 3vw, 1.2em);
+    font-weight: bold;
+    border-radius: .4em;
+}
+
+.appointment:hover {
+    background-color: white;
+    color: #d82323;
 }
