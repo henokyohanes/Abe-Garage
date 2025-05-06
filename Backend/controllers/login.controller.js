@@ -2,6 +2,17 @@ const loginService = require('../services/login.service');
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 
+// Handle employee register
+async function register(req, res, next) {
+  try {
+    const customerData = req.body;
+    const customer = await loginService.register(customerData);
+    res.status(200).json({status: "success", message: "user registered successfully", data: customer});
+  } catch (error) {
+    res.status(400).json({error: "Something went wrong!"});
+  }
+}
+
 // Handle employee login 
 async function logIn(req, res, next) {
   try {

@@ -28,15 +28,17 @@ const createCustomer = async (customerData) => {
     customer_first_name,
     customer_last_name,
     active_customer_status,
-    customer_hash
+    customer_hash,
+    customer_username,
+    customer_password
   } = customerData;
 
   try {
     // Insert into customer_info table
     const result = await db.query(
-      `INSERT INTO customer_identifier (customer_email, customer_phone_number, customer_hash)
+      `INSERT INTO customer_identifier (customer_email, customer_phone_number, customer_hash, customer_password)
       VALUES (?, ?, ?)`,
-      [customer_email, customer_phone_number, customer_hash]
+      [customer_email, customer_phone_number, customer_hash, customer_password]
     );
 
     // Retrieve the generated customer_id
@@ -45,9 +47,9 @@ const createCustomer = async (customerData) => {
 
       // Insert into customer_info table using the generated customer_id
       await db.query(
-        `INSERT INTO customer_info (customer_id, customer_first_name, customer_last_name, active_customer_status)
+        `INSERT INTO customer_info (customer_id, customer_username, customer_first_name, customer_last_name, active_customer_status)
         VALUES (?, ?, ?, ?)`,
-        [customer_id, customer_first_name, customer_last_name, active_customer_status]
+        [customer_id, customer_username, customer_first_name, customer_last_name, active_customer_status]
       );
     } else {
       throw new Error("Failed to retrieve insertId from customer_identifier insert.");

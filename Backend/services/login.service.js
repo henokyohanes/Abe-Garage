@@ -1,6 +1,18 @@
 const db = require("../config/db.config");
 const employeeService = require("./employee.service");
+const customerService = require("./customer.service");
 const bcrypt = require("bcrypt");
+
+//Handle employee register
+async function register(employeeData) {
+  try {
+    const employee = await customerService.createCustomer(employeeData);
+    return employee;
+  } catch (error) {
+    console.error("Error registering:", error);
+    throw error.response?.data || { message: "Unknown error occurred" };
+  }
+}
 
 // Handle employee login
 async function logIn(employeeData) {
