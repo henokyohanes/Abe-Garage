@@ -1,15 +1,71 @@
 const loginService = require('../services/login.service');
+const customerService = require('../services/customer.service');
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 
-// Handle employee register
+// Handle customer register
 async function register(req, res, next) {
+  const customerData = req.body;
+  const { customer_email } = customerData;
+
   try {
-    const customerData = req.body;
-    const customer = await loginService.register(customerData);
-    res.status(200).json({status: "success", message: "user registered successfully", data: customer});
+    // Check if customer already exists
+    const existingCustomer = await customerService.findCustomerByEmail(
+      customer_email
+    );
+
+    if (existingCustomer.length === 0) {
+      // If not found, create new customer
+      const newCustomer = await loginService.register(customerData);
+
+      const payload = {
+        customer_id: newCustomer.customer_id,
+        customer_email: newCustomer.customer_email,
+        customer_first_name: newCustomer.customer_first_name,
+        customer_last_name: newCustomer.customer_last_name,
+      };
+
+      const token = jwt.sign(payload, jwtSecret, { expiresIn: "24h" });
+      const sendBack = { customer_token: token };
+
+      return res.status(200).json({
+        status: "success",
+        message: "customer registered successfully",
+        data: sendBack,
+      });
+    }
+
+    // Customer exists and has password: already registered
+    if (existingCustomer[0].customer_password) {
+      return res.status(409).json({
+        status: "fail",
+        message: "Customer already exists",
+      });
+    }
+
+    // Customer exists but no password: update and register
+    await customerService.updateCustomer(
+      existingCustomer[0].customer_id,
+      customerData
+    );
+
+    const payload = {
+      customer_id: existingCustomer[0].customer_id,
+      customer_email: existingCustomer[0].customer_email,
+      customer_first_name: existingCustomer[0].customer_first_name,
+      customer_last_name: existingCustomer[0].customer_last_name,
+    };
+
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: "24h" });
+    const sendBack = { customer_token: token };
+
+    return res.status(200).json({
+      status: "success",
+      message: "customer registered successfully",
+      data: sendBack});
   } catch (error) {
-    res.status(400).json({error: "Something went wrong!"});
+    console.error("Error registering:", error);
+    res.status(400).json({ status: "fail", message: "Something went wrong!" });
   }
 }
 
@@ -43,4 +99,4 @@ async function logIn(req, res, next) {
   }
 }
 
-module.exports = {logIn};
+module.exports = {logIn, register};

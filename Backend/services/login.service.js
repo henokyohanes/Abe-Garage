@@ -3,11 +3,11 @@ const employeeService = require("./employee.service");
 const customerService = require("./customer.service");
 const bcrypt = require("bcrypt");
 
-//Handle employee register
-async function register(employeeData) {
+//Handle customer register
+async function register(customerData) {
   try {
-    const employee = await customerService.createCustomer(employeeData);
-    return employee;
+    const customer = await customerService.createCustomer(customerData);
+    return customer;
   } catch (error) {
     console.error("Error registering:", error);
     throw error.response?.data || { message: "Unknown error occurred" };
@@ -47,4 +47,4 @@ async function logIn(employeeData) {
   }
 }
 
-module.exports = { logIn };
+module.exports = { logIn, register };
