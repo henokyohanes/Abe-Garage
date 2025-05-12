@@ -1,0 +1,162 @@
+.signupContainer {
+  width: 100%;
+  max-width: 36em;
+  margin: 0 auto;
+  padding: 2em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: .4em;
+}
+
+.signupContainer h2 {
+  font-size: clamp(1.2em, 3vw, 1.5em);
+  font-weight: bold;
+  color: #07184A;
+  margin-bottom: .5em;
+  text-align: center;
+}
+
+.signupContainer h2 span {
+  color: #d82323;
+}
+
+.signupContainer p {
+  font-size: clamp(.9em, 3vw, 1.1em);
+  text-align: center;
+}
+
+.terms {
+  font-size: clamp(.8em, 3vw, 1.1em);
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.signupContainer a {
+  font-size: clamp(.9em, 3vw, 1.1em);
+  font-weight: bold;
+  color: #0b5ed7;
+  text-decoration: none;
+}
+
+.signupContainer a:hover {
+  text-decoration: underline;
+}
+
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  gap: .3em;
+}
+
+.signupForm span {
+  font-size: clamp(.8em, 3vw, 1em);
+}
+
+.name_fields,
+.phone_fields {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.signupForm input {
+  width: 100%;
+  padding: .5em .8em;
+  font-size: clamp(.9em, 3vw, 1.1em);
+  border: 1px solid #ccc;
+  border-radius: .4em;
+  transition: border-color 0.2s ease-in-out;
+}
+
+
+.signupForm input:active {
+  border: 1px solid #0b5ed7;
+}
+
+.signupForm input:focus {
+  border-color: #0b5ed7;
+  outline: none;
+}
+
+.error {
+  color: #d82323;
+  font-size: clamp(.8em, 3vw, 1em);
+}
+
+.hidden {
+  color: white;
+  font-size: clamp(.8em, 3vw, 1em);
+}
+
+.passwordHint {
+  margin: .4em 0;
+}
+
+.signupForm button {
+  width: 100%;
+  padding: .5em;
+  margin-bottom: 1em;
+  background-color: #d82323;
+  font-size: clamp(.9em, 3vw, 1.1em);
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: .4em;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.signupForm button:hover {
+  background-color: #07184A;
+}
+
+.popup {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5em;
+}
+
+.icon {
+  font-size: clamp(.5em, 2vw, 1em);
+  margin: 0 auto;
+}
+
+.errorTitle {
+  font-size: clamp(1.2em, 3vw, 1.8em);
+  padding: 0;
+  color: #d82323;
+}
+
+.successTitle {
+  font-size: clamp(1.2em, 3vw, 1.8em);
+  padding: 0;
+  color: #A5DC86;
+}
+
+.text {
+  font-size: clamp(.9em, 3vw, 1.1em);
+  padding: 0;
+  font-weight: bold;
+}
+
+.confirmButton {
+  padding: .4em 3em;  
+  margin: 0;
+  background-color: #07184A;
+  color: white;
+  font-size: clamp(.9em, 3vw, 1.1em);
+  font-weight: bold;
+  border-radius: .4em;
+  cursor: pointer;
+}
+
+.confirmButton:hover {
+  background-color: #d82323;
+}
