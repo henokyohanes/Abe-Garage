@@ -41,6 +41,7 @@ const Header = () => {
     const logOut = async () => {
         await loginService.logOut();
         setIsLogged(false);
+        window.location.href = "/";
     };
 
     // Function to get the role text
