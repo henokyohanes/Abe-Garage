@@ -85,15 +85,20 @@ async function logIn(req, res, next) {
     // If successful, send a response to the client
     const payload = {
       employee_id: employee.data.employee_id,
-      employee_email: employee.data.employee_email,
-      employee_role: employee.data.company_role_id,
+      employee_username: employee.data.employee_username,
       employee_first_name: employee.data.employee_first_name,
+      employee_last_name: employee.data.employee_last_name,
+      employee_email: employee.data.employee_email,
+      employee_phone: employee.data.employee_phone,
+      employee_role: employee.data.company_role_id,
+      employee_profile_picture: employee.data.employee_profile_picture
     };
 
     // Generate a JWT token
     const token = jwt.sign(payload, jwtSecret, {expiresIn: "24h"});
     const sendBack = {employee_token: token};
-    res.status(200).json({status: "success", message: "Employee logged in successfully", data: sendBack});
+    const employeeInfo = employee.data;
+    res.status(200).json({status: "success", message: "Employee logged in successfully", data: {sendBack, employeeInfo}});
   } catch (error) {
     res.status(400).json({error: "Something went wrong!"});
   }
