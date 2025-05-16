@@ -5,7 +5,7 @@ const api_url = import.meta.env.VITE_API_URL;
 // Helper function to retrieve authentication headers
 const getAuthHeaders = () => {
     const storedToken = JSON.parse(localStorage.getItem("employee"));
-    const token = storedToken?.employee_token;
+    const token = storedToken?.sendBack.employee_token;
     return {
         headers: {
             "Content-Type": "application/json",

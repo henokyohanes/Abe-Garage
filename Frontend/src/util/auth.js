@@ -4,13 +4,20 @@ const getAuth = async () => {
     
     // Read the data from the user's local storage
     const employee = JSON.parse(localStorage.getItem("employee"));
-    if (employee && employee.employee_token) {
-      const decodedToken = decodeTokenPayload(employee.employee_token);
+    // console.log(employee);
+    if (employee && employee.sendBack.employee_token) {
+      const decodedToken = decodeTokenPayload(employee.sendBack.employee_token);
       return {
-        ...employee,
+        // ...employee,
+        employee_token: employee.sendBack.employee_token,
         employee_role: decodedToken.employee_role,
         employee_id: decodedToken.employee_id,
+        employee_username: decodedToken.employee_username,
         employee_first_name: decodedToken.employee_first_name,
+        employee_last_name: decodedToken.employee_last_name,
+        employee_email: decodedToken.employee_email,
+        employee_phone: decodedToken.employee_phone,
+        employee_profile_picture: decodedToken.employee_profile_picture,
       };
     }
     return {};
