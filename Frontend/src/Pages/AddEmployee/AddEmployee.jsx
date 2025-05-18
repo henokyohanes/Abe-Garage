@@ -16,6 +16,7 @@ const AddEmployee = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);  
   const [employee, setEmployee] = useState({
+    employee_username: "",
     employee_email: "",
     employee_first_name: "",
     employee_last_name: "",
@@ -40,6 +41,16 @@ const AddEmployee = () => {
   const validateForm = () => {
     let isValid = true;
     let newErrors = {};
+
+    //username validation
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+    if (!employee.employee_username) {
+      newErrors.employee_username = "Username is required";
+      isValid = false;
+    } else if (!usernameRegex.test(employee.employee_username)) {
+      newErrors.employee_username = "Username must be alphanumeric";
+      isValid = false;
+    }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -102,8 +113,9 @@ const AddEmployee = () => {
       const data = await employeeService.addEmployee(employee, loggedInEmployeeToken);
       Swal.fire({
         title: "Success!",
-        html: "Employee added successfull!",
+        html: "Employee added successfully!",
         icon: "success",
+        timer: 1500,
         customClass: {
           popup: styles.popup,
           confirmButton: styles.confirmButton,
@@ -152,6 +164,18 @@ const AddEmployee = () => {
                   <div className={styles.form}>
                     <form onSubmit={handleSubmit}>
                       <div className={styles.formGroupContainer}>
+                        <div className={styles.formGroup}>
+                          {errors.employee_username && (
+                            <div className={styles.error}>{errors.employee_username}</div>
+                          )}
+                          <input
+                            className={styles.formControl}
+                            name="employee_username"
+                            placeholder="Employee username *"
+                            value={employee.employee_username}
+                            onChange={handleChange}
+                          />
+                        </div>
                         <div className={styles.formGroup}>
                           {errors.employee_email && (
                             <div className={styles.error}>{errors.employee_email}</div>

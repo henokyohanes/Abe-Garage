@@ -20,8 +20,8 @@ async function createEmployee(employee) {
     const hashedPassword = await bcrypt.hash(employee.employee_password, salt);
 
     // Insert the email in to the employee table
-    const query = "INSERT INTO employee (employee_email, active_employee) VALUES (?, ?)";
-    const rows = await db.query(query, [employee.employee_email, employee.active_employee]);
+    const query = "INSERT INTO employee (employee_username, employee_email, active_employee) VALUES (?, ?, ?)";
+    const rows = await db.query(query, [employee.employee_username, employee.employee_email, employee.active_employee]);
 
     if (rows.affectedRows !== 1) { return false; }
 
