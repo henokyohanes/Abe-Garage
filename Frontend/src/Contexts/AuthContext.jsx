@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
       // Fetch authentication details
       try {
         const loggedInEmployee = await getAuth();
+        // console.log(loggedInEmployee);
         
         if (loggedInEmployee?.employee_token) {
           setIsLogged(true);
@@ -55,6 +56,7 @@ export const AuthProvider = ({ children }) => {
     setIsAdmin,
     setIsLogged,
     employee,
+    setEmployee,
     loading,
     employeeId: employee?.employee_id
   }),

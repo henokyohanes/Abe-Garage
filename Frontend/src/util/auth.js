@@ -1,23 +1,39 @@
+import employeeService from "../services/employee.service";
+
 // Function to read the data from the user's local storage
 const getAuth = async () => {
   try {
     
     // Read the data from the user's local storage
-    const employee = JSON.parse(localStorage.getItem("employee"));
+    const stored = JSON.parse(localStorage.getItem("employee"));
     // console.log(employee);
-    if (employee && employee.sendBack.employee_token) {
-      const decodedToken = decodeTokenPayload(employee.sendBack.employee_token);
+    if (stored && stored.sendBack.employee_token) {
+      const decodedToken = decodeTokenPayload(stored.sendBack.employee_token);
+      const employee_id = decodedToken.employee_id;
+
+      // Call the getEmployeeById method from the employee service
+      const employee = await employeeService.fetchEmployeeById(employee_id);
+
+      console.log(employee);
+
+      // If the employee is not found
+      if (!employee) throw new Error("Employee not found.");
+
+      const employeeData = employee.data;
+
+      console.log(employeeData);
+
       return {
-        // ...employee,
-        employee_token: employee.sendBack.employee_token,
+        ...employeeData,
+        employee_token: stored.sendBack.employee_token,
         employee_role: decodedToken.employee_role,
         employee_id: decodedToken.employee_id,
-        employee_username: decodedToken.employee_username,
-        employee_first_name: decodedToken.employee_first_name,
-        employee_last_name: decodedToken.employee_last_name,
-        employee_email: decodedToken.employee_email,
-        employee_phone: decodedToken.employee_phone,
-        employee_profile_picture: decodedToken.employee_profile_picture,
+        employee_username: employeeData.employee_username,
+        employee_first_name: employeeData.employee_first_name,
+        employee_last_name: employeeData.employee_last_name,
+        employee_email: employeeData  .employee_email,
+        employee_phone: employeeData.employee_phone,
+        employee_profile_picture: employeeData.employee_profile_picture,
       };
     }
     return {};

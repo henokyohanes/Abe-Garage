@@ -12,10 +12,6 @@ const PrivateAuthRoute = ({ roles = [], children }) => {
         const employee = await getAuth();
         if (employee?.employee_token) {
           setIsLogged(true);
-          // If roles are specified, check authorization
-          if (roles.length === 0 || roles.includes(employee.employee_role)) {
-            setIsAuthorized(true);
-          }
         }
       } catch (error) {
         console.error("Error during authentication check:", error);
