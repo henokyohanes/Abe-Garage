@@ -1,0 +1,215 @@
+.accountContainer {
+    max-width: 75em;
+    margin: 0 auto;
+    padding: 3em 1em 5em 1em;
+}
+
+.profile {
+    margin: 0 auto;
+    padding: 2em 1em 3em 1em;
+    background-color: white;
+    width: 100%;
+    max-width: 30em;
+    border-radius: .4em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.profileDetails h2,
+.profileUpload h2 {
+    font-size: clamp(1.2em, 3vw, 1.5em);
+    font-weight: bold;
+    color: #4e68ff;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+.profileContainer {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.profileImgWrapper {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.profileImage {
+    position: relative;
+    width: 12em;
+    height: 12em;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profileIcon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profileCamera {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 3.6em;
+    height: 3.6em;
+    background-color: #eef0f3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cameraIcon {
+    font-size: 2.2em;
+}
+
+.profileDetails p {
+    font-size: clamp(.9em, 3vw, 1.1em);
+    color: #818892;
+}
+
+.email {
+    border-bottom: 1px solid #2E3B55;
+    padding-bottom: 1em;
+}
+
+.profileDetails strong {
+    margin-left: 1em;
+    color: black
+}
+
+.profileDetails button {
+    font-size: clamp(.9em, 3vw, 1.1em);
+    font-weight: bold;
+    background: none;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+}
+
+.profileDetails button:hover {
+    color: #FE7E6F;
+}
+
+.icon {
+    width: 1.6em;
+    height: 1.6em;
+    border-radius: 50%;
+    display: inline-block;
+    line-height: 1.6em;
+    text-align: center;
+    margin-right: .5em;
+}
+
+.profileUpload p {
+    font-size: 1em;
+}
+
+.profileUpload input[type="file"] {
+    width: 100%;
+    font-size: clamp(.9em, 3vw, 1.1em);
+    border: 1px solid #ccc;
+    padding: .3em;
+    border-radius: .4em;
+    background-color: #e2e7ec;
+    cursor: pointer;
+}
+
+.profileUpload input[type="file"]:focus {
+    outline: none;
+    border-color: #0056b3;
+}
+
+.profileUpload input[type="file"]::-webkit-file-upload-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: .4em;
+    margin-right: 1em;
+    padding: .1em 1em;
+    cursor: pointer;
+}
+
+.profileUpload input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #0056b3;
+}
+
+.canvasContainer {
+    border: 1px solid #007BFF;
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+    margin: 1em auto;
+    touch-action: none;
+}
+
+.canvasContainer img {
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: move;
+}
+
+.zoomSliderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+}
+
+.zoomSliderContainer button {
+    width: 1em;
+    height: 1em;
+    margin: 0 .6em;
+    font-size: 1.4em;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 0.3em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoomSlider {
+    width: 10em;
+}
+
+.uploadBtn {
+    display: flex;
+    justify-content: end;
+    gap: 1em;
+}
+
+.uploadBtn button {
+    font-size: clamp(.9em, 3vw, 1.1em);
+    padding: 0.2em 1.6em;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 0.3em;
+    cursor: pointer;
+    text-align: center;
+}
+
+.uploadBtn button:hover {
+    background-color: #ff7800;
+}
