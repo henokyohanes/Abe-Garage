@@ -14,14 +14,16 @@ const profileImage = (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
-
-    const employee_email = req.employee_email;
+// console.log(req);
+    const employee_email = req.body.employee_email;
+    const customer_email = req.body.customer_email;
+    console.log("for image", employee_email, customer_email);
     const imagePath = `/images/${req.file.filename}`;
 
     try {
       
       const result = await imageService.handleProfileImageUpdate(
-        employee_email,
+        employee_email, customer_email,
         imagePath
       );
       return res.status(200).json(result);
