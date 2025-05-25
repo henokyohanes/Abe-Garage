@@ -14,37 +14,41 @@ async function register(customerData) {
   }
 }
 
-// Handle employee login
-async function logIn(employeeData) {
+// Handle employee OR customer login
+async function logIn(userData) {
   try {
-    let returnData = {};
+    // 1. Look up both
+    const [employee] = await employeeService.getEmployeeByEmail(userData.email);
+    const [customer] = await customerService.findCustomerByEmail(userData.email);
 
-    // Check if the employee exists
-    const employee = await employeeService.getEmployeeByEmail(employeeData.employee_email);
-    if (employee.length === 0) {
-      returnData = {status: "fail", message: "Employee does not exist"};
-      return returnData;
+    if (!employee && !customer) {
+      return { status: "fail", message: "The user does not exist" };
     }
 
-    // Check if the password is correct
-    const passwordMatch = await bcrypt.compare(
-      employeeData.employee_password,
-      employee[0].employee_password_hashed
-    );
-
-    // If the password is incorrect
-    if (!passwordMatch) {
-      returnData = {status: "fail", message: "Incorrect password"};
-      return returnData;
+    // 2. Determine which record we have and what the hash field is
+    let userRecord, hashToCompare;
+    if (employee) {
+      userRecord    = employee;
+      hashToCompare = employee.employee_password_hashed;
+    } else {
+      userRecord    = customer;
+      hashToCompare = customer.customer_password_hashed;
     }
 
-    // If the password is correct
-    returnData = {status: "success", data: employee[0]};
-    return returnData;
+    // 3. Compare the password once
+    const isMatch = await bcrypt.compare(userData.password, hashToCompare);
+    if (!isMatch) {
+      return { status: "fail", message: "Incorrect password" };
+    }
+
+    // 4. Success!
+    return { status: "success", data: userRecord };
+
   } catch (error) {
     console.error("Error logging in:", error);
-    return {status: "fail", message: "Something went wrong"};
+    return { status: "fail", message: "Something went wrong" };
   }
 }
+
 
 module.exports = { logIn, register };

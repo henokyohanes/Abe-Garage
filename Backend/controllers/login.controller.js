@@ -72,33 +72,33 @@ async function register(req, res, next) {
 // Handle employee login 
 async function logIn(req, res, next) {
   try {
-    const employeeData = req.body;
+    const userData = req.body;
 
     // Call the logIn method from the login service 
-    const employee = await loginService.logIn(employeeData);
+    const response = await loginService.logIn(userData);
 
     // If the employee is not found
-    if (employee.status === "fail") {
-      res.status(403).json({status: employee.status, message: employee.message});
+    if (response.status === "fail") {
+      res.status(403).json({status: response.status, message: response.message});
       return;
     }
-    // If successful, send a response to the client
+
     const payload = {
-      employee_id: employee.data.employee_id,
-      employee_username: employee.data.employee_username,
-      employee_first_name: employee.data.employee_first_name,
-      employee_last_name: employee.data.employee_last_name,
-      employee_email: employee.data.employee_email,
-      employee_phone: employee.data.employee_phone,
-      employee_role: employee.data.company_role_id,
-      employee_profile_picture: employee.data.employee_profile_picture
+      user_id: response.data.employee_id || response.data.customer_id,
+      user_name: response.data.employee_username || response.data.customer_email,
+      first_name: response.data.employee_first_name || response.data.customer_first_name,
+      last_name: response.data.employee_last_name || response.data.customer_last_name,
+      email: response.data.employee_email || response.data.customer_email,
+      phone: response.data.employee_phone || response.data.customer_phone_number,
+      company_role: response.data.company_role_id || null,
+      profile_picture: response.data.employee_profile_picture || response.data.customer_profile_picture || null
     };
 
     // Generate a JWT token
     const token = jwt.sign(payload, jwtSecret, {expiresIn: "24h"});
-    const sendBack = {employee_token: token};
-    const employeeInfo = employee.data;
-    res.status(200).json({status: "success", message: "Employee logged in successfully", data: {sendBack, employeeInfo}});
+    const sendBack = {user_token: token};
+    const userInfo = response.data;
+    res.status(200).json({status: "success", message: "user logged in successfully", data: {sendBack, userInfo}});
   } catch (error) {
     res.status(400).json({error: "Something went wrong!"});
   }
