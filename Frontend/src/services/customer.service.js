@@ -4,8 +4,8 @@ const api_url = import.meta.env.VITE_API_URL;
 
 // Helper function to retrieve authentication headers
 const getAuthHeaders = () => {
-    const storedToken = JSON.parse(localStorage.getItem("employee"));
-    const token = storedToken?.sendBack.employee_token;
+    const storedToken = JSON.parse(localStorage.getItem("user"));
+    const token = storedToken?.sendBack.user_token;
     return {
         headers: {
             "Content-Type": "application/json",
@@ -30,6 +30,7 @@ export const fetchCustomers = async () => {
 
 // Function to fetch a customer by ID
 export const fetchCustomerById = async (id) => {
+    console.log(id);
     try {
         const response = await axios.get(
             `${api_url}/api/customer/${id}`,

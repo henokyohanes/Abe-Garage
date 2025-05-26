@@ -58,7 +58,7 @@ const createCustomer = async (customerData) => {
       customer_password === null
         ? `INSERT INTO customer_identifier (customer_email, customer_phone_number, customer_hash)
          VALUES (?, ?, ?)`
-        : `INSERT INTO customer_identifier (customer_email, customer_phone_number, customer_hash, customer_password)
+        : `INSERT INTO customer_identifier (customer_email, customer_phone_number, customer_hash, customer_password_hashed)
          VALUES (?, ?, ?, ?)`;
 
     const identifierValues =

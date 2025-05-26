@@ -51,7 +51,7 @@ const createCustomer = async (req, res) => {
     }
 
     // Create new customer
-    await customerService.createCustomer({
+    const newCustomer = await customerService.createCustomer({
       customer_email,
       customer_phone_number,
       customer_first_name,
@@ -59,6 +59,8 @@ const createCustomer = async (req, res) => {
       active_customer_status,
       customer_hash
     });
+
+    // console.log(newCustomer.data);
 
     return res.status(201).json({ status: "success", message: "Customer created successfully" });
   } catch (err) {
@@ -83,6 +85,7 @@ const getAllCustomers = async (req, res) => {
 // function to Get a single customer by ID
 const getCustomerById = async (req, res) => {
   const { id } = req.params;
+  console.log(id);
 
   // Validate the ID
   if (!id || isNaN(id)) {
