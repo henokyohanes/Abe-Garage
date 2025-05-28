@@ -2,54 +2,38 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 import { NavDropdown } from "react-bootstrap";
-import { FaBars, FaChevronDown, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaChevronDown, FaUser, FaSignOutAlt, FaUserShield } from "react-icons/fa";
 import { RiAccountCircleFill } from "react-icons/ri";
-import loginService from "../../services/login.service";
+import loginservice, { axiosImageURL } from "../../services/login.service";
 import logo from "../../assets/images/logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Style from "./Header.module.css";
 
-// Profile Image component
-// const ProfileImage = ({ user }) => {
-//     return (
-//         <div className={Style.profileImgWrapper}>
-//             <div className={Style.profileImgContainer}>
-//                 {user.profileimg ? (
-//                     <img
-//                         src={`${axiosImageURL}${user.profileimg}`}
-//                         className={Style.profileImg}
-//                         alt="Profile Image"
-//                         loading="lazy"
-//                     />
-//                 ) : (
-//                     <RiAccountCircleFill className={Style.profileImgCircle} />
-//                 )}
-//             </div>
-//             <div className={Style.profileArrow}>
-//                 <FontAwesomeIcon icon={faChevronDown} className={Style.arrowIcon} />
-//             </div>
-//         </div>
-//     );
-// };
-
 const Header = () => {
 
     // Access the authentication context
-    const { isLogged, setIsLogged, employee, isAdmin, isManager } = useAuth();
+    const { isLogged, setIsLogged, user, isAdmin, isManager, isEmployee } = useAuth();
 
     // Log out event handler function
     const logOut = async () => {
-        await loginService.logOut();
+        try {
+        await loginservice.logOut();
         setIsLogged(false);
         window.location.href = "/";
+        } catch (error) {
+        console.error("Error logging out:", error);
+        }
     };
 
     // Function to get the role text
     const getRoleText = () => {
         if (isAdmin) return "Admin";
         if (isManager) return "Manager";
-        return "Mechanic";
+        if (isEmployee) return "Mechanic";
+        return "User";
     };
+
+    console.log(user);
 
     return (
         <header className={Style.header}>
@@ -65,7 +49,7 @@ const Header = () => {
                 <div>
                     {isLogged ? (
                         <div className={Style.contactInfo}>
-                            Welcome: <strong>{employee?.employee_first_name}</strong>
+                            Welcome: <strong>{user?.employee_first_name || user?.customer_first_name}</strong>
                         </div>
                     ) : (
                         <div className={Style.contactInfo}>
@@ -77,9 +61,6 @@ const Header = () => {
             <div className={Style.mainHeader}>
                 <NavDropdown title={<FaBars size={35} />} className="d-md-none">
                     <NavDropdown.Item as={Link} to="/">Home</NavDropdown.Item>
-                    {isLogged && (
-                        <NavDropdown.Item as={Link} to="/dashboard">{getRoleText()}</NavDropdown.Item>
-                    )}
                     <NavDropdown.Item as={Link} to="/about-us">About Us</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/abe-services">Services</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/contact-us">Contact Us</NavDropdown.Item>
@@ -88,9 +69,6 @@ const Header = () => {
                 <div className={Style.navMenu}>
                     <ul className="d-none d-md-flex">
                         <li><Link to="/">Home</Link></li>
-                        {isLogged && (
-                            <li><Link to="/dashboard">{getRoleText()}</Link></li>
-                        )}
                         <li><Link to="/about-us">About Us</Link></li>
                         <li><Link to="/abe-services">Services</Link></li>
                         <li><Link to="/contact-us">Contact Us</Link></li>
@@ -100,9 +78,9 @@ const Header = () => {
                             <NavDropdown
                                 title={<div className={Style.profileImgWrapper}>
                                     <div className={Style.profileImgContainer}>
-                                        {employee.profileimg ? (
+                                        {user.employee_profile_picture || user.customer_profile_picture ? (
                                             <img
-                                                src={`${axiosImageURL}${user.profileimg}`}
+                                                src={`${axiosImageURL}${user.employee_profile_picture || user.customer_profile_picture}`}
                                                 className={Style.profileImg}
                                                 alt="Profile Image"
                                                 loading="lazy"
@@ -116,7 +94,13 @@ const Header = () => {
                                     </div>
                                 </div>}
                             >
-                                <NavDropdown.Item as={Link} to="/Account">
+                                <NavDropdown.Item as={Link} to="/dashboard">
+                                    <span className={Style.icon}>
+                                        <FaUserShield />
+                                    </span>
+                                    {getRoleText()} Dashboard
+                                </NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to="/account">
                                     <span className={Style.icon}>
                                         <FaUser />
                                     </span>
