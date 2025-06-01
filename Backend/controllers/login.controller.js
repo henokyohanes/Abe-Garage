@@ -69,7 +69,7 @@ async function register(req, res, next) {
   }
 }
 
-// Handle employee login 
+// Handle user login 
 async function logIn(req, res, next) {
   try {
     const userData = req.body;
@@ -104,4 +104,21 @@ async function logIn(req, res, next) {
   }
 }
 
-module.exports = {logIn, register};
+// handle forgot password
+async function forgotPassword(req, res) {
+  const email = req.body.email;
+
+  if (!email) {
+    return res.json({ status: "fail", message: "Please provide your email" });
+  }
+
+  try {
+    const result = await loginService.forgotPassword(email);
+    return res.json({ status: "success", ...result });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    return res.json({ status: "fail", message: "Something went wrong!" });
+  }
+}
+
+module.exports = {logIn, register, forgotPassword};
