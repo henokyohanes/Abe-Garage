@@ -62,9 +62,11 @@ async function forgotPassword(email) {
       return { status: "fail", message: "No user with that email exists." };
     }
 
+    console.log("now", employee, customer);
+
     let isEmployee = false;
     let userRecord;
-    if (employee) {
+    if (employee.length > 0) {
       isEmployee = true;
       userRecord = employee;
     } else {
@@ -89,7 +91,7 @@ async function forgotPassword(email) {
       );
     }
 
-    const resetLink = `${process.env.CLIENT_URL}/reset-password/${rawToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${rawToken}`;
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -142,4 +144,56 @@ This link will expire in 1 hour. If you did not request a password reset, you ca
   }
 }
 
-module.exports = { logIn, register, forgotPassword };
+// Handle reset password
+async function resetPassword(token, newPassword) {
+  try {
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    // Try finding employee first
+    const employee = await db.query(
+      "SELECT * FROM employee_pass WHERE reset_token = ? AND token_expiry > NOW()",
+      [hashedToken]
+    );
+
+    console.log("employee", employee);
+
+    if (employee.length > 0) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await db.query(
+        "UPDATE employee_pass SET employee_password_hashed = ?, reset_token = NULL, token_expiry = NULL WHERE employee_id = ?",
+        [hashedPassword, employee[0].employee_id]
+      );
+
+      return { status: "success", message: "Employee password reset successful" };
+    }
+
+    // If not an employee, try customer
+    const customer = await db.query(
+      "SELECT * FROM customer_identifier WHERE reset_token = ? AND token_expiry > NOW()",
+      [hashedToken]
+    );
+
+    if (customer.length > 0) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await db.query(
+        "UPDATE customer_identifier SET customer_password_hashed = ?, reset_token = NULL, token_expiry = NULL WHERE customer_id = ?",
+        [hashedPassword, customer[0].customer_id]
+      );
+
+      return { status: "success", message: "Customer password reset successful" };
+    }
+
+    // If neither found
+    return { status: "fail", message: "Invalid or expired reset token" };
+  } catch (err) {
+    console.error("Error resetting password:", err);
+    throw err;
+  }
+}
+
+module.exports = { logIn, register, forgotPassword, resetPassword };

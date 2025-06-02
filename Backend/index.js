@@ -14,6 +14,9 @@ app.use(express.json());
 // middleware to sanitize incoming data
 app.use(sanitize.middleware);
 
+// Serve the 'images' folder statically at /images
+app.use("/images", express.static("images"));
+
 //employee routes middleware file
 const employeeRoutes = require("./routes/employee.routes");
 
@@ -49,6 +52,12 @@ const serviceRoutes = require("./routes/service.routes");
 
 // service routes middleware
 app.use(serviceRoutes);
+
+// image routes middleware file
+const imageRoutes = require("./routes/image.routes");
+
+// image routes middleware
+app.use(imageRoutes);
 
 // start the Express server
 app.listen(port, () => {

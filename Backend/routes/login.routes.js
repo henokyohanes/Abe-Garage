@@ -6,6 +6,12 @@ const loginControllers = require("../controllers/login.controller");
 router.post("/api/customer/register", loginControllers.register);
 
 // Route to handle employee login
-router.post("/api/employee/login", loginControllers.logIn);
+router.post("/api/user/login", loginControllers.logIn);
+
+// route to handle forget password
+router.post("/api/user/forgot-password", loginControllers.forgotPassword);
+
+// route to handle reset password
+router.post("/api/user/reset-password/:token", loginControllers.resetPassword);
 
 module.exports = router;

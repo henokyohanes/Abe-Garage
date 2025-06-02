@@ -121,4 +121,30 @@ async function forgotPassword(req, res) {
   }
 }
 
-module.exports = {logIn, register, forgotPassword};
+// handle Reset Password
+async function resetPassword(req, res) {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  console.log(token, newPassword);
+
+  if (!newPassword || newPassword.length < 8) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Password must be at least 8 characters long",
+    });
+  }
+
+  try {
+    const result = await loginService.resetPassword(token, newPassword);
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error("Reset password error:", err);
+    return res.status(500).json({
+      status: "fail",
+      message: "Something went wrong while resetting password.",
+    });
+  }
+}
+
+module.exports = {logIn, register, forgotPassword, resetPassword};

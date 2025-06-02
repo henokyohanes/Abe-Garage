@@ -13,7 +13,7 @@ const verifyToken = async (req, res, next) => {
     if (err) {
       return res.status(401).send({status: "fail", message: "Unauthorized!"});
     }
-    req.employee_email = decoded.employee_email;
+    req.employee_email = decoded.email;
     next();
   });
 }
@@ -33,6 +33,7 @@ const isAdmin = async (req, res, next) => {
 const isAdminOrManager = async (req, res, next) => {
   const employee_email = req.employee_email;
   const employee = await employeeService.getEmployeeByEmail(employee_email);
+  console.log(employee);
   const role_id = employee[0].company_role_id;
 
   if (![2, 3].includes(role_id)) {
