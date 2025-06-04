@@ -54,7 +54,8 @@ const MyVehicles = () => {
             const vehicleData = await vehicleService.fetchVehiclesByCustomerId(id);
             setVehicles(vehicleData.data);
         } catch (error) {
-            if (!error.response?.data?.message === "No vehicles found for this customer") {
+            console.error("Error fetching vehicles:", error);
+            if (error !== "No vehicles found for this customer") {
                 setError(true);
             }
         } finally {
@@ -189,7 +190,7 @@ const MyVehicles = () => {
 
     return (
         <Layout>
-            <div className={`${styles.customerProfile} row g-0`}>
+            <div className={`${styles.customerVehicles} row g-0`}>
                 <div className="d-none d-md-block col-3"><AdminMenu /></div>
                 <div className="d-block d-md-none"><AdminMenuMobile /></div>
                 <div className="col-12 col-md-9">
