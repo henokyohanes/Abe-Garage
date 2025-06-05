@@ -127,8 +127,6 @@ const Signup = ({ onToggle, setError }) => {
 
       const response = await loginService.register(formDataWithHash);
 
-      console.log(response);
-
       if (response.status === "success") {
         Swal.fire({
           title: "Success!",
@@ -143,11 +141,14 @@ const Signup = ({ onToggle, setError }) => {
           },
         });
 
-        // Store the token in local storage and redirect to the home page
-        localStorage.setItem("token", response.data.token);
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1500);
+        if (response.data.token) {
+          const customer = await loginService.logIn({
+            employee_email: formData.customer_email,
+            employee_password: formData.customer_password,  
+          });
+          localStorage.setItem("customer", JSON.stringify(customer.data));
+          // setTimeout(() => {window.location.href = "/"}, 1500);
+        }
       }
     } catch (err) {
       console.error("Failed to register user:", err);

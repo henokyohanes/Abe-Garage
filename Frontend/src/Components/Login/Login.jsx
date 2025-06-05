@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -7,8 +7,8 @@ import loginService from "../../services/login.service";
 import Styles from "./Login.module.css";
 
 const Login = ({onToggle, setError}) => {
-  const [employee_email, setEmail] = useState("");
-  const [employee_password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,17 +24,17 @@ const Login = ({onToggle, setError}) => {
 
     // Email validation
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!employee_email) {
+    if (!email) {
       setEmailError("Please enter your email address");
       valid = false;
-    } else if (!regex.test(employee_email)) {
+    } else if (!regex.test(email)) {
       setEmailError("Invalid email address");
       valid = false;
     } else {
       setEmailError("");
     }
 
-    if (!employee_password) {
+    if (!password) {
       setPasswordError("please enter your password");
       valid = false;
     } else {
@@ -42,7 +42,7 @@ const Login = ({onToggle, setError}) => {
     }
     if (!valid) return;
 
-    const formData = { employee_email, employee_password };
+    const formData = { email, password };
 
     // Make the API call
     try {
@@ -66,13 +66,12 @@ const Login = ({onToggle, setError}) => {
         });
 
         // Store the employee data in localStorage
-        if (response.data.employee_token) {
-          localStorage.setItem("employee", JSON.stringify(response.data));
+        if (response.data.sendBack.user_token) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+          console.log(response.data);
         }
 
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1500);
+        setTimeout(() => {window.location.href = "/"}, 1500);
       } else if (response.message === "Something went wrong") {
         Swal.fire({
           title: "error!",
@@ -146,8 +145,8 @@ const Login = ({onToggle, setError}) => {
                             </div>
                           <input
                             type="email"
-                            name="employee_email"
-                            value={employee_email}
+                            name="email"
+                            value={email}
                             placeholder="Email *"
                             onChange={(event) => setEmail(event.target.value)}
                           />
@@ -159,8 +158,8 @@ const Login = ({onToggle, setError}) => {
                           <div className={Styles.passwordContainer}>
                             <input
                               type={showPassword ? "text" : "password"}
-                              name="employee_password"
-                              value={employee_password}
+                              name="password"
+                              value={password}
                               placeholder="Password *"
                               autoComplete="current-password"
                               onChange={(event) =>
@@ -200,4 +199,3 @@ const Login = ({onToggle, setError}) => {
 };
 
 export default Login;
-

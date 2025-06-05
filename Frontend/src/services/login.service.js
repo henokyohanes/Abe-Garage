@@ -22,7 +22,7 @@ export const register = async (formData) => {
 export const logIn = async (formData) => {
   try {
     const response = await axios.post(
-      `${api_url}/api/employee/login`,
+      `${api_url}/api/user/login`,
       formData,
       {headers: { "Content-Type": "application/json" }}
     );
@@ -38,9 +38,40 @@ export const logIn = async (formData) => {
   }
 };
 
-// A function to log out the user
-export const logOut = () => {
-  localStorage.removeItem("employee");
+// function to forget password
+export const forgotPassword  = async (email) => {
+  try {
+    const response = await axios.post(
+      `${api_url}/api/user/forgot-password`,
+        { email },
+      {headers: { "Content-Type": "application/json" }}
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error.response?.data || { message: "Unknown error occurred" };
+  }
 };
 
-export default { register, logIn, logOut };
+// function to reset password
+export const resetPassword = async (token, newPassword) => {
+  console.log(token, newPassword);
+  try {
+    const response = await axios.post(
+      `${api_url}/api/user/reset-password/${token}`,
+        { newPassword },
+      {headers: { "Content-Type": "application/json" }}
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    throw error.response?.data || { message: "Unknown error occurred" };
+  }
+};
+
+// A function to log out the user
+export const logOut = () => {
+  localStorage.removeItem("user");
+};
+
+export default { register, logIn, forgotPassword, resetPassword, logOut };

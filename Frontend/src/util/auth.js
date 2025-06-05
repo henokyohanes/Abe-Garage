@@ -1,39 +1,46 @@
 import employeeService from "../services/employee.service";
+import customerService from "../services/customer.service";
 
 // Function to read the data from the user's local storage
 const getAuth = async () => {
   try {
     
     // Read the data from the user's local storage
-    const stored = JSON.parse(localStorage.getItem("employee"));
-    // console.log(employee);
-    if (stored && stored.sendBack.employee_token) {
-      const decodedToken = decodeTokenPayload(stored.sendBack.employee_token);
-      const employee_id = decodedToken.employee_id;
-
+    const stored = JSON.parse(localStorage.getItem("user"));
+    if (stored && stored.sendBack.user_token) {
+      const decodedToken = decodeTokenPayload(stored.sendBack.user_token);
+      const employee_id = stored?.userInfo?.employee_id;
+      const customer_id = stored?.userInfo?.customer_id;
+      
       // Call the getEmployeeById method from the employee service
-      const employee = await employeeService.fetchEmployeeById(employee_id);
+      let employee = null;
+      let customer = null;
 
-      console.log(employee);
+      if (employee_id) {   
+        employee = await employeeService.fetchEmployeeById(employee_id);
+        if (!employee) throw new Error("Employee not found.");
+      }
+      
+      if (customer_id) {
+        customer = await customerService.fetchCustomerById(customer_id);
+        if (!customer) throw new Error("Customer not found.");
+      }
 
       // If the employee is not found
-      if (!employee) throw new Error("Employee not found.");
-
-      const employeeData = employee.data;
-
-      console.log(employeeData);
+      
+      const userData = (employee && employee.data) || (customer && customer.data);
 
       return {
-        ...employeeData,
-        employee_token: stored.sendBack.employee_token,
-        employee_role: decodedToken.employee_role,
-        employee_id: decodedToken.employee_id,
-        employee_username: employeeData.employee_username,
-        employee_first_name: employeeData.employee_first_name,
-        employee_last_name: employeeData.employee_last_name,
-        employee_email: employeeData  .employee_email,
-        employee_phone: employeeData.employee_phone,
-        employee_profile_picture: employeeData.employee_profile_picture,
+        ...userData,
+        user_token: stored.sendBack.user_token,
+        user_role: userData.employee_role || null,
+        user_id: userData.employee_id || userData.customer_id,
+        user_name: userData.employee_username || userData.customer_username,
+        first_name: userData.employee_first_name || userData.customer_first_name,
+        last_name: userData.employee_last_name || userData.customer_last_name,
+        email: userData.employee_email || userData.customer_email,
+        phone: userData.employee_phone || userData.customer_phone_number,
+        profile_picture: userData.employee_profile_picture || userData.customer_profile_picture,
       };
     }
     return {};
