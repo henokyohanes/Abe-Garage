@@ -64,7 +64,7 @@ async function getEmployeeByEmail(employee_email) {
     INNER JOIN employee_role ON employee.employee_id = employee_role.employee_id
     WHERE employee.employee_email = ?`;
 
-  const rows = await db.query(query, [employee_email]);
+  const rows = await db.query(query, [employee_email || ""]);
   return rows;
 }
 

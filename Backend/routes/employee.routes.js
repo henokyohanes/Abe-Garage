@@ -10,7 +10,7 @@ router.post("/api/employee", [authMiddleware.verifyToken, authMiddleware.isAdmin
 router.get("/api/employees", [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], employeeController.getAllEmployees);
 
 // Route to get a single employee by ID
-router.get("/api/employee/:id", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.getEmployeeById);
+router.get("/api/employee/:id", authMiddleware.verifyToken, employeeController.getEmployeeById);
 
 // Route to update an employee
 router.put("/api/employee/:id", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.updateEmployee);

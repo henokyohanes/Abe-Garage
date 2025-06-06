@@ -16,16 +16,10 @@
 
 .listGroup {
     display: flex;
-    gap: 3vw;
+    gap: 5vw;
     padding: 1vw 3vw;
     overflow-x: scroll;
     white-space: nowrap;
-}
-
-.listGroupMechanic {
-    display: flex;
-    gap: 5vw;
-    padding: 1vw 3vw;
 }
 
 .listGroupItem {

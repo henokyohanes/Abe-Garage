@@ -4,8 +4,9 @@ const api_url = import.meta.env.VITE_API_URL;
 
 // Helper function to retrieve authentication headers
 const getAuthHeaders = () => {
-    const storedToken = JSON.parse(localStorage.getItem("employee"));
-    const token = storedToken?.sendBack.employee_token;
+    const storedToken = JSON.parse(localStorage.getItem("user"));
+    const token = storedToken?.sendBack.user_token;
+    console.log(token);
     return {
         headers: {
             "Content-Type": "application/json",
@@ -45,6 +46,7 @@ export const fetchEmployees = async () => {
 
 // Function to fetch a single employee by ID
 export const fetchEmployeeById = async (id) => {
+    console.log(id);
     try {
         const response = await axios.get(
             `${api_url}/api/employee/${id}`,
@@ -52,7 +54,7 @@ export const fetchEmployeeById = async (id) => {
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching customer:", error);
+        console.error("Error fetching employee:", error);
         throw error.response?.data?.message || "Failed";
     }
 };
