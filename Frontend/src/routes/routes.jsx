@@ -22,6 +22,11 @@ import ProvideServices from "../Pages/ProvideServices/ProvideServices";
 import ServiceUpdate from "../Pages/ServiceUpdate/ServiceUpdate";
 import OrderDetails from "../Pages/OrderDetails/OrderDetails";
 import OrderUpdate from "../Pages/OrderUpdate/OrderUpdate";
+import MyVehicles from "../Pages/MyVehicles/MyVehicles";
+import MyOrders from "../Pages/MyOrders/MyOrders";
+import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "../Pages/ResetPassword/ResetPassword";
+import MakeAppointment from "../Pages/Appointment/MakeAppointment/MakeAppointment";
 
 const AppRoutes = () => (
   <Routes>
@@ -31,7 +36,10 @@ const AppRoutes = () => (
     <Route path="/about-us" element={<AboutUs />} />
     <Route path="/contact-us" element={<ContactUs />} />
     <Route path="/abe-Services" element={<AbeServices />} />
-    <Route path="/Account" element={<Account />} />
+    <Route path="/account" element={<Account />} />
+    <Route path="/forgot-password" element={<ForgotPassword />} />
+    <Route path="/reset-password/:token" element={<ResetPassword />} />
+    <Route path="/make-appointment" element={<MakeAppointment />} />
 
     {/* Protected Routes */}
     <Route
@@ -151,6 +159,22 @@ const AppRoutes = () => (
       element={
         <PrivateAuthRoute roles={[3]}>
           <ServiceUpdate />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/my-vehicles"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <MyVehicles />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/my-orders"
+      element={
+        <PrivateAuthRoute roles={[3]}>
+          <MyOrders />
         </PrivateAuthRoute>
       }
     />
