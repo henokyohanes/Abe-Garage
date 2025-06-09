@@ -9,8 +9,8 @@ const PrivateAuthRoute = ({ roles = [], children }) => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const employee = await getAuth();
-        if (employee?.employee_token) {
+        const user = await getAuth();
+        if (user?.user_token) {
           setIsLogged(true);
         }
       } catch (error) {

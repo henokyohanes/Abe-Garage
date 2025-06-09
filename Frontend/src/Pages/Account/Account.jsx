@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
 import { axiosImageURL, handleProfileImageUpdate} from "../../services/image.service";
 import { RiAccountCircleFill } from "react-icons/ri";
 import { ScaleLoader } from "react-spinners";
-import { FaCamera, FaSignOutAlt } from "react-icons/fa";
+import { FaCamera, FaEdit, FaSignOutAlt } from "react-icons/fa";
 // import { toast } from "react-toastify";
 import loginService from "../../services/login.service";
 import Layout from "../../Layout/Layout";
@@ -21,6 +22,7 @@ const Account = () => {
   const [uploadimage, setUploadimage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
@@ -293,6 +295,11 @@ const Account = () => {
   const handlePicture = () => setUploadimage(true);
   const handleCancelClick = () => setUploadimage(false);
 
+  const handleEdit = () => {
+    if (user.customer_email) return navigate(`/edit-customer/${user.customer_id}`);
+    if (user.employee_email) return navigate(`/edit-employee/${user.employee_id}`);
+  };
+
   console.log(user);
 
   return (
@@ -302,16 +309,22 @@ const Account = () => {
           <div className={styles.profile}>
             {!uploadimage ? (
               <div className={styles.profileDetails}>
-                <h2>Profile Details</h2>
+                <h2>
+                  Profile Details <span>______</span>
+                </h2>
                 <div className={styles.profileContainer}>
                   <div
                     className={styles.profileImgWrapper}
                     onClick={handlePicture}
                   >
                     <div className={styles.profileImage}>
-                      {user?.employee_profile_picture || user?.customer_profile_picture ? (
+                      {user?.employee_profile_picture ||
+                      user?.customer_profile_picture ? (
                         <img
-                          src={`${axiosImageURL}${user?.employee_profile_picture || user?.customer_profile_picture}`}
+                          src={`${axiosImageURL}${
+                            user?.employee_profile_picture ||
+                            user?.customer_profile_picture
+                          }`}
                           alt={"Profile Image"}
                           loading="lazy"
                         />
@@ -325,29 +338,51 @@ const Account = () => {
                   </div>
                   {/* <canvas ref={canvasRef} style={{ display: "none" }} /> */}
                 </div>
-                <p>
-                  username <strong>{user?.employee_username || user?.customer_username}</strong>
-                </p>
-                <p>
-                  name{" "}
-                  <strong>
-                    {user?.employee_first_name || user?.customer_first_name}{" "}
-                    {user?.employee_last_name || user?.customer_last_name}
-                  </strong>
-                </p>
-                <p className={styles.email}>
-                  email <strong>{user?.employee_email || user?.customer_email}</strong>
-                </p>
-                <button onClick={logOut}>
-                  <span className={styles.icon}>
-                    <FaSignOutAlt />
-                  </span>
-                  Logout
-                </button>
+                <div className={styles.profileLabel}>
+                  <div>
+                    <p>Username</p>
+                    <p>Full Name</p>
+                    <p>Phone number</p>
+                    <p>Email address</p>
+                  </div>
+                  <div className={styles.profileInfo}>
+                    <strong>
+                      - {user?.employee_username || user?.customer_username}
+                    </strong>
+                    <strong>
+                      - {user?.employee_first_name || user?.customer_first_name}{" "}
+                      {user?.employee_last_name || user?.customer_last_name}
+                    </strong>
+                    <strong>
+                      - {user?.employee_phone || user?.customer_phone_number}
+                    </strong>
+                    <strong>
+                      - {user?.employee_email || user?.customer_email}
+                    </strong>
+                  </div>
+                </div>
+                <div className={styles.buttons}>
+                  <button
+                    onClick={() =>
+                      handleEdit(user?.employee_id || user?.customer_id)
+                    }
+                  >
+                    <span className={styles.icon}>
+                      <FaEdit />
+                    </span>
+                    Edit Profile
+                  </button>
+                  <button onClick={logOut}>
+                    <span className={styles.icon}>
+                      <FaSignOutAlt />
+                    </span>
+                    Logout
+                  </button>
+                </div>
               </div>
             ) : (
               <div className={styles.profileUpload}>
-                <h2>Upload an Image</h2>
+                <h2>Upload an Image <span>______</span></h2>
                 <input
                   type="file"
                   id="image"
@@ -399,9 +434,17 @@ const Account = () => {
                     +
                   </button>
                 </div>
-                <div className={styles.uploadBtn}>
-                  <button onClick={handleCancelClick}>Cancel</button>
-                  <button onClick={handleUploadClick}>
+                <div className={styles.buttonsContainer}>
+                  <button
+                    onClick={handleCancelClick}
+                    className={styles.cancelBtn}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUploadClick}
+                    className={styles.uploadBtn}
+                  >
                     {loading ? (
                       <ScaleLoader color="#fff" height={12} />
                     ) : (
