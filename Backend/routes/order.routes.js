@@ -10,7 +10,7 @@ router.post('/api/order', [authMiddleware.verifyToken, authMiddleware.isAdminOrM
 router.get('/api/orders', authMiddleware.verifyToken, orderController.getAllOrders);
 
 // Route to get orders by employee ID
-router.get('/api/orders/customer/:customer_id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.getOrdersByCustomerId);
+router.get('/api/orders/customer/:customer_id', authMiddleware.verifyToken, orderController.getOrdersByCustomerId);
 
 // Route to get a single order by ID
 router.get('/api/order/:id', authMiddleware.verifyToken, orderController.getOrderById);

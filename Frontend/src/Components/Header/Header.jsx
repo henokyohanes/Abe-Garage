@@ -33,8 +33,6 @@ const Header = () => {
         return "User";
     };
 
-    console.log(user);
-
     return (
         <header className={Style.header}>
             <div className={Style.topBar}>
@@ -114,7 +112,7 @@ const Header = () => {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         ) : (
-                            <Link to="/Auth" className={Style.signInButton}>Register | Sign In</Link>
+                            <Link to="/auth" className={Style.signInButton}>Register | Sign In</Link>
                         )}
                     </div>
                 </div>

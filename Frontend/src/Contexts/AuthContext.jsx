@@ -13,7 +13,8 @@ export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isManager, setIsManager] = useState(false);
-  const [employee, setEmployee] = useState(null);
+  const [isEmployee, setIsEmployee] = useState(false);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,22 +22,26 @@ export const AuthProvider = ({ children }) => {
 
       // Fetch authentication details
       try {
-        const loggedInEmployee = await getAuth();
-        // console.log(loggedInEmployee);
+        const loggedInUser = await getAuth();
         
-        if (loggedInEmployee?.employee_token) {
+        if (loggedInUser?.user_token) {
           setIsLogged(true);
 
           // Check if the employee is an admin
-          if (loggedInEmployee.employee_role === 3) {
+          if (loggedInUser.company_role_id === 3) {
             setIsAdmin(true);
           }
 
           // Check if the employee is a manager
-          if (loggedInEmployee.employee_role === 2) {
+          if (loggedInUser.company_role_id === 2) {
             setIsManager(true);
           }
-          setEmployee(loggedInEmployee);
+
+          // check if the employee is an employee
+          if (loggedInUser.company_role_id === 1) {
+            setIsEmployee(true);
+          }
+          setUser(loggedInUser);
         }
       } catch (error) {
         console.error("Error fetching authentication details:", error);
@@ -53,14 +58,15 @@ export const AuthProvider = ({ children }) => {
     isLogged,
     isAdmin,
     isManager,
+    isEmployee,
     setIsAdmin,
     setIsLogged,
-    employee,
-    setEmployee,
+    user,
+    setUser,
     loading,
-    employeeId: employee?.employee_id
+    employeeId: user?.employee_id
   }),
-    [isLogged, isAdmin, employee, loading]
+    [isLogged, isAdmin, user, loading]
   );
 
   return (
