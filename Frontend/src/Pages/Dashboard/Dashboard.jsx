@@ -1,10 +1,31 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import Layout from "../../Layout/Layout";
 import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
+
+    // Access the authentication context
+    const { isAdmin, isManager, isEmployee } = useAuth();
+    const navigate = useNavigate();
+
+    // List of services
+    const services = [
+        (isAdmin || isManager || isEmployee) && { icon: "📦", title: "All Orders", sub: "Open For Employees", path: "/orders"},
+        (isAdmin || isManager) && { icon: "🆕", title: "New Orders", sub: "Open For Managers", path: "/new-order" },
+        isAdmin && { icon: "➕👤", title: "Add Employee", sub: "Open For Admins", path: "/add-employee" },
+        (isAdmin || isManager) && { icon: "👥", title: "Employees", sub: "Open For Managers", path: "/employees" },
+        (isAdmin || isManager) && { icon: "➕👤", title: "Add Customer", sub: "Open for Managers", path: "/add-customer" },
+        (isAdmin || isManager) && { icon: "👥", title: "Customers", sub: "Open for Managers", path: "/customers" },
+        (!isAdmin && !isManager && !isEmployee) && { icon: "📅", title: "My Appointments", sub: "Open For Customers", path: "/my-appointments" },
+        (!isAdmin && !isManager && !isEmployee) && { icon: "🚗", title: "My Vehicles", sub: "Open For Customers", path: "/my-vehicles" }, 
+        (!isAdmin && ! isManager || isEmployee) && { icon: "📦", title: "My Orders", sub: "Open For Customers", path: "/my-orders" },
+        { icon: "🛠️", title: "Services", sub: "Service and Repairs", path: "/services" },
+        { icon: "🛞", title: "Tire & Wheels", sub: "Service And Repairs" },
+    ].filter(Boolean);
 
     return (
         <Layout>
@@ -21,18 +42,9 @@ const Dashboard = () => {
                         and streamlined repair solutions to get you back on the road quickly and safely.
                     </p>
                     <div className="row g-3 g-lg-4">
-                        {[
-                            { icon: "📦", title: "All Orders", sub:"Open For All" },
-                            { icon: "🆕", title: "New Orders", sub:"Open For Managers" },
-                            { icon: "👥", title: "Employees", sub:"Open For Managers" },
-                            { icon: "➕👤", title: "Add Employee", sub:"Open For Admins" },
-                            { icon: "🛠️", title: "Engine Service", sub:"Service And Repairs" },
-                            { icon: "🎨", title: "Denting & Painting", sub:"Service And Repairs" },
-                            { icon: "🚗💨", title: "Break Service", sub:"Service And Repairs" },
-                            { icon: "🛞", title: "Tire & Wheels", sub:"Service And Repairs" },
-                        ].map((service, index) => (
+                        {services.map((service, index) => (
                             <div key={index} className="col-6 col-lg-4">
-                                <div key={index} className={`${styles.dashboardCard} `}>
+                                <div className={styles.dashboardCard} onClick={() => navigate(service.path)}>
                                     <p>{service.sub}</p>
                                     <h3>{service.title}</h3>
                                     <div className={styles.dashboardIcon}>{service.icon}</div>

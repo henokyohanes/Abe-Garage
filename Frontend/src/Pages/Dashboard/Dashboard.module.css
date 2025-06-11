@@ -26,6 +26,8 @@
     padding: .6vw;
     border-radius: .4em;
     border-bottom: .4em solid #d82323;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dashboardCard h3 {

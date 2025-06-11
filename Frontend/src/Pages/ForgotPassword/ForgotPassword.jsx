@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ScaleLoader } from "react-spinners";
-import axiosBaseURL from "../../Utility/axios";
 import Swal from "sweetalert2";
 import NotFound from "../../Components/NotFound/NotFound";
-import Layout from "../../Components/Layout/Layout";
+import Layout from "../../Layout/Layout";
 import styles from "./ForgotPassword.module.css";
+import loginService from "../../services/login.service";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -41,9 +41,7 @@ const ForgotPassword = () => {
         setError(false);
 
         try {
-            const response = await axiosBaseURL.post("/users/forgot-password", {
-                email,
-            });
+            const response = await loginService.forgotPassword(email);
 
             if (response.status === 200) {
                 Swal.fire({
@@ -88,7 +86,7 @@ const ForgotPassword = () => {
         <Layout>
             {!error ? (<div className={styles.forgotPasswordContainer}>
                 <div className={styles.forgotPassword}>
-                    <h2>Reset Your Password</h2>
+                    <h2>Reset Your Password <span>______</span></h2>
                     <p>
                         Please enter the email address associated with your account. Then We’ll
                         send you a link to reset your password and regain access.
