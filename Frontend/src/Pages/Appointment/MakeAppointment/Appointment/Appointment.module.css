@@ -1,0 +1,198 @@
+.customerContainer {
+    background-color: #E6E4E9;
+    padding: 2em 1em;
+}
+
+.makeAppointmentContainer {
+    max-width: 90em;
+    margin: 0 auto
+}
+
+.makeAppointmentContainer h2 {
+    font-size: clamp(1.1em, 3vw, 1.8em);
+    font-weight: bold;
+    color: #07184A;
+}
+
+.makeAppointmentContainer span {
+    color: #d82323;
+}
+
+.makeAppointment {
+    width: 100%;
+    overflow-x: auto;
+    border-bottom: 1px solid #07184A;
+}
+
+.makeAppointment ul {
+    width: fit-content;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    gap: 1vw;
+    padding: 0;
+    margin: .8vw auto;
+}
+
+.makeAppointment ul::-webkit-scrollbar {
+    display: none;
+}
+
+.makeAppointment ul li {
+    font-size: clamp(.8em, 3vw, 1.1em);
+    font-weight: bold;
+    color: #0b5ed7;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    cursor: pointer;
+}
+
+.arrow {
+    font-size: clamp(.8em, 3vw, 1.1em);
+    color: #07184A;
+    cursor: pointer;
+}
+
+.makeAppointmentContainer p {
+    font-size: clamp(.8em, 3vw, 1.1em);
+    margin-top: .2em;
+}
+
+.makeAppointmentContainer a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #0b5ed7;
+}
+
+.tittle {
+    font-size: clamp(1em, 3vw, 1.5em);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    border-bottom: 1px solid #07184A;
+}
+
+.servicesContainer {
+    padding: 1em 0 2em 2em;
+}
+
+.service {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 1vw;
+    margin: 1vw 0;
+    border: 1px solid rgb(87, 81, 81);
+    border-radius: .4em;
+    cursor: pointer;
+    word-break: break-word;
+}
+
+.service input {
+    transform: scale(clamp(1em, 3vw, 1.2em));
+}
+
+.serviceDescription {
+    padding: 0;
+}
+
+.service h3 {
+    font-size: clamp(.9em, 3vw, 1.3em);
+    font-weight: bold;
+    color: #07184A;
+    margin-bottom: .1em;
+}
+
+.datePickerContainer {
+    padding: 2em 0;
+}
+
+.datePickerWrapper :global(.react-datepicker) {
+    width: 100%;
+    max-width: 100%;
+}
+
+.datePickerWrapper :global(.react-datepicker__month-container) {
+    width: 100%;
+}
+
+.datePickerWrapper :global(.react-datepicker__day-names) {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.datePickerWrapper :global(.react-datepicker__week) {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.datePickerWrapper :global(.react-datepicker__day),
+.datePickerWrapper :global(.react-datepicker__day-name) {
+    font-size: clamp(.9em, 3vw, 1.1em);
+    font-weight: bold;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.datePickerWrapper :global(.react-datepicker__day) {
+    margin: 1em 0;
+}
+
+.datePickerContainer label {
+    font-size: clamp(.9em, 3vw, 1.1em);
+}
+
+.timeContainer {
+    padding-top: 1em;
+}
+
+.timeContainer button {
+    width: 6em;
+    font-size: clamp(.8em, 3vw, 1em);
+    font-weight: bold;
+    color: #07184A;
+    border: 1px solid #07184A;
+    border-radius: .4em;
+    padding: .1em;
+    margin: .3vw;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
+.buttonsContainer button {
+    display: flex;
+    align-items: center;
+    gap: .5em;
+    color: white;
+    padding: .6em;
+    font-size: clamp(.8em, 3vw, 1.1em);
+    font-weight: bold;
+    border: none;
+    border-radius: .4em;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.previousButton {
+    background-color: #d82323;
+}
+
+.previousButton:hover {
+    background-color: #07184A;
+}
+
+.nextButton {
+    background-color: #07184A;
+}
+
+.nextButton:hover {
+    background-color: #d82323;
+}
