@@ -26,7 +26,11 @@ import MyVehicles from "../Pages/MyVehicles/MyVehicles";
 import MyOrders from "../Pages/MyOrders/MyOrders";
 import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "../Pages/ResetPassword/ResetPassword";
-import MakeAppointment from "../Pages/Appointment/MakeAppointment/MakeAppointment";
+import Customer from "../Pages/Appointment/MakeAppointment/Customer/Customer";
+import Vehicle from "../Pages/Appointment/MakeAppointment/Vehicle/Vehicle";
+import Services from "../Pages/Appointment/MakeAppointment/Services/Services";
+import Appointment from "../Pages/Appointment/MakeAppointment/Appointment/Appointment";
+import Review from "../Pages/Appointment/MakeAppointment/Review/Review";
 
 const AppRoutes = () => (
   <Routes>
@@ -39,7 +43,12 @@ const AppRoutes = () => (
     <Route path="/account" element={<Account />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/reset-password/:token" element={<ResetPassword />} />
-    <Route path="/make-appointment" element={<MakeAppointment />} />
+    <Route path="/make-appointment" element={<Customer />} />
+    <Route path="/make-appointment/customer" element={<Customer />} />
+    <Route path="/make-appointment/vehicle" element={<Vehicle />} />
+    <Route path="/make-appointment/services" element={<Services />} />
+    <Route path="/make-appointment/appointment" element={<Appointment />} />
+    <Route path="/make-appointment/review" element={<Review />} />
 
     {/* Protected Routes */}
     <Route
