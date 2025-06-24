@@ -15,8 +15,8 @@ export const AppointmentProvider = ({ children }) => {
         year: "",
         color: "",
         services: [],
-        date: null,   // ✅ ADD THIS
-        time: ""      // ✅ AND THIS
+        date: null,
+        time: ""
     });
 
     return (

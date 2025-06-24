@@ -1,6 +1,11 @@
-.makeAppointmentContainer {
+.customerContainer {
     background-color: #E6E4E9;
-    padding: 2vw 4vw;
+    padding: 2em 1em;
+}
+
+.makeAppointmentContainer {
+    max-width: 90em;
+    margin: 0 auto
 }
 
 .makeAppointmentContainer h2 {
@@ -44,21 +49,8 @@
     cursor: pointer;
 }
 
-.makeAppointment ul li div {
-    background-color: #FFA10D;
-    color: white;
-    font-weight: bold;
-    font-size: clamp(.8em, 3vw, 1em);
-    width: 1.4em;
-    height: 1.4em;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-}
-
 .arrow {
-    font-size: clamp(1.2em, 3vw, 2em);
+    font-size: clamp(.8em, 3vw, 1.1em);
     color: #07184A;
     cursor: pointer;
 }
@@ -120,11 +112,11 @@
 .makeAppointmentContainer button {
     display: flex;
     align-items: center;
-    gap: .6em;
+    gap: .5em;
     background-color: #07184A;
     color: white;
     margin: 0 auto;
-    padding: .6em 1.2em;
+    padding: .6em;
     font-size: clamp(.8em, 3vw, 1.1em);
     font-weight: bold;
     border: none;

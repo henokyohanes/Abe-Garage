@@ -1,6 +1,6 @@
 .customerContainer {
     background-color: #E6E4E9;
-    padding: 2vw;
+    padding: 2em 1em;
 }
 
 .makeAppointmentContainer {
@@ -118,9 +118,9 @@
 .buttonsContainer button {
     display: flex;
     align-items: center;
-    gap: .6em;
+    gap: .5em;
     color: white;
-    padding: .6em 1.2em;
+    padding: .6em;
     font-size: clamp(.8em, 3vw, 1.1em);
     font-weight: bold;
     border: none;

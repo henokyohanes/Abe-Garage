@@ -57,7 +57,7 @@
 
 .makeAppointmentContainer p {
     font-size: clamp(.8em, 3vw, 1.1em);
-    margin-top: .2em;
+    margin: .2em;
 }
 
 .makeAppointmentContainer a {
@@ -75,10 +75,17 @@
     border-bottom: 1px solid #07184A;
 }
 
+.editIcon {
+    color: #d82323;
+    cursor: pointer;
+    margin-left: .4em;
+}
+
 .buttonsContainer {
     display: flex;
     justify-content: center;
     gap: 1em;
+    margin-top: 1em;
 }
 
 .buttonsContainer button {

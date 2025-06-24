@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { FaChevronLeft, FaChevronRight, FaWrench } from 'react-icons/fa'
-import Layout from '../../../../Layout/Layout'
-import style from "./Services.module.css"
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaChevronLeft, FaChevronRight, FaWrench } from 'react-icons/fa';
+import Layout from '../../../../Layout/Layout';
+import style from "./Services.module.css";
+import { useAppointment } from '../../../../Contexts/AppointmentContext'; // ✅ import context
 
 function Services() {
-
-    const [formData, setFormData] = useState({ services: [] });
     const navigate = useNavigate();
+    const { formData, setFormData } = useAppointment(); // ✅ use context
 
     const servicesList = [
         "Oil change", "Spark Plug Replacement", "Fuel Cap Tightening", "Oxygen Sensor Replacement",
@@ -30,13 +30,29 @@ function Services() {
         "Battery Replacement": "Test and replace dead or weak batteries."
     };
 
+    // Local state for checkboxes
+    const [selectedServices, setSelectedServices] = useState(formData.services || []);
+
+    useEffect(() => {
+        setSelectedServices(formData.services || []);
+    }, [formData.services]);
+
     const toggleService = (serviceName) => {
-        setFormData(prev => {
-            const services = prev.services.includes(serviceName)
-                ? prev.services.filter(s => s !== serviceName)
-                : [...prev.services, serviceName];
-            return { ...prev, services };
-        });
+        setSelectedServices(prev =>
+            prev.includes(serviceName)
+                ? prev.filter(s => s !== serviceName)
+                : [...prev, serviceName]
+        );
+    };
+
+    const handleNext = () => {
+        setFormData(prev => ({ ...prev, services: selectedServices })); // ✅ save selected services
+        navigate("/make-appointment/appointment");
+    };
+
+    const handleBack = () => {
+        setFormData(prev => ({ ...prev, services: selectedServices }));
+        navigate("/make-appointment/vehicle");
     };
 
     return (
@@ -46,14 +62,14 @@ function Services() {
                     <h2>Schedule Appointment <span>____</span></h2>
                     <div className={style.makeAppointment}>
                         <ul>
-                            <li> <Link to="/make-appointment/customer">Customer </Link> <FaChevronRight className={style.arrow} /> </li>
-                            <li> <Link to="/make-appointment/vehicle"> Vehicle </Link> <FaChevronRight className={style.arrow} /> </li>
-                            <li> Services <FaChevronRight className={style.arrow} /> </li>
-                            <li> Appointment <FaChevronRight className={style.arrow} /> </li>
-                            <li> Review </li>
+                            <li><Link to="/make-appointment/customer">Customer</Link> <FaChevronRight className={style.arrow} /></li>
+                            <li><Link to="/make-appointment/vehicle">Vehicle</Link> <FaChevronRight className={style.arrow} /></li>
+                            <li>Services <FaChevronRight className={style.arrow} /></li>
+                            <li>Appointment <FaChevronRight className={style.arrow} /></li>
+                            <li>Review</li>
                         </ul>
                     </div>
-                    <p>have an account? <Link to="/auth">Sign In </Link> or continue as guest.</p>
+                    <p>Have an account? <Link to="/auth">Sign In</Link> or continue as guest.</p>
                     <div className={style.tittle}><FaWrench /> Choose Services</div>
                     <p>Select the services you need by checking the boxes.</p>
                     <div className={`${style.servicesContainer} row g-0`}>
@@ -62,7 +78,7 @@ function Services() {
                                 <div className={style.service}>
                                     <input
                                         type="checkbox"
-                                        checked={formData.services.includes(service)}
+                                        checked={selectedServices.includes(service)}
                                         onChange={() => toggleService(service)}
                                     />
                                     <div>
@@ -74,13 +90,17 @@ function Services() {
                         ))}
                     </div>
                     <div className={style.buttonsContainer}>
-                        <button onClick={() => navigate("/make-appointment/vehicle")} className={style.previousButton}> <FaChevronLeft /> Back to Vehicle</button>
-                        <button onClick={() => navigate("/make-appointment/appointment")} className={style.nextButton}>Continue to Appointment <FaChevronRight /></button>
+                        <button onClick={handleBack} className={style.previousButton}>
+                            <FaChevronLeft /> Back to Vehicle
+                        </button>
+                        <button onClick={handleNext} className={style.nextButton}>
+                            Continue to Appointment <FaChevronRight />
+                        </button>
                     </div>
                 </div>
             </div>
         </Layout>
-    )
+    );
 }
 
-export default Services
+export default Services;
