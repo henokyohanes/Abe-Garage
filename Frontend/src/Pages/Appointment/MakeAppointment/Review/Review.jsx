@@ -15,28 +15,42 @@ function Review() {
   const selectedDate = formData.date ? new Date(formData.date) : null;
   const selectedTime = formData.time;
 
-  const handleSubmit = () => {
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'make', 'model', 'year', 'color'];
+  const handleSubmit = async () => {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "make",
+      "model",
+      "year",
+      "color",
+    ];
     for (let field of requiredFields) {
       if (!formData[field]) {
-        alert('Please fill out all required fields.');
+        toast.error("Please fill out all required fields.");
         return;
       }
     }
 
     if (!selectedDate || !selectedTime) {
-      alert('Please select an appointment date and time.');
+      toast.error("Please select an appointment date and time.");
       return;
     }
 
     const appointmentDetails = {
       ...formData,
-      appointmentDate: selectedDate.toLocaleDateString(),
-      appointmentTime: selectedTime
+      appointmentDate: selectedDate.toISOString().split("T")[0],
+      appointmentTime: selectedTime,
     };
 
-    console.log('Appointment Details:', appointmentDetails);
-    alert("Appointment scheduled! Check console for details.");
+    try {
+      await customerService.submitAppointment(appointmentDetails);
+      toast.success("Appointment scheduled successfully!");
+      setTimeout(() => navigate("/appointment-success"), 2000);
+    } catch (error) {
+      toast.error(error || "Failed to schedule appointment.");
+    }
   };
 
   return (

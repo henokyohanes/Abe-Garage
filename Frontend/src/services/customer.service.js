@@ -30,7 +30,6 @@ export const fetchCustomers = async () => {
 
 // Function to fetch a customer by ID
 export const fetchCustomerById = async (id) => {
-    console.log(id);
     try {
         const response = await axios.get(
             `${api_url}/api/customer/${id}`,
@@ -87,6 +86,22 @@ export const deleteCustomer = async (id) => {
     }
 };
 
-const customerService = {fetchCustomers, fetchCustomerById, addCustomer, updateCustomer, deleteCustomer};
+// Function to submit an appointment
+export const submitAppointment = async (appointmentData) => {
+    try {
+        const response = await axios.post(
+            `${api_url}/api/appointments`,
+            appointmentData,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error submitting appointment:", error);
+        throw error.response?.data?.message || "Failed to submit appointment";
+    }
+};
+
+
+const customerService = {fetchCustomers, fetchCustomerById, addCustomer, updateCustomer, deleteCustomer, submitAppointment};
 
 export default customerService;
