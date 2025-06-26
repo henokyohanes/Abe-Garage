@@ -336,4 +336,52 @@ const deleteCustomer = async (id) => {
   }
 };
 
-module.exports = { findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById, updateCustomer, deleteCustomer };
+// Function to create a new appointment
+const createAppointment = async (appointmentData) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    make,
+    model,
+    year,
+    color,
+    services,
+    appointmentDate,
+    appointmentTime,
+    userId = null
+  } = appointmentData;
+
+  try {
+    const result = await db.query(
+      `INSERT INTO appointment_info 
+      (first_name, last_name, email, phone, vehicle_make, vehicle_model, vehicle_year, vehicle_color, services, appointment_date, appointment_time, customer_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        firstName,
+        lastName,
+        email,
+        phone,
+        make,
+        model,
+        year,
+        color,
+        JSON.stringify(services), // Store as JSON string
+        appointmentDate,
+        appointmentTime,
+        userId
+      ]
+    );
+
+    return {
+      appointment_id: result.insertId ?? result[0]?.insertId,
+      ...appointmentData
+    };
+  } catch (error) {
+    console.error("Error creating appointment:", error.message);
+    throw new Error("Failed to create appointment");
+  }
+};
+
+module.exports = { findCustomerByEmail, createCustomer, getAllCustomers, getCustomerById, updateCustomer, deleteCustomer, createAppointment };

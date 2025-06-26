@@ -174,4 +174,30 @@ const deleteCustomer = async (req, res) => {
   }
 };
 
-module.exports = { validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById, updateCustomer, deleteCustomer };
+// Create appointment
+const createAppointment = async (req, res) => {
+  const {
+    firstName, lastName, email, phone,
+    make, model, year, color,
+    services, appointmentDate, appointmentTime
+  } = req.body;
+
+  try {
+    const newAppointment = await customerService.createAppointment({
+      firstName, lastName, email, phone,
+      make, model, year, color,
+      services, appointmentDate, appointmentTime
+    });
+
+    return res.status(201).json({
+      status: "success",
+      message: "Appointment created successfully",
+      data: newAppointment
+    });
+  } catch (err) {
+    console.error("Error creating appointment:", err.message);
+    return res.status(500).json({ status: "fail", message: "Failed to create appointment" });
+  }
+};
+
+module.exports = { validateCustomer, createCustomer: [validateCustomer, createCustomer], getAllCustomers, getCustomerById, updateCustomer, deleteCustomer, createAppointment };

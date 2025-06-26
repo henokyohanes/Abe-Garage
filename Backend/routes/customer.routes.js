@@ -18,4 +18,7 @@ router.put('/api/update-customer/:id', [authMiddleware.verifyToken, authMiddlewa
 // Route to Delete customer endpoint
 router.delete('/api/delete-customer/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], customerController.deleteCustomer);
 
+// Route to create appointment endpoint
+router.post('/api/appointments', customerController.createAppointment);
+
 module.exports = router;
