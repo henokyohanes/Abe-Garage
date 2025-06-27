@@ -3,50 +3,60 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight, FaWrench } from 'react-icons/fa';
 import Layout from '../../../../Layout/Layout';
 import style from "./Services.module.css";
-import { useAppointment } from '../../../../Contexts/AppointmentContext'; // ✅ import context
+import { useAppointment } from '../../../../Contexts/AppointmentContext';
+import serviceService from '../../../../services/service.service';
 
 function Services() {
     const navigate = useNavigate();
-    const { formData, setFormData } = useAppointment(); // ✅ use context
+    const { formData, setFormData } = useAppointment();
 
-    const servicesList = [
-        "Oil change", "Spark Plug Replacement", "Fuel Cap Tightening", "Oxygen Sensor Replacement",
-        "Brake Work", "Tire Repairs and Changes", "The Ignition System", "Programming the Camera Software",
-        "Engine Repair", "Transmission Repair", "AC System Service", "Battery Replacement"
-    ];
-
-    const serviceDescriptions = {
-        "Oil change": "Every 5,000 kilometers or so, you need to change the oil in your car to keep your engine in the best possible shape.",
-        "Spark Plug Replacement": "Spark plugs are a small part that can cause huge problems. Their job is to ignite the fuel in your engine, helping it start.",
-        "Fuel Cap Tightening": "Loose fuel caps are a main reason the 'check engine' light comes on.",
-        "Oxygen Sensor Replacement": "Measures oxygen in exhaust gases to optimize performance and emissions.",
-        "Brake Work": "Essential to prevent accidents and ensure stopping safety.",
-        "Tire Repairs and Changes": "Good tires are vital for control and efficiency.",
-        "The Ignition System": "Includes battery, starter, and ignition itself.",
-        "Programming the Camera Software": "Ensures better focus, quality, and performance.",
-        "Engine Repair": "Diagnose and fix engine issues for reliability.",
-        "Transmission Repair": "Fix slipping gears, leaks, and shifting problems.",
-        "AC System Service": "Recharge and repair your car’s air conditioning.",
-        "Battery Replacement": "Test and replace dead or weak batteries."
-    };
-
-    // Local state for checkboxes
+    const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
     const [selectedServices, setSelectedServices] = useState(formData.services || []);
+
+    useEffect(() => {
+        const fetchAllServices = async () => {
+            setLoading(true);
+            setError(false);
+            try {
+                const fetchedServices = await serviceService.getAllServices();
+                console.log("Fetched services:", fetchedServices);
+                setServices(fetchedServices);
+            } catch (err) {
+                console.error("Error fetching services:", err);
+                setError(true);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAllServices();
+    }, []);
 
     useEffect(() => {
         setSelectedServices(formData.services || []);
     }, [formData.services]);
 
-    const toggleService = (serviceName) => {
-        setSelectedServices(prev =>
-            prev.includes(serviceName)
-                ? prev.filter(s => s !== serviceName)
-                : [...prev, serviceName]
-        );
+    const toggleService = (service) => {
+        setSelectedServices((prev) => {
+            const exists = prev.find((s) => s.service_id === service.service_id);
+            if (exists) {
+                return prev.filter((s) => s.service_id !== service.service_id);
+            } else {
+                return [
+                    ...prev,
+                    {
+                        service_id: service.service_id,
+                        service_name: service.service_name,
+                    },
+                ];
+            }
+        });
     };
 
     const handleNext = () => {
-        setFormData(prev => ({ ...prev, services: selectedServices })); // ✅ save selected services
+        setFormData(prev => ({ ...prev, services: selectedServices }));
         navigate("/make-appointment/appointment");
     };
 
@@ -54,6 +64,9 @@ function Services() {
         setFormData(prev => ({ ...prev, services: selectedServices }));
         navigate("/make-appointment/vehicle");
     };
+
+    console.log(services);
+    console.log(selectedServices);
 
     return (
         <Layout>
@@ -72,23 +85,32 @@ function Services() {
                     <p>Have an account? <Link to="/auth">Sign In</Link> or continue as guest.</p>
                     <div className={style.tittle}><FaWrench /> Choose Services</div>
                     <p>Select the services you need by checking the boxes.</p>
+
+                    {loading && <p>Loading services...</p>}
+                    {error && <p className="text-danger">Failed to load services. Please try again later.</p>}
+
                     <div className={`${style.servicesContainer} row g-0`}>
-                        {servicesList.map((service, index) => (
-                            <div key={index} className={`col-12 col-sm-11 col-md-10 col-lg-6 ${index % 2 === 0 ? 'pe-lg-2' : 'ps-lg-2'} col-xxl-5`}>
+                        {services.map((service, index) => (
+                            <div
+                                key={index}
+                                className={`col-12 col-sm-11 col-md-10 col-lg-6 ${index % 2 === 0 ? 'pe-lg-2' : 'ps-lg-2'} col-xxl-5`}
+                            >
                                 <div className={style.service}>
                                     <input
+                                        id={`service-${index}`}
                                         type="checkbox"
-                                        checked={selectedServices.includes(service)}
+                                        checked={selectedServices.some(s => s.service_id === service.service_id)}
                                         onChange={() => toggleService(service)}
                                     />
-                                    <div>
-                                        <h3>{service}</h3>
-                                        <p>{serviceDescriptions[service]}</p>
-                                    </div>
+                                    <label htmlFor={`service-${index}`}>
+                                        <h3>{service.service_name}</h3>
+                                        <p>{service.service_description}</p>
+                                    </label>
                                 </div>
                             </div>
                         ))}
                     </div>
+
                     <div className={style.buttonsContainer}>
                         <button onClick={handleBack} className={style.previousButton}>
                             <FaChevronLeft /> Back to Vehicle
