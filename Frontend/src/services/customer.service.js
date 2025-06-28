@@ -88,6 +88,7 @@ export const deleteCustomer = async (id) => {
 
 // Function to submit an appointment
 export const submitAppointment = async (appointmentData) => {
+    console.log(appointmentData);
     try {
         const response = await axios.post(
             `${api_url}/api/appointments`,

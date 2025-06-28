@@ -350,14 +350,20 @@ const createAppointment = async (appointmentData) => {
     services,
     appointmentDate,
     appointmentTime,
-    userId = null
   } = appointmentData;
 
+  const appointmentStatus = 0;
+
+  const connection = await db.getConnection();
+  await connection.beginTransaction();
+
   try {
-    const result = await db.query(
-      `INSERT INTO appointment_info 
-      (first_name, last_name, email, phone, vehicle_make, vehicle_model, vehicle_year, vehicle_color, services, appointment_date, appointment_time, customer_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    const result = await connection.query(
+      `INSERT INTO appointments
+        (customer_first_name, customer_last_name, customer_email, customer_phone_number,
+         vehicle_make, vehicle_model, vehicle_year, vehicle_color,
+         appointment_date, appointment_time, appointment_status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         firstName,
         lastName,
@@ -367,20 +373,38 @@ const createAppointment = async (appointmentData) => {
         model,
         year,
         color,
-        JSON.stringify(services), // Store as JSON string
         appointmentDate,
         appointmentTime,
-        userId
+        appointmentStatus,
       ]
     );
 
+    const appointmentId = result[0]?.insertId || result.insertId;
+
+    // Insert services if provided
+    if (services && services.length > 0) {
+      const insertServicePromises = services.map((service) => {
+        return connection.query(
+          `INSERT INTO appointment_services (appointment_id, service_id) VALUES (?, ?)`,
+          [appointmentId, service.service_id]
+        );
+      });
+
+      await Promise.all(insertServicePromises);
+    }
+
+    await connection.commit();
+
     return {
-      appointment_id: result.insertId ?? result[0]?.insertId,
-      ...appointmentData
+      appointment_id: appointmentId,
+      ...appointmentData,
     };
   } catch (error) {
+    await connection.rollback();
     console.error("Error creating appointment:", error.message);
     throw new Error("Failed to create appointment");
+  } finally {
+    connection.release();
   }
 };
 

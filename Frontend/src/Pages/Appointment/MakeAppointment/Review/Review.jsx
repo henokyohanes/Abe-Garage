@@ -4,6 +4,8 @@ import {
   FaChevronLeft, FaChevronRight, FaCalendar,
   FaUser, FaCar, FaWrench, FaEdit
 } from 'react-icons/fa';
+import { toast } from "react-toastify";
+import customerService from '../../../../services/customer.service';
 import Layout from '../../../../Layout/Layout';
 import style from "./Review.module.css";
 import { useAppointment } from '../../../../Contexts/AppointmentContext';
@@ -44,10 +46,12 @@ function Review() {
       appointmentTime: selectedTime,
     };
 
+    console.log("Appointment details:", appointmentDetails);
+
     try {
       await customerService.submitAppointment(appointmentDetails);
       toast.success("Appointment scheduled successfully!");
-      setTimeout(() => navigate("/appointment-success"), 2000);
+      setTimeout(() => navigate("/"), 2000);
     } catch (error) {
       toast.error(error || "Failed to schedule appointment.");
     }
@@ -80,13 +84,12 @@ function Review() {
 
             <div className="col-md-5 mb-4">
               <div className={style.tittle}><FaCar /> Vehicle Information <FaEdit className={style.editIcon} onClick={() => navigate("/make-appointment/vehicle")} /> </div>
-              <p>{formData.year} {formData.make}
-                {formData.model} ({formData.color})</p>
+              <p>{formData.year} {formData.make} {formData.model} ({formData.color})</p>
             </div>
 
             <div className="col-md-5 mb-4">
               <div className={style.tittle}><FaWrench />Selected Services <FaEdit className={style.editIcon} onClick={() => navigate("/make-appointment/services")} /> </div>
-              <p>{formData.services.length > 0 ? formData.services.join(', ') : 'None selected'}</p>
+              <p>{formData.services && formData.services.length > 0 ? formData.services.map(s => s.service_name).join(", ") : "No services selected"}</p>
             </div>
 
             <div className="col-md-5 mb-4">
