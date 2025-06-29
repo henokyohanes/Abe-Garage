@@ -59,6 +59,12 @@ const imageRoutes = require("./routes/image.routes");
 // image routes middleware
 app.use(imageRoutes);
 
+// appointment routes middleware file
+const appointmentRoutes = require("./routes/appointment.routes");
+
+// appointment routes middleware
+app.use(appointmentRoutes);
+
 // start the Express server
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
