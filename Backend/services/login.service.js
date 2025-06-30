@@ -110,6 +110,7 @@ async function forgotPassword(email) {
       "User";
 
     const mailOptions = {
+      from: `"Abe Garage" <${process.env.EMAIL_USER}>`,
       to: recipientEmail,
       subject: "Password Reset Request",
       text: `
