@@ -86,23 +86,6 @@ export const deleteCustomer = async (id) => {
     }
 };
 
-// Function to submit an appointment
-export const submitAppointment = async (appointmentData) => {
-    console.log(appointmentData);
-    try {
-        const response = await axios.post(
-            `${api_url}/api/appointments`,
-            appointmentData,
-            getAuthHeaders()
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error submitting appointment:", error);
-        throw error.response?.data?.message || "Failed to submit appointment";
-    }
-};
-
-
-const customerService = {fetchCustomers, fetchCustomerById, addCustomer, updateCustomer, deleteCustomer, submitAppointment};
+const customerService = {fetchCustomers, fetchCustomerById, addCustomer, updateCustomer, deleteCustomer};
 
 export default customerService;
