@@ -6,4 +6,7 @@ const appointmentController = require("../controllers/appointment.controller");
 // Route to create appointment endpoint
 router.post('/api/appointments', appointmentController.createAppointment);
 
+// Route to get booked times endpoint for a specific date
+router.get('/api/appointments/booked-times', appointmentController.getBookedTimes);
+
 module.exports = router;

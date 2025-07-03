@@ -129,6 +129,17 @@ const createAppointment = async (appointmentData) => {
   }
 };
 
+// Function to get booked times by date
+const getBookedTimesByDate = async (date) => {
+  const rows = await db.query(
+    "SELECT appointment_time FROM appointments WHERE DATE(appointment_date) = ?",
+    [date]
+  );
+  console.log("rows", rows);
+
+  return rows.map((row) => row.appointment_time);
+};
+
 module.exports = {
-  createAppointment,
+  createAppointment, getBookedTimesByDate
 };

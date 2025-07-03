@@ -26,4 +26,24 @@ const createAppointment = async (req, res) => {
   }
 };
 
-module.exports = { createAppointment };
+// function to get booked times
+const getBookedTimes = async (req, res) => {
+  const { date } = req.query;
+  console.log("date", date);
+
+  if (!date) {
+    return res
+      .status(400)
+      .json({ error: "Date is required in YYYY-MM-DD format." });
+  }
+
+  try {
+    const bookedTimes = await appointmentService.getBookedTimesByDate(date);
+    res.json({ bookedTimes });
+  } catch (err) {
+    console.error("Error in controller:", err);
+    res.status(500).json({ error: "Failed to fetch booked times." });
+  }
+};
+
+module.exports = { createAppointment, getBookedTimes };
