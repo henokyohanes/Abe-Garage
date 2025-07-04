@@ -16,11 +16,29 @@ export const AppointmentProvider = ({ children }) => {
         color: "",
         services: [],
         date: null,
-        time: ""
+        time: "",
     });
 
+    const clearFormData = () => {
+        setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            make: "",
+            model: "",
+            year: "",
+            color: "",
+            services: [],
+            date: null,
+            time: "",
+        });
+    };
+
     return (
-        <AppointmentContext.Provider value={{ formData, setFormData }}>
+        <AppointmentContext.Provider
+            value={{ formData, setFormData, clearFormData }}
+        >
             {children}
         </AppointmentContext.Provider>
     );
