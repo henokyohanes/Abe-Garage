@@ -75,14 +75,26 @@
     border-bottom: 1px solid #07184A;
 }
 
+.error {
+    color: #d82323;
+    font-size: clamp(.8em, 3vw, 1em);
+}
+
+.hidden {
+    color: #E6E4E9;
+    font-size: clamp(.8em, 3vw, 1em);
+}
+
 .inputsContainer {
     display: flex;
     flex-direction: column;
-    gap: 2em;
+    gap: 1em;
     margin: 2em 0 4em 3em;
 }
 
-.inputsContainer input {
+.inputsContainer input,
+.inputsContainer select {
+    color: #757587;
     width: 100%;
     max-width: 30em;
     padding: .6em .8em;
@@ -92,20 +104,24 @@
     transition: border-color 0.2s ease-in-out;
 }
 
-.inputsContainer input::placeholder {
+.inputsContainer input::placeholder,
+.inputsContainer option {
     font-size: clamp(.8em, 3vw, 1.1em);
 }
 
-.inputsContainer input:focus {
+.inputsContainer input:focus,
+.inputsContainer select:focus {
     border-color: #007bff;
     outline: none;
 }
 
-.inputsContainer input:invalid {
+.inputsContainer input:invalid,
+.inputsContainer select:invalid {
     border-color: #d82323;
 }
 
-.inputsContainer input:invalid::placeholder {
+.inputsContainer input:invalid::placeholder,
+.inputsContainer select:invalid::placeholder {
     color: #d82323;
 }
 

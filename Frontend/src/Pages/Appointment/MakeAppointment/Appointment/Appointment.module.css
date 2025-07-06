@@ -161,6 +161,15 @@
     margin: .3vw;
 }
 
+.bookedTime {
+    opacity: 0.3 !important;
+    border: 1px solid #07184A !important;
+    color: #07184A !important;
+    pointer-events: none;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
 .buttonsContainer {
     display: flex;
     justify-content: center;
