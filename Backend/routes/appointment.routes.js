@@ -9,4 +9,7 @@ router.post('/api/appointments', appointmentController.createAppointment);
 // Route to get booked times endpoint for a specific date
 router.get('/api/appointments/booked-times', appointmentController.getBookedTimes);
 
+// Route to get appointements endpoint for specific customer
+router.get('/api/appointments/by-email',appointmentController.getAppointmentsByEmail);
+
 module.exports = router;

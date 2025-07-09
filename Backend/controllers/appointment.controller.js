@@ -46,4 +46,21 @@ const getBookedTimes = async (req, res) => {
   }
 };
 
-module.exports = { createAppointment, getBookedTimes };
+// Get all appointments for a customer by email
+const getAppointmentsByEmail = async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  try {
+    const appointments = await appointmentService.getAppointmentsByEmail(email);
+    res.json(appointments);
+  } catch (err) {
+    console.error("Error fetching appointments by email:", err.message);
+    res.status(500).json({ error: "Failed to fetch appointments" });
+  }
+};
+
+module.exports = { createAppointment, getBookedTimes, getAppointmentsByEmail };
