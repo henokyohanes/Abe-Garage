@@ -18,6 +18,7 @@ const Header = () => {
     const logOut = async () => {
         try {
         await loginservice.logOut();
+        localStorage.removeItem("appointmentFormData");
         setIsLogged(false);
         window.location.href = "/";
         } catch (error) {
