@@ -22,7 +22,7 @@
 }
 
 .services span {
-    color:  #d82323;
+    color: #d82323;
 }
 
 .serviceCard {
@@ -31,6 +31,30 @@
     padding: 1em;
     border-radius: .5em;
     border-bottom: .4em solid #d82323;
+    position: relative;
+    overflow: visible;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    padding: 1em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    border-radius: 0 0 .5em .5em;
+}
+
+.dropdownVisible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .serviceSub {
@@ -49,11 +73,14 @@
 
 .readMore {
     font-size: clamp(.9em, 3vw, 1.1em);
-    color: #d82323;
-    text-decoration: none;
+    color: white;
+    background-color: #d82323;
+    border: none;
+    border-radius: .4em;
+    padding: .1em .8em;
     cursor: pointer;
 }
 
 .readMore:hover {
-    color: #07184A;
+    background-color: #07184A;
 }

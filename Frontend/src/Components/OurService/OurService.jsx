@@ -50,14 +50,16 @@ const OurService = () => {
           }
         ].map((service, index) => (
           <div key={index} className="col-md-6 col-xl-4">
-            <div key={index} className={`${style.serviceCard} `}>
+            <div className={`${style.serviceCard} `}>
               <p>Service and Repairs</p>
               <h3>{service.title}</h3>
               <div className={style.serviceIcon}>{service.icon}</div>
-              <a className={style.readMore} onClick={() => handleClick(index)}>
+              <button className={style.readMore} onClick={() => handleClick(index)}>
                 Read {expandedService === index ? "Less" : "More"}
-              </a>
-              {expandedService === index && <p className={style.serviceSub}>{service.sub}</p>}
+              </button>
+              <div className={`${style.dropdown} ${expandedService === index ? style.dropdownVisible : ""}`}>
+                <p>{service.sub}</p>
+              </div>
             </div>
           </div>
         ))}
