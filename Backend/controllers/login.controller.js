@@ -36,7 +36,7 @@ async function register(req, res, next) {
     }
 
     // Customer exists and has password: already registered
-    if (existingCustomer[0].customer_password) {
+    if (existingCustomer[0].customer_password_hashed) {
       return res.status(409).json({
         status: "fail",
         message: "Customer already exists",
@@ -147,4 +147,30 @@ async function resetPassword(req, res) {
   }
 }
 
-module.exports = {logIn, register, forgotPassword, resetPassword};
+// Check username availability
+async function checkUsernameAvailability(req, res) {
+  try {
+    const { username } = req.query;
+
+    console.log("username", username);
+
+    if (!username) {
+      return res.status(400).json({ available: false, message: "Username is required" });
+    }
+
+    // Call a service method to check DB
+    const existingUser = await loginService.findUserByUsername(username);
+
+    if (existingUser) {
+      return res.json({ available: false, message: "Username already used" });
+    }
+
+    return res.json({ available: true });
+  } catch (error) {
+    console.error("Error checking username:", error);
+    res.status(500).json({ available: false, message: "Server error" });
+  }
+}
+
+
+module.exports = {logIn, register, forgotPassword, resetPassword, checkUsernameAvailability};

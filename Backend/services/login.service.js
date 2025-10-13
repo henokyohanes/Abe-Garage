@@ -18,6 +18,7 @@ async function register(customerData) {
 
 // Handle employee OR customer login
 async function logIn(userData) {
+  console.log("user data", userData);
   try {
     // 1. Look up both
     const [employee] = await employeeService.getEmployeeByEmail(userData.email);
@@ -34,7 +35,11 @@ async function logIn(userData) {
       hashToCompare = employee.employee_password_hashed;
     } else {
       userRecord    = customer;
-      hashToCompare = customer.customer_password_hashed;
+      hashToCompare = customer?.customer_password_hashed;
+    }
+
+    if (!hashToCompare) {
+      return { status: "fail", message: "The user does not exist" };
     }
 
     // 3. Compare the password once
@@ -197,4 +202,24 @@ async function resetPassword(token, newPassword) {
   }
 }
 
-module.exports = { logIn, register, forgotPassword, resetPassword };
+// Find user by username
+async function findUserByUsername(username) {
+  const query = `
+    SELECT * FROM customer_info WHERE customer_username = ? 
+    UNION 
+    SELECT * FROM employee WHERE employee_username = ?;
+  `;
+  const rows = await db.query(query, [username, username]);
+  console.log("rows", rows);
+  return rows.length > 0 ? rows[0] : null;
+}
+
+module.exports = {
+  logIn,
+  register,
+  forgotPassword,
+  resetPassword,
+  findUserByUsername,
+};
+
+module.exports = { logIn, register, forgotPassword, resetPassword, findUserByUsername };
