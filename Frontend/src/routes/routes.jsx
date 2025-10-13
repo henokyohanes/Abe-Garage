@@ -24,6 +24,7 @@ import OrderDetails from "../Pages/OrderDetails/OrderDetails";
 import OrderUpdate from "../Pages/OrderUpdate/OrderUpdate";
 import MyVehicles from "../Pages/MyVehicles/MyVehicles";
 import MyOrders from "../Pages/MyOrders/MyOrders";
+import MyTasks from "../Pages/MyTasks/MyTasks";
 import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "../Pages/ResetPassword/ResetPassword";
 import Customer from "../Pages/Appointment/MakeAppointment/Customer/Customer";
@@ -31,6 +32,10 @@ import Vehicle from "../Pages/Appointment/MakeAppointment/Vehicle/Vehicle";
 import Services from "../Pages/Appointment/MakeAppointment/Services/Services";
 import Appointment from "../Pages/Appointment/MakeAppointment/Appointment/Appointment";
 import Review from "../Pages/Appointment/MakeAppointment/Review/Review";
+import MyAppointments from "../Pages/Appointment/MyAppointments/MyAppointments";
+import MyNotifications from "../Pages/MyNotifications/MyNotifications";
+import PrivacyPolicy from "../Pages/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "../Pages/TermsOfService/TermsOfService";
 
 const AppRoutes = () => (
   <Routes>
@@ -49,12 +54,15 @@ const AppRoutes = () => (
     <Route path="/make-appointment/services" element={<Services />} />
     <Route path="/make-appointment/appointment" element={<Appointment />} />
     <Route path="/make-appointment/review" element={<Review />} />
+    <Route path="/my-appointments" element={<MyAppointments />} />
+    <Route path="privacy-policy" element={<PrivacyPolicy />} />
+    <Route path="/terms-of-service" element={<TermsOfService />} />
 
     {/* Protected Routes */}
     <Route
       path="/dashboard"
       element={
-        <PrivateAuthRoute roles={[1, 2, 3]}>
+        <PrivateAuthRoute roles={[1, 2, 3, 4]}>
           <Dashboard />
         </PrivateAuthRoute>
       }
@@ -70,7 +78,7 @@ const AppRoutes = () => (
     <Route
       path="/order-details/:id"
       element={
-        <PrivateAuthRoute roles={[1, 2, 3]}>
+        <PrivateAuthRoute roles={[1, 2, 3, 4]}>
           <OrderDetails />
         </PrivateAuthRoute>
       }
@@ -78,7 +86,7 @@ const AppRoutes = () => (
     <Route
       path="/edit-order/:id"
       element={
-        <PrivateAuthRoute roles={[2, 3]}>
+        <PrivateAuthRoute roles={[1, 2, 3]}>
           <OrderUpdate />
         </PrivateAuthRoute>
       }
@@ -110,7 +118,7 @@ const AppRoutes = () => (
     <Route
       path="/edit-employee/:id"
       element={
-        <PrivateAuthRoute roles={[3]}>
+        <PrivateAuthRoute roles={[1, 2, 3]}>
           <EmployeeUpdate />
         </PrivateAuthRoute>
       }
@@ -134,7 +142,7 @@ const AppRoutes = () => (
     <Route
       path="/edit-customer/:id"
       element={
-        <PrivateAuthRoute roles={[2, 3]}>
+        <PrivateAuthRoute roles={[2, 3, 4]}>
           <CustomerUpdate />
         </PrivateAuthRoute>
       }
@@ -142,7 +150,7 @@ const AppRoutes = () => (
     <Route
       path="/edit-vehicle/:customer_id/:vehicle_id"
       element={
-        <PrivateAuthRoute roles={[2, 3]}>
+        <PrivateAuthRoute roles={[2, 3, 4]}>
           <VehicleUpdate />
         </PrivateAuthRoute>
       }
@@ -158,7 +166,7 @@ const AppRoutes = () => (
     <Route
       path="/services"
       element={
-        <PrivateAuthRoute roles={[1, 2, 3]}>
+        <PrivateAuthRoute roles={[1, 2, 3, 4]}>
           <ProvideServices />
         </PrivateAuthRoute>
       }
@@ -174,7 +182,7 @@ const AppRoutes = () => (
     <Route
       path="/my-vehicles"
       element={
-        <PrivateAuthRoute roles={[3]}>
+        <PrivateAuthRoute roles={[4]}>
           <MyVehicles />
         </PrivateAuthRoute>
       }
@@ -182,8 +190,24 @@ const AppRoutes = () => (
     <Route
       path="/my-orders"
       element={
-        <PrivateAuthRoute roles={[3]}>
+        <PrivateAuthRoute roles={[4]}>
           <MyOrders />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/my-notifications"
+      element={
+        <PrivateAuthRoute roles={[4]}>
+          <MyNotifications />
+        </PrivateAuthRoute>
+      }
+    />
+    <Route
+      path="/my-tasks"
+      element={
+        <PrivateAuthRoute roles={[1]}>
+          <MyTasks />
         </PrivateAuthRoute>
       }
     />
