@@ -20,6 +20,7 @@ export const register = async (formData) => {
 
 // A function to send the login request to the server
 export const logIn = async (formData) => {
+  console.log(formData);
   try {
     const response = await axios.post(
       `${api_url}/api/user/login`,
@@ -69,9 +70,24 @@ export const resetPassword = async (token, newPassword) => {
   }
 };
 
+// Function to check if a username is available
+export const checkUsernameAvailability = async (username) => {
+  console.log(username);
+  try {
+    const response = await axios.get(`${api_url}/api/user/check-username`, {
+      params: { username },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error checking username:", error);
+    throw error.response?.data || { message: "Unknown error occurred" };
+  }
+};
+
 // A function to log out the user
 export const logOut = () => {
   localStorage.removeItem("user");
 };
 
-export default { register, logIn, forgotPassword, resetPassword, logOut };
+export default { register, logIn, forgotPassword, resetPassword, checkUsernameAvailability, logOut };

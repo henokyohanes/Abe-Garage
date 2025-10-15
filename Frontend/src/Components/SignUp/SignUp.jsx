@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import { FaInfoCircle } from "react-icons/fa";
@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 import styles from "./SignUp.module.css";
 
 const Signup = ({ onToggle, setError }) => {
-
   const [formData, setFormData] = useState({
     customer_username: "",
     customer_first_name: "",
@@ -16,10 +15,11 @@ const Signup = ({ onToggle, setError }) => {
     customer_phone_number: "",
     customer_email: "",
     customer_password: "",
-    active_customer_status: 1
+    active_customer_status: 1,
   });
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  // const [checkingUsername, setCheckingUsername] = useState(false);
 
   // Handler for input field changes
   const handleChange = (e) => {
@@ -32,6 +32,32 @@ const Signup = ({ onToggle, setError }) => {
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
+  // Function to check if username is available
+  const checkUsernameAvailability = async (username) => {
+    if (!username) return;
+
+    try {
+      const res = await loginService.checkUsernameAvailability(username);
+      if (!res.available) {
+        setFormErrors((prev) => ({
+          ...prev,
+          customer_username: "Username already used",
+        }));
+      } else {
+        setFormErrors((prev) => ({
+          ...prev,
+          customer_username: "",
+        }));
+      }
+    } catch (error) {
+      console.error("Error checking username availability:", error);
+      setFormErrors((prev) => ({
+        ...prev,
+        customer_username: "Could not verify username",
+      }));
+    }
+  };
+
   // Regular expressions for validation
   const validateForm = () => {
     let isValid = true;
@@ -40,57 +66,59 @@ const Signup = ({ onToggle, setError }) => {
     //name validation
     const nameRegex = /^[A-Za-z]{2,}([ '-][A-Za-z]+)*$/;
     if (!formData.customer_first_name) {
-      errors.firstName = "First name is required";
+      errors.customer_first_name = "First name is required";
       isValid = false;
     } else if (!nameRegex.test(formData.customer_first_name)) {
-      errors.firstName = "Invalid first name format";
+      errors.customer_first_name = "Invalid first name format";
       isValid = false;
     }
     if (!formData.customer_last_name) {
-      errors.lastName = "Last name is required";
+      errors.customer_last_name = "Last name is required";
       isValid = false;
     } else if (!nameRegex.test(formData.customer_last_name)) {
-      errors.lastName = "Invalid last name format";
+      errors.customer_last_name = "Invalid last name format";
       isValid = false;
     }
 
     //username validation
     const usernameRegex = /^[a-zA-Z0-9]+$/;
     if (!formData.customer_username) {
-      errors.username = "Username is required";
+      errors.customer_username = "Username is required";
       isValid = false;
     } else if (!usernameRegex.test(formData.customer_username)) {
-      errors.username = "Username must be alphanumeric";
+      errors.customer_username = "Username must be alphanumeric";
+      isValid = false;
+    } else if (formData.customer_username === "Username already used") {
       isValid = false;
     }
 
     //phone validation
     const phoneRegex = /^(\(?\d{3}\)?[-\s]?)\d{3}[-\s]?\d{4}$/;
     if (!formData.customer_phone_number) {
-      errors.phone = "Phone number is required";
+      errors.customer_phone_number = "Phone number is required";
       isValid = false;
     } else if (!phoneRegex.test(formData.customer_phone_number)) {
-      errors.phone = "Invalid phone number format";
+      errors.customer_phone_number = "Invalid phone number format";
       isValid = false;
     }
 
     //email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.customer_email) {
-      errors.email = "Email is required";
+      errors.customer_email = "Email is required";
       isValid = false;
     } else if (!emailRegex.test(formData.customer_email)) {
-      errors.email = "Invalid email format";
+      errors.customer_email = "Invalid email format";
       isValid = false;
     }
 
     //password validation
     const passwordRegex = /^.{8,}$/;
     if (!formData.customer_password) {
-      errors.password = "Password is required";
+      errors.customer_password = "Password is required";
       isValid = false;
     } else if (!passwordRegex.test(formData.customer_password)) {
-      errors.password = "Password must be at least 8 characters";
+      errors.customer_password = "Password must be at least 8 characters";
       isValid = false;
     }
 
@@ -126,6 +154,7 @@ const Signup = ({ onToggle, setError }) => {
       setError(false);
 
       const response = await loginService.register(formDataWithHash);
+      console.log(response.data);
 
       if (response.status === "success") {
         Swal.fire({
@@ -141,13 +170,15 @@ const Signup = ({ onToggle, setError }) => {
           },
         });
 
-        if (response.data.token) {
+        if (response.data.customer_token) {
           const customer = await loginService.logIn({
-            employee_email: formData.customer_email,
-            employee_password: formData.customer_password,  
+            email: formData.customer_email,
+            password: formData.customer_password,
           });
-          localStorage.setItem("customer", JSON.stringify(customer.data));
-          // setTimeout(() => {window.location.href = "/"}, 1500);
+          localStorage.setItem("user", JSON.stringify(customer.data));
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 2000);
         }
       }
     } catch (err) {
@@ -202,9 +233,14 @@ const Signup = ({ onToggle, setError }) => {
       <form onSubmit={handleSubmit} className={styles.signupForm}>
         <div className={styles.name_fields}>
           <div className={styles.inputGroup}>
-              <div className={`${formErrors.firstName ? styles.error : styles.hidden}`} role="alert">
-                {formErrors.firstName}.
-              </div>
+            <div
+              className={`${
+                formErrors.customer_first_name ? styles.error : styles.hidden
+              }`}
+              role="alert"
+            >
+              {formErrors.customer_first_name}.
+            </div>
             <input
               type="text"
               name="customer_first_name"
@@ -214,9 +250,14 @@ const Signup = ({ onToggle, setError }) => {
             />
           </div>
           <div className={styles.inputGroup}>
-              <div className={`${formErrors.lastName ? styles.error : styles.hidden}`} role="alert">
-                {formErrors.lastName}.
-              </div>
+            <div
+              className={`${
+                formErrors.customer_last_name ? styles.error : styles.hidden
+              }`}
+              role="alert"
+            >
+              {formErrors.customer_last_name}.
+            </div>
             <input
               type="text"
               name="customer_last_name"
@@ -228,21 +269,32 @@ const Signup = ({ onToggle, setError }) => {
         </div>
         <div className={styles.phone_fields}>
           <div className={styles.inputGroup}>
-              <div className={`${formErrors.username ? styles.error : styles.hidden}`} role="alert">
-                {formErrors.username}.
-              </div>
+            <div
+              className={`${
+                formErrors.customer_username ? styles.error : styles.hidden
+              }`}
+              role="alert"
+            >
+              {formErrors.customer_username}.
+            </div>
             <input
               type="text"
               name="customer_username"
               placeholder="Username *"
               value={formData.customer_username}
               onChange={handleChange}
+              onBlur={(e) => checkUsernameAvailability(e.target.value)}
             />
           </div>
           <div className={styles.inputGroup}>
-              <div className={`${formErrors.phone ? styles.error : styles.hidden}`} role="alert">
-                {formErrors.phone}.
-              </div>
+            <div
+              className={`${
+                formErrors.customer_phone_number ? styles.error : styles.hidden
+              }`}
+              role="alert"
+            >
+              {formErrors.customer_phone_number}.
+            </div>
             <input
               type="text"
               name="customer_phone_number"
@@ -253,9 +305,14 @@ const Signup = ({ onToggle, setError }) => {
           </div>
         </div>
         <div className={styles.inputGroup}>
-            <div className={`${formErrors.email ? styles.error : styles.hidden}`} role="alert">
-              {formErrors.email}.
-            </div>
+          <div
+            className={`${
+              formErrors.customer_email ? styles.error : styles.hidden
+            }`}
+            role="alert"
+          >
+            {formErrors.customer_email}.
+          </div>
           <input
             type="email"
             name="customer_email"
@@ -265,9 +322,14 @@ const Signup = ({ onToggle, setError }) => {
           />
         </div>
         <div className={styles.inputGroup}>
-            <div className={`${formErrors.password ? styles.error : styles.hidden}`} role="alert">
-              {formErrors.password}.
-            </div>
+          <div
+            className={`${
+              formErrors.customer_password ? styles.error : styles.hidden
+            }`}
+            role="alert"
+          >
+            {formErrors.customer_password}.
+          </div>
           <input
             type="password"
             name="customer_password"
