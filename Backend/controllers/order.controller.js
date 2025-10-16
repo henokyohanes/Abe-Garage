@@ -6,12 +6,14 @@ const createOrder = async (req, res) => {
     employee_id,
     customer_id,
     vehicle_id,
+    technician_id,
     service_ids,
     additional_request,
     additional_requests_completed,
     active_order,
     order_hash,
     order_status,
+    pickup_status,
     order_total_price,
     service_completed,
   } = req.body;
@@ -22,12 +24,14 @@ const createOrder = async (req, res) => {
       employee_id,
       customer_id,
       vehicle_id,
+      technician_id,
       service_ids,
       additional_request,
       additional_requests_completed,
       active_order,
       order_hash,
       order_status,
+      pickup_status,
       order_total_price,
       service_completed,
     });
@@ -71,6 +75,27 @@ const getOrdersByCustomerId = async (req, res) => {
     return res.status(500).json({status: "fail", message: "error retrieving orders for customer."});
   }
 };
+
+// function to Get all orders for a specific employee
+const getTasksByEmployeeId = async (req, res) => {
+  const { employee_id } = req.params;
+  console.log("employee_id", employee_id);
+
+  try {
+    // Validate employee ID
+    if (!employee_id || isNaN(employee_id)) {
+      return res.status(400).json({status: "fail", message: "invalid or missing employee ID."});
+    }
+
+    // Fetch orders for the employee
+    const orders = await orderService.getTasksByEmployeeId(employee_id);
+
+    return res.status(200).json({status: "success", data: orders});
+  } catch (error) {
+    console.error("Error retrieving orders for employee:", error.message);
+    return res.status(500).json({status: "fail", message: "error retrieving orders for employee."});
+  }
+}
 
 // function to Get single order by ID
 const getOrderById = async (req, res) => {
@@ -122,11 +147,13 @@ const updateOrder = async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      order_id,
+      // order_id,
+      technician_id,
       services,
       additional_request,
       additional_requests_completed,
       order_status,
+      pickup_status,
       active_order,
       completion_date,
       order_total_price,
@@ -148,10 +175,12 @@ const updateOrder = async (req, res) => {
     // Update order in the database
     const updatedOrder = await orderService.updateOrder({
       id,
-      order_id,
+      // order_id,
+      technician_id,
       additional_request,
       additional_requests_completed,
       order_status,
+      pickup_status,
       active_order,
       completion_date,
       order_total_price,
@@ -249,4 +278,29 @@ const cancelAdditionalRequest = async (req, res) => {
     }
 };
 
-module.exports = {createOrder, getAllOrders, getOrderById, getOrdersByEmployeeId, updateOrder, deleteOrder, getOrdersByCustomerId, deleteService, cancelAdditionalRequest};
+// function to update task status
+const updateTaskStatus = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    // Validate order ID
+    if (!orderId || isNaN(orderId)) {
+      return res.status(400).json({status: "fail", message: "The order ID provided is invalid or missing."});
+    }
+
+    // Validate that the order exists
+    const orderExists = await orderService.getOrderById(orderId);
+    if (!orderExists) {
+      return res.status(404).json({status: "fail", message: "The order ID provided does not exist."});
+    }
+
+    // Update task status
+    const result = await orderService.updateTaskStatus(orderId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in updateTaskStatusController:", error);
+    res.status(500).json({ message: error.message || "Failed to update task status." });
+  }
+};
+
+module.exports = {createOrder, getAllOrders, getOrderById, getOrdersByEmployeeId, updateOrder, deleteOrder, getOrdersByCustomerId, getTasksByEmployeeId, deleteService, cancelAdditionalRequest, updateTaskStatus};
