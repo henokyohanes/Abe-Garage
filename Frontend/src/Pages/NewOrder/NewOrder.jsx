@@ -7,11 +7,14 @@ import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import CryptoJS from "crypto-js";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import carMakersData from "../../assets/json/carMakers.json";
+import vehicleTypes from "../../assets/json/vehicleTypes.json";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import customerservice from "../../services/customer.service";
 import vehicleService from "../../services/vehicle.service";
 import serviceService from "../../services/service.service";
 import orderService from "../../services/order.service";
+import employeeService from "../../services/employee.service";
 import Loader from "../../Components/Loader/Loader";
 import NotFound from "../../Components/NotFound/NotFound";
 import Layout from "../../Layout/Layout";
@@ -28,24 +31,39 @@ const NewOrder = () => {
     const [vehicles, setVehicles] = useState([]);
     const [vehicle, setVehicle] = useState([]);
     const [services, setServices] = useState(null);
+    const [technicians, setTechnicians] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
     const [showSearch, setShowSearch] = useState(true);
     const [showCustomer, setShowCustomer] = useState(false);
     const [showVehicle, setShowVehicle] = useState(false);
     const [showVehicles, setShowVehicles] = useState(true);
+    const [showform, setShowform] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [newVehicle, setNewVehicle] = useState({
+            vehicle_make: "",
+            vehicle_model: "",
+            vehicle_year: "",
+            vehicle_type: "",
+            vehicle_color: "",
+            vehicle_mileage: "",
+            vehicle_tag: "",
+            vehicle_serial: ""
+        });
     const [order, setOrder] = useState({
         additional_request: "",
         order_total_price: "",
         order_status: 0,
+        pickup_status: 0,
         active_order: true,
         additional_requests_completed: false,
         service_completed: false,
         service_ids: [],
         customer_id: "",
         vehicle_id: "",
-        employee_id: ""
+        employee_id: "",
+        technician_id: ""
     });
     const itemsPerPage = 10;
 
@@ -120,7 +138,9 @@ const NewOrder = () => {
         try {
             const response = await customerservice.fetchCustomerById(customerId);
             setCustomer(response.data);
-            setOrder({ ...order, customer_id: customerId });
+            console.log("response", response.data);
+            // setOrder({ ...order, customer_id: customerId });
+            setOrder((prev) => ({ ...prev, customer_id: customerId }));
         } catch (err) {
             console.error(err);
             setError(true);
@@ -134,6 +154,8 @@ const NewOrder = () => {
         
         setLoading(true);
         setError(false);
+
+        console.log("Fetching vehicles for customer ID:", customerId);
 
         try {
             const response = await vehicleService.fetchVehiclesByCustomerId(customerId);
@@ -158,11 +180,6 @@ const NewOrder = () => {
         setShowCustomer(true);
     };
 
-    // Add vehicle function for redirect
-    const handleAddVehicle = (id) => {
-        navigate(`/customer-profile/${id}?redirect=/new-order`);
-    };
-
     // Fetch vehicle by id
     const fetchVehicleById = async (vehicleId) => {
 
@@ -176,6 +193,161 @@ const NewOrder = () => {
         } catch (err) {
             console.error(err);
             setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const carMakers = Object.keys(carMakersData);
+    const carModelsByMake = carMakersData;
+
+    // Regular expressions for validation
+    const validateForm = () => {
+        let isValid = true;
+        const errors = {};
+
+        // make validation
+        if (!newVehicle.vehicle_make) { 
+            errors.make = "make is required";
+            isValid = false;
+        }
+
+        // model validation
+        if (!newVehicle.vehicle_model) {
+            errors.model = "Model is required";
+            isValid = false;
+        }
+
+        // year validation
+        if (!newVehicle.vehicle_year) { 
+            errors.year = "year is required";
+            isValid = false;
+        }
+
+        // type validation
+        if (!newVehicle.vehicle_type) {
+            errors.type = "Type is required";
+            isValid = false;
+        }
+
+        // color validation
+        const colorRegex = /^[A-Za-z]{2,}([ '-][A-Za-z]+)*$/;
+        if (!newVehicle.vehicle_color) {
+            errors.color = "Color is required";
+            isValid = false;
+        } else if (!colorRegex.test(newVehicle.vehicle_color)) {
+            errors.color = "Invalid color format";
+            isValid = false;
+        }
+
+        // mileage validation
+        const mileageRegex = /^\d{1,10}$/;
+        if (!newVehicle.vehicle_mileage) {
+            errors.mileage = "Mileage is required";
+            isValid = false;
+        } else if (!mileageRegex.test(newVehicle.vehicle_mileage)) {
+            errors.mileage = "Mileage must be a number with up to 10 digits only";
+            isValid = false;
+        }
+
+        // tag validation
+        if (!newVehicle.vehicle_tag) {
+            errors.tag = "License plate is required";
+            isValid = false;
+        } else if (newVehicle.vehicle_tag.length < 6) {
+            errors.tag = "License plate must be at least 6 characters long";
+            isValid = false;
+        }
+
+        // serial validation
+        if (!newVehicle.vehicle_serial) {
+            errors.serial = "Vin number is required";
+            isValid = false;
+        }
+
+        setFormErrors(errors);
+        return isValid;
+    };
+
+    const handleChange = (field, value) => {
+        setNewVehicle((prev) => ({
+            ...prev,
+            [field]: value,
+            ...(field === "make" ? { model: "" } : {}),
+        }));
+
+        // Clear the corresponding error when user types
+        setFormErrors((prevFormErrors) => ({
+            ...prevFormErrors,
+            ...(field === "vehicle_make" && { make: "" }),
+            ...(field === "vehicle_model" && { model: "" }),
+            ...(field === "vehicle_year" && { year: "" }),
+            ...(field === "vehicle_type" && { type: "" }),
+            ...(field === "vehicle_color" && { color: "" }),
+            ...(field === "vehicle_mileage" && { mileage: "" }),
+            ...(field === "vehicle_tag" && { tag: "" }),
+            ...(field === "vehicle_serial" && { serial: "" }),
+        }));
+    };
+
+    // Add a new vehicle using vehicleService
+    const handleAddVehicle = async (customerId) => {
+        if (!validateForm()) {
+            return;
+        }
+        setLoading(true);
+        setError(false);
+
+        try {
+            await vehicleService.addVehicle(customerId, newVehicle);
+            setShowform(false);
+            fetchVehiclesByCustomerId(customerId);
+            // setNewVehicle({
+            //     vehicle_make: "",
+            //     vehicle_model: "",
+            //     vehicle_year: "",
+            //     vehicle_type: "",
+            //     vehicle_color: "",
+            //     vehicle_mileage: "",
+            //     vehicle_tag: "",
+            //     vehicle_serial: "",
+            // });
+            Swal.fire({
+                title: "Success!",
+                html: "Vehicle added successfully.",
+                icon: "success",
+                customClass: {
+                    popup: styles.popup,
+                    confirmButton: styles.confirmButton,
+                    icon: styles.icon,
+                    title: styles.successTitle,
+                    htmlContainer: styles.text,
+                },
+            });
+
+            // Append the new vehicle to existing list
+            // setVehicles((prevVehicles) => [
+            //     ...prevVehicles,
+            //     { ...newVehicle },
+            // ]);
+        } catch (error) {
+            console.error("Error adding vehicle:", error);
+            if (error === "Failed") {
+                setError(true);
+            } else {
+                Swal.fire({
+                    title: "Error!",
+                    html: `${error}. Please try again.`,
+                    icon: "error",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.errorTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+            }
         } finally {
             setLoading(false);
         }
@@ -224,6 +396,25 @@ const NewOrder = () => {
         });
     };
 
+    // Fetch Techincians
+    const fetchTechniciansData = async () => {
+
+        setLoading(true);
+        setError(false);
+
+        try {
+            const response = await employeeService.fetchEmployees();
+            const technicians = response.data.filter((employee) => employee.company_role_id === 1);
+            setTechnicians(technicians);
+            console.log("response of technicians", technicians);
+        } catch (err) {
+            console.error(err);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // function to Create a new order
     const handleCreateOrder = async () => {
         const orderHash = generateorderHash();
@@ -231,6 +422,8 @@ const NewOrder = () => {
             ...order,
             order_hash: orderHash,
         };
+
+        console.log("orderWithHash", orderWithHash);
 
         setLoading(true);
         setError(false);
@@ -250,7 +443,8 @@ const NewOrder = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => { navigate(`/order-details/${response.data.order_id}`)}, 1500);
+            // setTimeout(() => { navigate(`/order-details/${response.data.order_id}`)}, 1500);
+            // setTimeout(() => { window.location.href = `/order-details/${response.data.order_id}` }, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {
@@ -415,6 +609,7 @@ const NewOrder = () => {
                                                                 className={styles.selectButton}
                                                                 onClick={() => {
                                                                     handleSelectVehicle(vehicle.vehicle_id);
+                                                                    fetchTechniciansData();
                                                                     setShowVehicles(false);
                                                                     setShowVehicle(true);
                                                                 }}
@@ -428,12 +623,139 @@ const NewOrder = () => {
                                         </table>
                                     </div>) : (<div className={styles.noResults}>
                                         <p>No vehicles found for this customer.</p>
-                                        <button onClick={() => { handleAddVehicle(customer.customer_id); }}>
-                                            Add New Vehicle
-                                        </button>
                                     </div>)}
+                                        {!showform && <button className={styles.vehicleContainer} onClick={() => setShowform(true)}>Add New Vehicle</button>}
                                 </div>}
                             </div>}
+                            {/* vehicle form */}
+                            {showform && (
+                                <div className={styles.vehicleForm}>
+                                    <div className={styles.closeBtn} onClick={() => setShowform(false)}>X</div>
+                                    <div className={styles.vehicleFormContainer}>
+                                        <h2>Add a New Vehicle <span>____</span></h2>
+                                        <div>
+                                            <div className={`${formErrors.year ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.year}.
+                                            </div>
+                                            <select
+                                                className={styles.input}
+                                                value={newVehicle.vehicle_year || ""}
+                                                onChange={(e) => handleChange("vehicle_year", e.target.value)}
+                                            >
+                                                <option value="">* Year</option>
+                                                {Array.from({ length: 40 }, (_, i) => {
+                                                    const year = new Date().getFullYear() + 1 - i;
+                                                    return (
+                                                        <option key={year} value={year}>
+                                                            {year}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div className={`${formErrors.make ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.make}.
+                                            </div>
+                                            <select
+                                                className={styles.input}
+                                                value={newVehicle.vehicle_make || ""}
+                                                onChange={(e) => handleChange("vehicle_make", e.target.value)}
+                                            >
+                                                <option value="">* Make</option>
+                                                {carMakers.map((maker, i) => (
+                                                    <option key={i} value={maker}>
+                                                        {maker}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div className={`${formErrors.model ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.model}.
+                                            </div>
+                                            <select
+                                                // className={style.input}
+                                                value={newVehicle.vehicle_model || ""}
+                                                onChange={(e) => handleChange("vehicle_model", e.target.value)}
+                                                disabled={!newVehicle.vehicle_make}
+                                            >
+                                                <option value="">* Model</option>
+                                                {newVehicle.vehicle_make &&
+                                                    carModelsByMake[newVehicle.vehicle_make].map((model, i) => (
+                                                        <option key={i} value={model}>
+                                                            {model}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div className={`${formErrors.type ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.type}.
+                                            </div>
+                                            <select
+                                                className={styles.input}
+                                                value={newVehicle.vehicle_type || ""}
+                                                onChange={(e) => handleChange("vehicle_type", e.target.value)}
+                                            >
+                                                <option value="">* Type</option>
+                                                {vehicleTypes.map((type) => (
+                                                    <option key={type} value={type}>{type}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.color ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.color}.
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="vehicle_color"
+                                            placeholder="* Color"
+                                            value={newVehicle.vehicle_color}
+                                            onChange={(e) => handleChange("vehicle_color", e.target.value)}
+                                        />
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.mileage ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.mileage}.
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="vehicle_mileage"
+                                            placeholder="* Mileage"
+                                            value={newVehicle.vehicle_mileage}
+                                            onChange={(e) => handleChange("vehicle_mileage", e.target.value)}
+                                        />
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.tag ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.tag}.
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="vehicle_tag"
+                                            placeholder="* License Plate"
+                                            value={newVehicle.vehicle_tag}
+                                            onChange={(e) => handleChange("vehicle_tag", e.target.value)}
+                                        />
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.serial ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.serial}.
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="vehicle_serial"
+                                            placeholder="* VIN Number"
+                                            value={newVehicle.vehicle_serial}
+                                            onChange={(e) => handleChange("vehicle_serial", e.target.value)}
+                                        />
+                                        </div>
+                                        <button onClick={() => handleAddVehicle(customer.customer_id)}>Add Vehicle</button>
+                                    </div>
+                                </div>
+                            )}
                             {showVehicle && <div>
                                 <button
                                     className={styles.closeButton}
@@ -489,14 +811,44 @@ const NewOrder = () => {
                                             placeholder="Service description"
                                             onChange={(e) => setOrder({ ...order, additional_request: e.target.value })}
                                         />
-                                        <input
-                                            type="number"
-                                            value={order.order_total_price || ""}
-                                            placeholder="Price"
-                                            onChange={(e) => setOrder({ ...order, order_total_price: e.target.value })}
-                                        />
-                                        <button onClick={handleCreateOrder}>Submit Order</button>
                                     </div>
+                                </div>
+                                <div className={styles.orderForm}>
+                                    <div className={styles.orderInfo}>
+                                        <h3>Total Price</h3>
+                                        <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
+                                            value={order.order_total_price}
+                                            placeholder="Price *"
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (/^\d*$/.test(value)) {
+                                                    setOrder({ ...order, order_total_price: value });
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.orderForm}>
+                                    <div className={styles.orderInfo}>
+                                        <h3>Assigned Technician</h3>
+                                        <select
+                                            value={order.technician_id || ""}
+                                            onChange={(e) => setOrder({ ...order, technician_id: Number(e.target.value) })}
+                                        >
+                                            <option value="">Select Technician</option>
+                                            {technicians.map((technician) => (
+                                                <option key={technician.employee_id} value={technician.employee_id}>
+                                                    {technician.employee_first_name} {technician.employee_last_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className={styles.submitOrder}>
+                                    <button onClick={handleCreateOrder}>Submit Order</button>
                                 </div>
                             </div>}
                         </div>
@@ -507,4 +859,4 @@ const NewOrder = () => {
     );
 };
 
-export default NewOrder;
+export default NewOrder; 
