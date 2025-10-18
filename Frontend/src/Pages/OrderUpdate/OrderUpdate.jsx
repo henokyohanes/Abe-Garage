@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 import Swal from "sweetalert2";
 import orderService from "../../services/order.service";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -10,8 +11,10 @@ import Loader from "../../Components/Loader/Loader";
 import styles from "./OrderUpdate.module.css";
 
 const OrderUpdate = () => {
+
+    const { isEmployee } = useAuth();
     const { id } = useParams();
-    const [order, setOrder] = useState({});
+    const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
@@ -39,10 +42,65 @@ const OrderUpdate = () => {
 
     // Handle input changes and service cancellations
     const handleChange = async (e) => {
-        const { name, value, type, checked, dataset } = e.target;
-        const index = dataset.index ? parseInt(dataset.index, 10) : null;
+    const { name, value, type, checked, dataset } = e.target;
+    const index = dataset.index !== undefined ? parseInt(dataset.index, 10) : null;
 
-        if (value === "3" && name === "service_completed" && index !== null) {
+    // Normalize value
+    const newValue =
+        type === "checkbox"
+            ? (checked ? 1 : 0)
+            : (name.includes("status") || name.includes("completed"))
+                ? parseInt(value, 10)
+                : value;
+
+    // 🚫 Prevent completing order if services not done
+    if (name === "order_status" && newValue === 2) {
+        const allServicesCompleted = order.services?.every(
+            (s) => parseInt(s.service_completed, 10) === 2
+        );
+        const additionalRequestCompleted =
+            !order.additional_request ||
+            parseInt(order.additional_requests_completed, 10) === 2;
+
+        if (!allServicesCompleted || !additionalRequestCompleted) {
+                Swal.fire({
+                    title: "Cannot Complete Order",
+                    html: "All services must be completed before marking the order as completed.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.warningTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+                return; // stop here
+            }
+        }
+
+        // 🚫 Prevent pickup status change if order not completed
+        if (name === "pickup_status" && (newValue === 1 || newValue === 2)) {
+            if (parseInt(order.order_status, 10) !== 2) {
+                Swal.fire({
+                    title: "Cannot Change Pickup Status",
+                    html: "The order must be completed before changing the pickup status.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    customClass: {
+                        popup: styles.popup,
+                        confirmButton: styles.confirmButton,
+                        icon: styles.icon,
+                        title: styles.warningTitle,
+                        htmlContainer: styles.text,
+                    },
+                });
+                return; // stop here
+            }
+        }
+
+        if (newValue === 3 && name === "service_completed" && index !== null) {
 
             Swal.fire({
                 title: "Are you sure you want to cancel this service?",
@@ -114,7 +172,7 @@ const OrderUpdate = () => {
             });
 
         // Handle additional request cancellations
-        } else if (value === "3" && name === "additional_requests_completed") {
+        } else if (newValue === 3 && name === "additional_requests_completed") {
 
             Swal.fire({
                 title: "Are you sure you want to cancel this additional request?",
@@ -183,7 +241,7 @@ const OrderUpdate = () => {
             });
 
         // Handle order cancellations
-        } else if (value === "3" && name === "order_status") {
+        } else if (newValue === 3 && name === "order_status") {
 
             Swal.fire({
                 title: "Are you sure you want to cancel this order?",
@@ -251,7 +309,7 @@ const OrderUpdate = () => {
                     const updatedServices = [...prevOrder.services];
                     updatedServices[index] = {
                         ...updatedServices[index],
-                        [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+                        [name]: newValue,
                     };
                     return {
                         ...prevOrder,
@@ -260,12 +318,14 @@ const OrderUpdate = () => {
                 } else {
                     return {
                         ...prevOrder,
-                        [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+                        [name]: newValue,
                     };
                 }
             });
         }
     };
+
+    console.log("order", order);
 
     // Handle form submission for updating the order
     const handleUpdateOrder = async (e) => {
@@ -275,11 +335,14 @@ const OrderUpdate = () => {
         setError(false);
 
         try {
-            await orderService.updateOrder(id, order);
+            const payload = { ...order,technician_id: order.technician_id || order.employee_id };
+
+            await orderService.updateOrder(id, payload);
             Swal.fire({
                 title: "Updated!",
                 html: "The order has been updated.",
                 icon: "success",
+                timer: 1500,
                 customClass: {
                     popup: styles.popup,
                     confirmButton: styles.confirmButton,
@@ -412,7 +475,7 @@ const OrderUpdate = () => {
                                             <option className={styles.statusReceived} value={0}>Received</option>
                                             <option className={styles.statusInProgress} value={1}>In Progress</option>
                                             <option className={styles.statusCompleted} value={2}>Completed</option>
-                                            <option className={styles.statusCancelled} value={3}>Cancel</option>
+                                            {!isEmployee && <option className={styles.statusCancelled} value={3}>Cancel</option>}
                                         </select>
                                     </div>
                                 ))) : <p className={styles.noServices}>
@@ -422,13 +485,14 @@ const OrderUpdate = () => {
                                     <div className={`${styles.service} row align-items-center justify-content-between g-0`}>
                                         <div className="col-12 col-md-9 mb-3 mb-md-0 pe-md-3">
                                             <h4>Additional Requests</h4>
-                                            <textarea
-                                                type="text"
-                                                name="additional_request"
-                                                placeholder="Additional Requests"
-                                                value={order.additional_request}
-                                                onChange={handleChange}
-                                            />
+                                            {isEmployee ? <p>{order.additional_request}</p> :
+                                                <textarea
+                                                    type="text"
+                                                    name="additional_request"
+                                                    placeholder="Additional Requests"
+                                                    value={order.additional_request}
+                                                    onChange={handleChange}
+                                                />}
                                         </div>
                                         <select
                                             className={`${styles.status} ${getStatusClass(order.additional_requests_completed)} col-12 col-md-3 ps-md-3`}
@@ -439,7 +503,7 @@ const OrderUpdate = () => {
                                             <option className={styles.statusReceived} value={0}>Received</option>
                                             <option className={styles.statusInProgress} value={1}>In Progress</option>
                                             <option className={styles.statusCompleted} value={2}>Completed</option>
-                                            <option className={styles.statusCancelled} value={3}>Cancel</option>
+                                            {!isEmployee && <option className={styles.statusCancelled} value={3}>Cancel</option>}
                                         </select>
                                     </div>)}
                             </div>
@@ -447,8 +511,8 @@ const OrderUpdate = () => {
                                 <h3>Edit: Order Details <span>____</span></h3>
                                 <form onSubmit={handleUpdateOrder}>
                                     <div className={styles.formGroup}>
-                                        <div className={`${styles.orderFlexContainer} row justify-content-between g-0`}>
-                                            <div className="col-12 col-md-6">
+                                        <div className={`${styles.orderFlexContainer} row justify-content-between g-4`}>
+                                            <div className="col-12 col-md-7 col-xxl-6">
                                                 <div className={styles.orderFlex}>
                                                     <h4>Order Status:</h4>
                                                     <select
@@ -460,10 +524,10 @@ const OrderUpdate = () => {
                                                         <option className={styles.statusReceived} value={0}>Received</option>
                                                         <option className={styles.statusInProgress} value={1}>In Progress</option>
                                                         <option className={styles.statusCompleted} value={2}>Completed</option>
-                                                        <option className={styles.statusCancelled} value={3}>Cancel</option>
+                                                        {!isEmployee && <option className={styles.statusCancelled} value={3}>Cancel</option>}
                                                     </select>
                                                 </div>
-                                                <div className={styles.orderFlex}>
+                                                {!isEmployee && <div className={styles.orderFlex}>
                                                     <h4>completion date:</h4>
                                                     <input
                                                         className={styles.date}
@@ -474,7 +538,53 @@ const OrderUpdate = () => {
                                                         min={today}
                                                         value={order.completion_date ? formatDate(order.completion_date) : ""}
                                                     />
-                                                </div>
+                                                </div>}
+                                                {/* <div className={styles.orderFlex}>
+                                                    <h4>Assigned Technician:</h4>
+                                                    <select
+                                                        className={styles.technician}
+                                                        name="technician_id"
+                                                        value={order.technician_id || ""}
+                                                        onChange={(e) => setOrder({ ...order, technician_id: Number(e.target.value) })}
+                                                    >
+                                                        <option value="">{order.employee_first_name} {order.employee_last_name}</option>
+                                                        {order.employees.map((technician) => (
+                                                            <option key={technician.employee_id} value={technician.employee_id}>
+                                                                {technician.employee_first_name} {technician.employee_last_name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div> */}
+                                                {!isEmployee && <div className={styles.orderFlex}>
+                                                    <h4>Assigned Technician:</h4>
+                                                    <select
+                                                        className={styles.technician}
+                                                        name="technician_id"
+                                                        value={order.technician_id || order.employee_id}
+                                                        onChange={(e) =>
+                                                            setOrder({ ...order, technician_id: Number(e.target.value) })
+                                                        }
+                                                        // onChange={handleChange}
+                                                    >
+                                                        {/* Show the assigned technician first if there is one */}
+                                                            <option value={order.employee_id}>
+                                                                {order.employee_first_name} {order.employee_last_name}
+                                                            </option>
+
+                                                        {/* Show all other technicians except the assigned one */}
+                                                        {order.employees
+                                                            .filter(
+                                                                (technician) => technician.employee_id !== order.employee_id
+                                                            )
+                                                            .map((technician) => (
+                                                                <option key={technician.employee_id} value={technician.employee_id}>
+                                                                    {technician.employee_first_name} {technician.employee_last_name}
+                                                                </option>
+                                                            ))}
+                                                    </select>
+                                                </div>}
+
+
                                                 <div>
                                                     <h4>Notes for customer</h4>
                                                     <textarea
@@ -487,6 +597,19 @@ const OrderUpdate = () => {
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-5">
+                                                {!isEmployee && <div className={styles.orderFlex}>
+                                                    <h4>Pickup Status:</h4>
+                                                    <select
+                                                        className={`${styles.status} ${getStatusClass(order.pickup_status)}`}
+                                                        name="pickup_status"
+                                                        value={order.pickup_status}
+                                                        onChange={handleChange}
+                                                    >
+                                                        <option className={styles.statusReceived} value={0}>Received</option>
+                                                        <option className={styles.statusInProgress} value={1}>Ready</option>
+                                                        <option className={styles.statusCompleted} value={2}>Picked Up</option>
+                                                    </select>
+                                                </div>}
                                                 <div className={styles.orderFlex}>
                                                     <h4>Active Order:</h4>
                                                     <input
@@ -497,7 +620,7 @@ const OrderUpdate = () => {
                                                         onChange={handleChange}
                                                     />
                                                 </div>
-                                                <div className={styles.orderFlex}>
+                                                {!isEmployee && <div className={styles.orderFlex}>
                                                     <h4>Total Price:</h4>
                                                     <input
                                                         className={styles.price}
@@ -507,7 +630,7 @@ const OrderUpdate = () => {
                                                         onChange={handleChange}
                                                         value={order.order_total_price}
                                                     />
-                                                </div>
+                                                </div>}
                                                 <div>
                                                     <h4>Notes for provider</h4>
                                                     <textarea

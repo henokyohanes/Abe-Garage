@@ -41,6 +41,21 @@ export const fetchCustomerOrders = async (customerId) => {
     }
 };
 
+// function to fetch orders for a specific employee
+export const fetchEmployeeTasks = async (employeeId) => {
+    console.log("employeeId", employeeId);
+    try {
+        const response = await axios.get(
+            `${api_url}/api/orders/employee/${employeeId}`,
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching orders for employee:", error);
+        throw error.response?.data?.message || "Failed to fetch orders for employee";
+    }
+};
+
 // function to fetch an order by ID
 export const fetchOrderById = async (id) => {
     try {
@@ -72,6 +87,7 @@ export const addOrder = async (orderData) => {
 
 // function to update an order
 export const updateOrder = async (id, updatedData) => {
+    console.log("updatedData", updatedData);
     try {
         const response = await axios.put(
             `${api_url}/api/order/${id}`,
@@ -128,6 +144,20 @@ export const deleteAdditionalRequest = async (orderId, additionalRequest) => {
     }
 };
 
-const orderService = { fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders, deleteService, deleteAdditionalRequest };
+// function to update action for an order
+export const updateAction = async (orderId) => {
+    try {
+        const response = await axios.put(
+            `${api_url}/api/order/${orderId}/action`, {},
+            getAuthHeaders()
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error updating action:", error);
+        throw error.response?.data?.message || "Failed";
+    }
+};
+
+const orderService = { fetchOrders, fetchOrderById, addOrder, updateOrder, deleteOrder, fetchCustomerOrders, fetchEmployeeTasks, deleteService, deleteAdditionalRequest, updateAction };
 
 export default orderService;
