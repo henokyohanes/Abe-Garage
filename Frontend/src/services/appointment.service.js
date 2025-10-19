@@ -31,12 +31,13 @@ export const submitAppointment = async (appointmentData) => {
 };
 
 // Function to fetch booked times for a specific date
-export const getBookedTimesByDate = async (dateString) => {
+export const getBookedTimesByDate = async (dateKey) => {
+    console.log("dateKey", dateKey);
     try {
         const response = await axios.get(
             `${api_url}/api/appointments/booked-times`,
             {
-                params: { date: dateString }, // e.g. "2025-07-01"
+                params: { date: dateKey },
             }
         );
         return response.data.bookedTimes || [];
@@ -46,4 +47,27 @@ export const getBookedTimesByDate = async (dateString) => {
     }
 };
 
-export default { submitAppointment };
+// Function to get appointments for a specific customer by email
+export const getAppointmentsByCustomerEmail = async (customerEmail) => {
+    try {
+        const response = await axios.get(
+            `${api_url}/api/appointments/by-email`,
+            {
+                params: { email: customerEmail },
+                ...getAuthHeaders(),
+            }
+        );
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching appointments:", error);
+        throw error.response?.data?.message || "Failed to fetch appointments";
+    }
+};
+
+const appointmentService = {
+    submitAppointment,
+    getBookedTimesByDate, getAppointmentsByCustomerEmail
+};
+
+export default appointmentService;
