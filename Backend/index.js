@@ -65,6 +65,12 @@ const appointmentRoutes = require("./routes/appointment.routes");
 // appointment routes middleware
 app.use(appointmentRoutes);
 
+// notification routes middleware file
+const notificationRoutes = require("./routes/notification.routes");
+
+// notification routes middleware
+app.use(notificationRoutes);
+
 // start the Express server
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);

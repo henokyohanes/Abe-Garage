@@ -9,14 +9,17 @@ router.post('/api/order', [authMiddleware.verifyToken, authMiddleware.isAdminOrM
 // Route to get all orders
 router.get('/api/orders', authMiddleware.verifyToken, orderController.getAllOrders);
 
-// Route to get orders by employee ID
+// Route to get orders by customer ID
 router.get('/api/orders/customer/:customer_id', authMiddleware.verifyToken, orderController.getOrdersByCustomerId);
+
+// Route to get orders by employee ID
+router.get('/api/orders/employee/:employee_id', authMiddleware.verifyToken, orderController.getTasksByEmployeeId);
 
 // Route to get a single order by ID
 router.get('/api/order/:id', authMiddleware.verifyToken, orderController.getOrderById);
 
 // Route to update an order
-router.put('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.updateOrder);
+router.put('/api/order/:id', authMiddleware.verifyToken, orderController.updateOrder);
 
 // Route to delete an order
 router.delete('/api/order/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.deleteOrder);
@@ -26,5 +29,8 @@ router.delete('/api/order/:orderId/service/:serviceId', [authMiddleware.verifyTo
 
 // Route to add an additional request to an order
 router.put('/api/order/:orderId/additional-request', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], orderController.cancelAdditionalRequest);
+
+// Route to update task status
+router.put('/api/order/:orderId/action', authMiddleware.verifyToken, orderController.updateTaskStatus);
 
 module.exports = router;

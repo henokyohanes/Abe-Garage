@@ -13,7 +13,7 @@ router.get("/api/employees", [authMiddleware.verifyToken, authMiddleware.isAdmin
 router.get("/api/employee/:id", authMiddleware.verifyToken, employeeController.getEmployeeById);
 
 // Route to update an employee
-router.put("/api/employee/:id", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.updateEmployee);
+router.put("/api/employee/:id", authMiddleware.verifyToken, employeeController.updateEmployee);
 
 // Route to update the recipient of an order
 router.put("/api/employee/orders/:id/:updatedId", [authMiddleware.verifyToken, authMiddleware.isAdmin], employeeController.updateOrderRecipientEmployee);
