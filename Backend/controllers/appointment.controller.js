@@ -2,6 +2,7 @@ const appointmentService = require('../services/appointment.service');
 
 // function to Create appointment
 const createAppointment = async (req, res) => {
+console.log("req.body", req.body);
   const {
     firstName, lastName, email, phone,
     make, model, year, color,

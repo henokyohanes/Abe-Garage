@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const appointmentController = require("../controllers/appointment.controller");
-// const authMiddleware = require("../middlewares/auth.middleware");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 // Route to create appointment endpoint
 router.post('/api/appointments', appointmentController.createAppointment);
@@ -10,6 +10,6 @@ router.post('/api/appointments', appointmentController.createAppointment);
 router.get('/api/appointments/booked-times', appointmentController.getBookedTimes);
 
 // Route to get appointements endpoint for specific customer
-router.get('/api/appointments/by-email',appointmentController.getAppointmentsByEmail);
+router.get('/api/appointments/by-email', authMiddleware.verifyToken, appointmentController.getAppointmentsByEmail);
 
 module.exports = router;

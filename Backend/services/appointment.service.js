@@ -13,9 +13,14 @@ const transporter = nodemailer.createTransport({
 
 // Function to send appointment confirmation email
 const sendAppointmentConfirmation = async (toEmail, appointment) => {
+  console.log("appointment", appointment);
   const {
     firstName,
     lastName,
+    make,
+    model,
+    year,
+    color,
     appointmentDate,
     appointmentTime,
     services = [],
@@ -40,7 +45,8 @@ const sendAppointmentConfirmation = async (toEmail, appointment) => {
       <p>Your appointment has been successfully scheduled at <strong>Abe Garage</strong>.</p>
       <p>
         <strong>Date:</strong> ${formattedDate}<br/>
-        <strong>Time:</strong> ${appointmentTime}
+        <strong>Time:</strong> ${appointmentTime}<br/>
+        <strong>Vehicle:</strong> ${year} ${make} ${model} (${color})<br/>
       </p>
       <p><strong>Services:</strong><br/>${serviceList}</p>
       <p>We look forward to serving you!</p>
@@ -224,21 +230,49 @@ const getAppointmentsByEmail = async (email) => {
 
   // For each appointment, fetch related services
   for (const appt of appointments) {
-    const [services] = await db.query(
+    const services = await db.query(
       `
-      SELECT s.id, s.service_name, s.description
+      SELECT s.service_id, s.service_name, s.service_description
       FROM appointment_services aps
-      JOIN services s ON aps.service_id = s.id
+      JOIN common_services s ON aps.service_id = s.service_id
       WHERE aps.appointment_id = ?
       `,
-      [appt.id]
+      [appt.appointment_id]
     );
     appt.services = services; // Attach services to each appointment
   }
 
+  console.log("appointments with services", appointments);  
+
   return appointments;
 };
 
+// function to get notifications by customer email
+const getNotificationsById = async (customer_id) => {
+  if (!customer_id) {
+    throw new Error("Email is required");
+  }
+
+  // Get all notifications by customer email
+  const notifications = await db.query(
+    `
+    SELECT
+      n.*,
+      vci.vehicle_year,
+      vci.vehicle_make,
+      vci.vehicle_model
+    FROM notifications n
+    JOIN orders o ON n.order_id = o.order_id
+    JOIN customer_vehicle_info vci ON o.vehicle_id = vci.vehicle_id
+    WHERE o.customer_id = ?
+    ORDER BY notification_date DESC
+    `,
+    [customer_id]
+  );
+
+  return notifications;
+};
+
 module.exports = {
-  createAppointment, getBookedTimesByDate, getAppointmentsByEmail
+  createAppointment, getBookedTimesByDate, getAppointmentsByEmail, getNotificationsById
 };
