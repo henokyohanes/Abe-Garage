@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Contexts/AuthContext";
-import { axiosImageURL, handleProfileImageUpdate} from "../../services/image.service";
+import { axiosImageURL, handleProfileImageUpdate } from "../../services/image.service";
 import { RiAccountCircleFill } from "react-icons/ri";
 import { ScaleLoader } from "react-spinners";
 import { FaCamera, FaEdit, FaSignOutAlt } from "react-icons/fa";
 // import { toast } from "react-toastify";
 import loginService from "../../services/login.service";
 import Layout from "../../Layout/Layout";
+import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import Loader from "../../Components/Loader/Loader";
 import NotFound from "../../Components/NotFound/NotFound";
 import styles from "./Account.module.css";
 
@@ -27,7 +30,7 @@ const Account = () => {
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
   const lastTouchDistance = useRef(null);
-  
+
   // Access the authentication context
   const { isLogged, setIsLogged, user, setUser, isAdmin, isManager } = useAuth();
 
@@ -304,161 +307,185 @@ const Account = () => {
 
   return (
     <Layout>
-      {!error ? (
-        <div className={styles.accountContainer}>
-          <div className={styles.profile}>
-            {!uploadimage ? (
-              <div className={styles.profileDetails}>
-                <h2>
-                  Profile Details <span>______</span>
-                </h2>
-                <div className={styles.profileContainer}>
-                  <div
-                    className={styles.profileImgWrapper}
-                    onClick={handlePicture}
-                  >
-                    <div className={styles.profileImage}>
-                      {user?.employee_profile_picture ||
-                      user?.customer_profile_picture ? (
+      <div className={`${styles.provideServices} row g-0`}>
+        <div className="d-none d-xl-block col-3">
+          <AdminMenu />
+        </div>
+        <div className="d-block d-xl-none">
+          <AdminMenuMobile />
+        </div>
+        <div className="col-12 col-xl-9">
+          {!loading && !error ? (
+            <div className={styles.accountContainer}>
+              <div className={styles.profile}>
+                {!uploadimage ? (
+                  <div className={styles.profileDetails}>
+                    <h2>
+                      Profile Details <span>______</span>
+                    </h2>
+                    <div className={styles.profileContainer}>
+                      <div
+                        className={styles.profileImgWrapper}
+                        onClick={handlePicture}
+                      >
+                        <div className={styles.profileImage}>
+                          {user?.employee_profile_picture ||
+                            user?.customer_profile_picture ? (
+                            <img
+                              src={`${axiosImageURL}${user?.employee_profile_picture ||
+                                user?.customer_profile_picture
+                                }`}
+                              alt={"Profile Image"}
+                              loading="lazy"
+                            />
+                          ) : (
+                            <RiAccountCircleFill
+                              className={styles.profileIcon}
+                            />
+                          )}
+                        </div>
+                        <div className={styles.profileCamera}>
+                          <FaCamera className={styles.cameraIcon} />
+                        </div>
+                      </div>
+                      {/* <canvas ref={canvasRef} style={{ display: "none" }} /> */}
+                    </div>
+                    <div className={styles.profileLabel}>
+                      <div>
+                        <p>Username</p>
+                        <p>Full Name</p>
+                        <p>Phone number</p>
+                        <p>Email address</p>
+                      </div>
+                      <div className={styles.profileInfo}>
+                        <strong>
+                          - {user?.employee_username || user?.customer_username}
+                        </strong>
+                        <strong>
+                          -{" "}
+                          {user?.employee_first_name ||
+                            user?.customer_first_name}{" "}
+                          {user?.employee_last_name || user?.customer_last_name}
+                        </strong>
+                        <strong>
+                          -{" "}
+                          {user?.employee_phone || user?.customer_phone_number}
+                        </strong>
+                        <strong>
+                          - {user?.employee_email || user?.customer_email}
+                        </strong>
+                      </div>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button
+                        onClick={() =>
+                          handleEdit(user?.employee_id || user?.customer_id)
+                        }
+                      >
+                        <span className={styles.icon}>
+                          <FaEdit />
+                        </span>
+                        Edit Profile
+                      </button>
+                      <button onClick={logOut}>
+                        <span className={styles.icon}>
+                          <FaSignOutAlt />
+                        </span>
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.profileUpload}>
+                    <h2>
+                      Upload an Image <span>______</span>
+                    </h2>
+                    <input
+                      type="file"
+                      id="image"
+                      name="image"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      required
+                    />
+                    <div
+                      className={styles.canvasContainer}
+                      ref={canvasRef}
+                      onMouseDown={handleMouseDown}
+                      onMouseUp={handleMouseUp}
+                      onMouseMove={handleMouseMove}
+                      onWheel={handleWheel}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                    >
+                      {image && (
                         <img
-                          src={`${axiosImageURL}${
-                            user?.employee_profile_picture ||
-                            user?.customer_profile_picture
-                          }`}
-                          alt={"Profile Image"}
+                          ref={imgRef}
+                          src={image}
+                          onLoad={handleImageLoad}
                           loading="lazy"
+                          style={{
+                            position: "absolute",
+                            transformOrigin: "top left",
+                          }}
+                          alt="Uploaded"
                         />
-                      ) : (
-                        <RiAccountCircleFill className={styles.profileIcon} />
                       )}
                     </div>
-                    <div className={styles.profileCamera}>
-                      <FaCamera className={styles.cameraIcon} />
+                    <div className={styles.zoomSliderContainer}>
+                      <button
+                        onClick={handleZoomOut}
+                        disabled={scale <= MIN_SCALE}
+                      >
+                        -
+                      </button>
+                      <input
+                        type="range"
+                        id="zoomRange"
+                        min="1"
+                        max="3"
+                        step="0.01"
+                        value={scale}
+                        onChange={(e) => setScale(parseFloat(e.target.value))}
+                        className={styles.zoomSlider}
+                      />
+                      <button
+                        onClick={handleZoomIn}
+                        disabled={scale >= MAX_SCALE}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className={styles.buttonsContainer}>
+                      <button
+                        onClick={handleCancelClick}
+                        className={styles.cancelBtn}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleUploadClick}
+                        className={styles.uploadBtn}
+                      >
+                        {loading ? (
+                          <ScaleLoader color="#fff" height={12} />
+                        ) : (
+                          "Upload"
+                        )}
+                      </button>
                     </div>
                   </div>
-                  {/* <canvas ref={canvasRef} style={{ display: "none" }} /> */}
-                </div>
-                <div className={styles.profileLabel}>
-                  <div>
-                    <p>Username</p>
-                    <p>Full Name</p>
-                    <p>Phone number</p>
-                    <p>Email address</p>
-                  </div>
-                  <div className={styles.profileInfo}>
-                    <strong>
-                      - {user?.employee_username || user?.customer_username}
-                    </strong>
-                    <strong>
-                      - {user?.employee_first_name || user?.customer_first_name}{" "}
-                      {user?.employee_last_name || user?.customer_last_name}
-                    </strong>
-                    <strong>
-                      - {user?.employee_phone || user?.customer_phone_number}
-                    </strong>
-                    <strong>
-                      - {user?.employee_email || user?.customer_email}
-                    </strong>
-                  </div>
-                </div>
-                <div className={styles.buttons}>
-                  <button
-                    onClick={() =>
-                      handleEdit(user?.employee_id || user?.customer_id)
-                    }
-                  >
-                    <span className={styles.icon}>
-                      <FaEdit />
-                    </span>
-                    Edit Profile
-                  </button>
-                  <button onClick={logOut}>
-                    <span className={styles.icon}>
-                      <FaSignOutAlt />
-                    </span>
-                    Logout
-                  </button>
-                </div>
+                )}
               </div>
-            ) : (
-              <div className={styles.profileUpload}>
-                <h2>Upload an Image <span>______</span></h2>
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  required
-                />
-                <div
-                  className={styles.canvasContainer}
-                  ref={canvasRef}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                  onMouseMove={handleMouseMove}
-                  onWheel={handleWheel}
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  {image && (
-                    <img
-                      ref={imgRef}
-                      src={image}
-                      onLoad={handleImageLoad}
-                      loading="lazy"
-                      style={{
-                        position: "absolute",
-                        transformOrigin: "top left",
-                      }}
-                      alt="Uploaded"
-                    />
-                  )}
-                </div>
-                <div className={styles.zoomSliderContainer}>
-                  <button onClick={handleZoomOut} disabled={scale <= MIN_SCALE}>
-                    -
-                  </button>
-                  <input
-                    type="range"
-                    id="zoomRange"
-                    min="1"
-                    max="3"
-                    step="0.01"
-                    value={scale}
-                    onChange={(e) => setScale(parseFloat(e.target.value))}
-                    className={styles.zoomSlider}
-                  />
-                  <button onClick={handleZoomIn} disabled={scale >= MAX_SCALE}>
-                    +
-                  </button>
-                </div>
-                <div className={styles.buttonsContainer}>
-                  <button
-                    onClick={handleCancelClick}
-                    className={styles.cancelBtn}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleUploadClick}
-                    className={styles.uploadBtn}
-                  >
-                    {loading ? (
-                      <ScaleLoader color="#fff" height={12} />
-                    ) : (
-                      "Upload"
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : error ? (
+            <NotFound />
+          ) : (
+            <Loader />
+          )}
         </div>
-      ) : (
-        <NotFound />
-      )}
+      </div>
     </Layout>
   );
 };
