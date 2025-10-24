@@ -4,16 +4,19 @@ import { FaChevronRight, FaUser } from "react-icons/fa";
 import Layout from '../../../../Layout/Layout';
 import style from "./Customer.module.css";
 import { useAppointment } from '../../../../Contexts/AppointmentContext';
+import { useAuth } from '../../../../Contexts/AuthContext';
 
 function Customer() {
     const navigate = useNavigate();
+    const { isLogged, user } = useAuth();
 
+    const defaultForm = {firstName: "", lastName: "", email: "", phone: ""};
     const { formData, setFormData } = useAppointment();
-    const [localForm, setLocalForm] = useState(formData);
+    const [localForm, setLocalForm] = useState({...defaultForm, ...formData});
     const [formErrors, setFormErrors] = useState({});
 
     useEffect(() => {
-        setLocalForm(formData);
+        setLocalForm((prev) => ({ ...prev, ...formData }));
     }, [formData]);
 
     // Regular expressions for validation
@@ -70,6 +73,8 @@ function Customer() {
 
     const handleClick = () => {
         if (!validateForm()) return;
+        if (!localForm) return;
+
         setFormData((prev) => ({ ...prev, ...localForm }));
         navigate("/make-appointment/vehicle");
     };
@@ -82,13 +87,13 @@ function Customer() {
                     <div className={style.makeAppointment}>
                         <ul>
                             <li><Link to="/make-appointment/customer">Customer</Link> <FaChevronRight className={style.arrow} /></li>
-                            <li>Vehicle <FaChevronRight className={style.arrow} /></li>
-                            <li>Services <FaChevronRight className={style.arrow} /></li>
-                            <li>Appointment <FaChevronRight className={style.arrow} /></li>
-                            <li>Review</li>
+                            <li><a>Vehicle</a> <FaChevronRight className={style.arrow} /></li>
+                            <li><a>Services</a> <FaChevronRight className={style.arrow} /></li>
+                            <li><a>Appointment</a> <FaChevronRight className={style.arrow} /></li>
+                            <li><a>Review</a></li>
                         </ul>
                     </div>
-                    <p>Have an account? <Link to="/auth">Sign In</Link> or continue as guest.</p>
+                    {!isLogged && <p>Have an account? <Link to="/auth">Sign In</Link> or continue as guest.</p>}
                     <div className={style.tittle}><FaUser /> My Information</div>
                     <p><span>*</span> All fields are required</p>
                     <div className={style.inputsContainer}>
