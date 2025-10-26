@@ -14,7 +14,7 @@
 }
 
 .customerContainer h2 {
-    font-size: clamp(1em, 3vw, 1.4em);
+    font-size: clamp(1.1em, 3vw, 1.8em);
     font-weight: bold;
     color: #07184A;
     margin-bottom: .1em;    
@@ -78,6 +78,16 @@
     cursor: pointer;
 }
 
+.error {
+    color: #d82323;
+    font-size: clamp(.8em, 3vw, 1em);
+}
+
+.hidden {
+    color: #FFFFFF;
+    font-size: clamp(.8em, 3vw, 1em);
+}
+
 .vehicleFormContainer {
     background-color: #FFFFFF;
     margin-left: 10vw;
@@ -86,7 +96,9 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.vehicleFormContainer input {
+.vehicleFormContainer input,
+.vehicleFormContainer select {
+    color: #757587;
     font-size: clamp(.9em, 3vw, 1.1em);
     width: 80%;
     padding: .5vw 1vw;
@@ -95,13 +107,26 @@
     border-radius: .4em;
 }
 
-.vehicleFormContainer input:focus {
+.vehicleFormContainer input:focus,
+.vehicleFormContainer select:focus {
     border-color: #007bff;
     outline: none;
 }
 
-.vehicleFormContainer input::placeholder {
+.vehicleFormContainer input::placeholder,
+.vehicleFormContainer select::placeholder,
+.vehicleFormContainer option {
     font-size: clamp(.9em, 3vw, 1.1em);
+}
+
+.vehicleFormContainer input:invalid,
+.vehicleFormContainer select:invalid {
+    border-color: #d82323;
+}
+
+.vehicleFormContainer input:invalid::placeholder,
+.vehicleFormContainer select:invalid::placeholder {
+    color: #d82323;
 }
 
 .vehicleFormContainer button {
@@ -117,7 +142,7 @@
     cursor: pointer;
 }
 
-.deleteIcon {
+/* .deleteIcon {
     float: right;
     background-color: #d82323;
     color: #FFFFFF;
@@ -127,7 +152,7 @@
     border: none;
     border-radius: .4em;
     cursor: pointer;
-}
+} */
 
 .popup {
     padding: 1em;
