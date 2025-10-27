@@ -21,6 +21,8 @@ const ProvideServices = () => {
     const [errors, setErrors] = useState({});
     const { isAdmin } = useAuth();
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 2;
 
     // Fetch all services when the component mounts
     const fetchAllServices = async () => {
@@ -111,7 +113,7 @@ const ProvideServices = () => {
     };
 
     // redirect to edit page
-    const handleEdit = (id) => { navigate(`/edit-service/${id}`)};
+    const handleEdit = (id) => { navigate(`/edit-service/${id}`) };
 
     // Delete a service
     const handleDelete = async (id) => {
@@ -173,6 +175,22 @@ const ProvideServices = () => {
         }
     };
 
+    // Calculate total pages
+    const totalPages = Math.ceil(services.length / itemsPerPage);
+    const displayedServices = services.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Function to handle page change
+    const handlePageChange = (direction) => {
+        if (direction === "next" && currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        } else if (direction === "prev" && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     return (
         <Layout>
             <div className={`${styles.provideServices} row g-0`}>
@@ -187,7 +205,7 @@ const ProvideServices = () => {
                                 evolved from generation experiences.
                             </p>
                             <div className={styles.serviceList}>
-                                {services.map((service, index) => (
+                                {displayedServices.map((service, index) => (
                                     <div key={service.service_id || index} className={styles.service}>
                                         <div className={styles.details}>
                                             <h2>{service.service_name}</h2>
@@ -204,6 +222,24 @@ const ProvideServices = () => {
                                     </div>
                                 ))}
                             </div>
+                            
+                            {/* Pagination */}
+                            {services.length > 0 && <div className={styles.pagination}>
+                                <button
+                                    onClick={() => handlePageChange("prev")}
+                                    disabled={currentPage === 1}
+                                >
+                                    Previous
+                                </button>
+                                <span>Page {currentPage} of {totalPages}</span>
+                                <button
+                                    onClick={() => handlePageChange("next")}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Next
+                                </button>
+                            </div>}
+
                             {isAdmin && <div className={styles.form}>
                                 <h1>Add a new Service <span>____</span></h1>
                                 {errors.service_name && <div className={styles.error}>
@@ -229,6 +265,8 @@ const ProvideServices = () => {
                                     Add Service
                                 </div>
                             </div>}
+
+
                         </div>
                     ) : error ? <NotFound /> : <Loader />}
                 </div>
