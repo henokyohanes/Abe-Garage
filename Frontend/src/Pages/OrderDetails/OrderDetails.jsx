@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../../Contexts/AuthContext";
 import orderService from "../../services/order.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
@@ -10,6 +11,7 @@ import styles from "./OrderDetails.module.css";
 
 const OrderDetails = () => {
 
+    const { isEmployee } = useAuth();
     const { id } = useParams();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -24,6 +26,7 @@ const OrderDetails = () => {
 
             try {
                 const response = await orderService.fetchOrderById(parseInt(id));
+                console.log("response", response);
                 setOrder(response.data[0]);
             } catch (error) {
                 console.error("Error fetching order details:", error);
@@ -51,8 +54,9 @@ const OrderDetails = () => {
     };
 
     // Helper function to get status text
-    const getStatusText = (status) => {
-        switch (status) {
+    const getStatusText = (order, pickup) => {
+
+        switch (order) {
             case 2:
                 return "Completed";
             case 1:
@@ -62,6 +66,56 @@ const OrderDetails = () => {
             default:
                 return "Unknown";
         }
+    };
+
+    // Helper function to get pickup class
+    const getPickupClass = (pickup, order) => {
+
+        if (pickup >= 1 && order === 2) {
+            return styles.statusCompleted;
+        } else if (pickup === 0 && order >= 1) {
+            return styles.statusInProgress;
+        } else if (pickup === 0 && order === 0) {
+            return styles.statusReceived;
+        } else {
+            return "";
+        }
+
+        // switch (status) {
+        //     case 2:
+        //         return styles.statusCompleted;
+        //     case 1:
+        //         return styles.statusInProgress;
+        //     case 0:
+        //         return styles.statusReceived;
+        //     default:
+        //         return "";
+        // }
+    };
+
+    // Helper function to get pickup text
+    const getPickupText = (pickup, order) => {
+
+        if (pickup >= 1 && order === 2) {
+            return "Completed";
+        } else if (pickup === 0 && order >= 1) {
+            return "In Progress";
+        } else if (pickup === 0 && order === 0) {
+            return "Received";
+        } else {
+            return "Unknown";
+        }
+
+        // switch () {
+        //     case 2:
+        //         return "Picked Up";
+        //     case 1:
+        //         return "Ready";
+        //     case 0:
+        //         return "Received";
+        //     default:
+        //         return "Unknown";
+        // }
     };
 
     return (
@@ -77,9 +131,11 @@ const OrderDetails = () => {
                                     {order.customer_first_name} {order.customer_last_name}
                                     <span>____</span>
                                 </h2>
-                                <p className={`${styles.status} ${getStatusClass(order.order_status)}`}>
+                                {isEmployee ? <p className={`${styles.status} ${getStatusClass(order.order_status)}`}>
                                     {getStatusText(order.order_status)}
-                                </p>
+                                </p> : <p className={`${styles.status} ${getPickupClass(order.pickup_status, order.order_status)}`}>
+                                    {getPickupText(order.pickup_status, order.order_status)}
+                                </p>}
                             </div>
                             <p>
                                 You can track the progress of your order using this page. we will constantly
