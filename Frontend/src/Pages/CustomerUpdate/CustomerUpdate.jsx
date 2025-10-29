@@ -5,18 +5,21 @@ import customerService from "../../services/customer.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import { useAuth } from "../../Contexts/AuthContext";
 import NotFound from "../../Components/NotFound/NotFound";
 import Loader from "../../Components/Loader/Loader";
 import styles from "./CustomerUpdate.module.css";
 
 const CustomerUpdate = () => {
     
+    const { isadmin, ismanager } = useAuth();
     const { id } = useParams();
     const [customer, setCustomer] = useState({
         customer_first_name: "",
         customer_last_name: "",
         customer_phone_number: "",
-        active_customer_status: false
+        active_customer_status: false,
+        two_factor_enabled: false
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -148,7 +151,7 @@ const CustomerUpdate = () => {
                                             required
                                         />
                                     </div>
-                                    <div className={styles.formGroup}>
+                                    {isadmin || ismanager && <div className={styles.formGroup}>
                                         <label className={styles.label}>
                                             <input
                                                 type="checkbox"
@@ -157,6 +160,17 @@ const CustomerUpdate = () => {
                                                 onChange={handleChange} 
                                             />
                                             <div className={styles.checkmark}>Is active customer</div>
+                                        </label>
+                                    </div>}
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>
+                                            <input
+                                                type="checkbox"
+                                                name="two_factor_enabled"
+                                                checked={customer.two_factor_enabled}
+                                                onChange={handleChange} 
+                                            />
+                                            <div className={styles.checkmark}>Two-factor Authentication</div>
                                         </label>
                                     </div>
                                     <div className={styles.formGroup}>

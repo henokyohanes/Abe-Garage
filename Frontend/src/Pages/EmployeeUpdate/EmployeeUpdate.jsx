@@ -5,19 +5,22 @@ import employeeService from "../../services/employee.service";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import { useAuth } from "../../Contexts/AuthContext";
 import NotFound from "../../Components/NotFound/NotFound";
 import Loader from "../../Components/Loader/Loader";
 import styles from "./EmployeeUpdate.module.css";
 
 const EmployeeUpdate = () => {
 
+    const { isadmin, ismanager } = useAuth();
     const { id } = useParams();
     const [employee, setEmployee] = useState({
         employee_first_name: "",
         employee_last_name: "",
         employee_email: "", employee_phone: "",
         employee_role_name: "Employee",
-        active_employee: false
+        active_employee: false,
+        two_factor_enabled: false
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -32,6 +35,7 @@ const EmployeeUpdate = () => {
             try {
                 const response = await employeeService.fetchEmployeeById(parseInt(id, 10));
                 setEmployee(response.data);
+                console.log("responsenew", response);
             } catch (err) {
                 console.error(err);
                 setError(true);
@@ -58,24 +62,9 @@ const EmployeeUpdate = () => {
 
         setLoading(true);
         setError(false);
-        
+
         try {
-            const {
-                employee_first_name,
-                employee_last_name,
-                employee_email,
-                employee_phone,
-                company_role_id,
-                active_employee,
-            } = employee;
-            await employeeService.updateEmployee(id, {
-                employee_first_name,
-                employee_last_name,
-                employee_email,
-                employee_phone,
-                company_role_id,
-                active_employee,
-            });
+            await employeeService.updateEmployee(id, employee);
             Swal.fire({
                 title: "Updated!",
                 html: "The employee has been updated.",
@@ -88,7 +77,7 @@ const EmployeeUpdate = () => {
                     htmlContainer: styles.text,
                 },
             });
-            setTimeout(() => { navigate("/employees")}, 1500);
+            setTimeout(() => { navigate("/employees") }, 1500);
         } catch (err) {
             console.error(err);
             if (err === "Failed") {
@@ -181,6 +170,17 @@ const EmployeeUpdate = () => {
                                                 onChange={handleChange}
                                             />
                                             <div className={styles.checkmark}>Is active employee</div>
+                                        </label>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>
+                                            <input
+                                                type="checkbox"
+                                                name="two_factor_enabled"
+                                                checked={employee.two_factor_enabled}
+                                                onChange={handleChange}
+                                            />
+                                            <div className={styles.checkmark}>Two-factor Authentication</div>
                                         </label>
                                     </div>
                                     <div className={styles.formGroup}>
