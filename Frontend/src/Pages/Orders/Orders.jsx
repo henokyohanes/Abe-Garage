@@ -29,6 +29,7 @@ const Orders = () => {
 
       try {
         const response = await orderService.fetchOrders();
+        console.log("response", response);
         setOrders(response.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -62,6 +63,20 @@ const Orders = () => {
         return "Completed";
       case 1:
         return "In Progress";
+      case 0:
+        return "Received";
+      default:
+        return "Unknown";
+    }
+  };
+
+  // Helper function to get pickup text
+  const getPickupText = (status) => {
+    switch (status) {
+      case 2:
+        return "Picked Up";
+      case 1:
+        return "Ready";
       case 0:
         return "Received";
       default:
@@ -103,7 +118,8 @@ const Orders = () => {
           {!loading && !error ? (
             <div className={styles.ordersList}>
               <h2>Orders <span>____</span></h2>
-              <div className={styles.tableContainer}>
+              {orders.length > 0 ? (<div>
+                <div className={styles.tableContainer}>
                 <table className={styles.ordersTable}>
                   <thead>
                     <tr>
@@ -112,7 +128,9 @@ const Orders = () => {
                       <th>Vehicle</th>
                       <th>Order Date</th>
                       <th>Received by</th>
+                      <th>Assigned to</th>
                       <th>Order status</th>
+                      <th>Pickup status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -132,9 +150,15 @@ const Orders = () => {
                         </td>
                         <td>{order.order_date.split("T")[0]}</td>
                         <td>{order.employee_first_name + " " + order.employee_last_name}</td>
+                        <td>{order.technician_first_name + " " + order.technician_last_name}</td>
                         <td>
                           <span className={`${styles.statusBadge} ${getStatusClass(order.order_status)}`}>
                             {getStatusText(order.order_status)}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`${styles.statusBadge} ${getStatusClass(order.pickup_status)}`}>
+                            {getPickupText(order.pickup_status)}
                           </span>
                         </td>
                         <td>
@@ -161,6 +185,7 @@ const Orders = () => {
                   Next
                 </button>
               </div>
+              </div>) : <div className={styles.noOrders}>No orders found.</div>}
             </div>
           ) : error ? <NotFound /> : <Loader />}
         </div>

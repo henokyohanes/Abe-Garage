@@ -115,3 +115,9 @@
 .statusReceived {
     background-color: #57595c;
 }
+
+.noOrders {
+    text-align: center;
+    font-size: clamp(.9em, 3vw, 1.1em);
+    color: #d82323;
+}
