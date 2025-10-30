@@ -4,6 +4,7 @@ import { useAuth } from "../../Contexts/AuthContext";
 import Swal from "sweetalert2";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
+import loginService from "../../services/login.service";
 import employeeService from "../../services/employee.service";
 import Loader from "../../Components/Loader/Loader";
 import NotFound from "../../Components/NotFound/NotFound";
@@ -35,7 +36,36 @@ const AddEmployee = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEmployee((prev) => ({...prev, [name]: value}));
+
+    // Clear the corresponding error when user types
+    setErrors((prevErrors) => ({...prevErrors, [name]: ""}));
   };
+
+  // Function to check if username is available
+    const checkUsernameAvailability = async (username) => {
+      if (!username) return;
+  
+      try {
+        const res = await loginService.checkUsernameAvailability(username);
+        if (!res.available) {
+          setErrors((prev) => ({
+            ...prev,
+            employee_username: "Username already used",
+          }));
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            employee_username: "",
+          }));
+        }
+      } catch (error) {
+        console.error("Error checking username availability:", error);
+        setErrors((prev) => ({
+          ...prev,
+          employee_username: "Could not verify username",
+        }));
+      }
+    };
 
   // Validate form
   const validateForm = () => {
@@ -49,6 +79,8 @@ const AddEmployee = () => {
       isValid = false;
     } else if (!usernameRegex.test(employee.employee_username)) {
       newErrors.employee_username = "Username must be alphanumeric";
+      isValid = false;
+    } else if (employee.employee_username === "Username already used") {
       isValid = false;
     }
 
@@ -165,30 +197,6 @@ const AddEmployee = () => {
                     <form onSubmit={handleSubmit}>
                       <div className={styles.formGroupContainer}>
                         <div className={styles.formGroup}>
-                          {errors.employee_username && (
-                            <div className={styles.error}>{errors.employee_username}</div>
-                          )}
-                          <input
-                            className={styles.formControl}
-                            name="employee_username"
-                            placeholder="Employee username *"
-                            value={employee.employee_username}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className={styles.formGroup}>
-                          {errors.employee_email && (
-                            <div className={styles.error}>{errors.employee_email}</div>
-                          )}
-                          <input
-                            className={styles.formControl}
-                            name="employee_email"
-                            placeholder="Employee email *"
-                            value={employee.employee_email}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className={styles.formGroup}>
                           {errors.employee_first_name && (
                             <div className={styles.error}>{errors.employee_first_name}</div>
                           )}
@@ -196,7 +204,7 @@ const AddEmployee = () => {
                             className={styles.formControl}
                             type="text"
                             name="employee_first_name"
-                            placeholder="Employee first name *"
+                            placeholder="First name *"
                             value={employee.employee_first_name}
                             onChange={handleChange}
                           />
@@ -209,8 +217,33 @@ const AddEmployee = () => {
                             className={styles.formControl}
                             type="text"
                             name="employee_last_name"
-                            placeholder="Employee last name *"
+                            placeholder="Last name *"
                             value={employee.employee_last_name}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className={styles.formGroup}>
+                          {errors.employee_username && (
+                            <div className={styles.error}>{errors.employee_username}</div>
+                          )}
+                            <input
+                              className={styles.formControl}
+                              name="employee_username"
+                              placeholder="username *"
+                              value={employee.employee_username}
+                              onChange={handleChange}
+                              onBlur={(e) => checkUsernameAvailability(e.target.value)}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                          {errors.employee_email && (
+                            <div className={styles.error}>{errors.employee_email}</div>
+                          )}
+                          <input
+                            className={styles.formControl}
+                            name="employee_email"
+                            placeholder="Employee email *"
+                            value={employee.employee_email}
                             onChange={handleChange}
                           />
                         </div>
