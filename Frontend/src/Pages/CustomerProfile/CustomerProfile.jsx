@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import Layout from "../../Layout/Layout";
 import AdminMenu from "../../Components/AdminMenu/AdminMenu";
 import AdminMenuMobile from "../../Components/AdminMenuMobile/AdminMenuMobile";
+import carMakersData from "../../assets/json/carMakers.json";
+import vehicleTypes from "../../assets/json/vehicleTypes.json";
 import vehicleService from "../../services/vehicle.service";
 import customerService from "../../services/customer.service";
 import orderService from "../../services/order.service";
@@ -32,12 +34,9 @@ const CustomerProfile = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
     const navigate = useNavigate();
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const redirectUrl = params.get("redirect");
-
-    // Fetch customer data, vehicles, and orders when id changes
+    
     useEffect(() => {
         if (!id) return;
         fetchCustomerData();
@@ -80,6 +79,9 @@ const CustomerProfile = () => {
         }
     };
 
+    const carMakers = Object.keys(carMakersData);
+    const carModelsByMake = carMakersData;
+
     // Fetch orders for the customer
     const fetchOrders = async () => {
 
@@ -97,15 +99,102 @@ const CustomerProfile = () => {
         }
     };
 
+    // Regular expressions for validation
+    const validateForm = () => {
+        let isValid = true;
+        const errors = {};
+
+        // make validation
+        if (!newVehicle.vehicle_make) { 
+            errors.make = "make is required";
+            isValid = false;
+        }
+
+        // model validation
+        if (!newVehicle.vehicle_model) {
+            errors.model = "Model is required";
+            isValid = false;
+        }
+
+        // year validation
+        if (!newVehicle.vehicle_year) { 
+            errors.year = "year is required";
+            isValid = false;
+        }
+
+        // type validation
+        if (!newVehicle.vehicle_type) {
+            errors.type = "Type is required";
+            isValid = false;
+        }
+
+        // color validation
+        const colorRegex = /^[A-Za-z]{2,}([ '-][A-Za-z]+)*$/;
+        if (!newVehicle.vehicle_color) {
+            errors.color = "Color is required";
+            isValid = false;
+        } else if (!colorRegex.test(newVehicle.vehicle_color)) {
+            errors.color = "Invalid color format";
+            isValid = false;
+        }
+
+        // mileage validation
+        const mileageRegex = /^\d{1,10}$/;
+        if (!newVehicle.vehicle_mileage) {
+            errors.mileage = "Mileage is required";
+            isValid = false;
+        } else if (!mileageRegex.test(newVehicle.vehicle_mileage)) {
+            errors.mileage = "Mileage must be a number with up to 10 digits only";
+            isValid = false;
+        }
+
+        // tag validation
+        if (!newVehicle.vehicle_tag) {
+            errors.tag = "License plate is required";
+            isValid = false;
+        } else if (newVehicle.vehicle_tag.length < 6) {
+            errors.tag = "License plate must be at least 6 characters long";
+            isValid = false;
+        }
+
+        // serial validation
+        if (!newVehicle.vehicle_serial) {
+            errors.serial = "Vin number is required";
+            isValid = false;
+        }
+
+        setFormErrors(errors);
+        return isValid;
+    };
+
     // Handle form input changes for the modal
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewVehicle((prev) => ({ ...prev, [name]: value }));
+    const handleChange = (field, value) => {
+        setNewVehicle((prev) => ({
+            ...prev,
+            [field]: value,
+            ...(field === "make" ? { model: "" } : {}),
+        }));
+
+        // Clear the corresponding error when user types
+        setFormErrors((prevFormErrors) => ({
+            ...prevFormErrors,
+            ...(field === "vehicle_make" && { make: "" }),
+            ...(field === "vehicle_model" && { model: "" }),
+            ...(field === "vehicle_year" && { year: "" }),
+            ...(field === "vehicle_type" && { type: "" }),
+            ...(field === "vehicle_color" && { color: "" }),
+            ...(field === "vehicle_mileage" && { mileage: "" }),
+            ...(field === "vehicle_tag" && { tag: "" }),
+            ...(field === "vehicle_serial" && { serial: "" }),
+        }));
     };
 
     // Add a new vehicle using vehicleService
     const handleAddVehicle = async () => {
 
+        if (!validateForm()) {
+            return;
+        }
         setLoading(true);
         setError(false);
 
@@ -121,7 +210,7 @@ const CustomerProfile = () => {
                 vehicle_color: "",
                 vehicle_mileage: "",
                 vehicle_tag: "",
-                vehicle_serial: ""
+                vehicle_serial: "",
             });
             Swal.fire({
                 title: "Success!",
@@ -135,9 +224,12 @@ const CustomerProfile = () => {
                     htmlContainer: styles.text,
                 },
             });
-            if (redirectUrl) {
-                setTimeout(() => { navigate(redirectUrl) }, 1500);
-            }
+
+            // Append the new vehicle to existing list
+            setVehicles((prevVehicles) => [
+                ...prevVehicles,
+                { ...newVehicle }, // You can add an ID or timestamp if needed
+            ]);
         } catch (error) {
             console.error("Error adding vehicle:", error);
             if (error === "Failed") {
@@ -362,62 +454,125 @@ const CustomerProfile = () => {
                                     <div className={styles.closeBtn} onClick={() => setShowform(false)}>X</div>
                                     <div className={styles.vehicleFormContainer}>
                                         <h2>Add a New Vehicle <span>____</span></h2>
-                                        <input
-                                            type="text"
-                                            name="vehicle_year"
-                                            placeholder="Vehicle year"
-                                            value={newVehicle.vehicle_year}
-                                            onChange={handleInputChange}
-                                        />
-                                        <input
-                                            type="text"
-                                            name="vehicle_make"
-                                            placeholder="Vehicle make"
-                                            value={newVehicle.vehicle_make}
-                                            onChange={handleInputChange}
-                                        />
-                                        <input
-                                            type="text"
-                                            name="vehicle_model"
-                                            placeholder="Vehicle model"
-                                            value={newVehicle.vehicle_model}
-                                            onChange={handleInputChange}
-                                        />
-                                        <input
-                                            type="text"
-                                            name="vehicle_type"
-                                            placeholder="Vehicle type"
-                                            value={newVehicle.vehicle_type}
-                                            onChange={handleInputChange}
-                                        />
+                                        <div>
+                                            <div className={`${formErrors.year ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.year}.
+                                            </div>
+                                            <select
+                                                className={styles.input}
+                                                value={newVehicle.vehicle_year || ""}
+                                                onChange={(e) => handleChange("vehicle_year", e.target.value)}
+                                            >
+                                                <option value="">* Year</option>
+                                                {Array.from({ length: 40 }, (_, i) => {
+                                                    const year = new Date().getFullYear() + 1 - i;
+                                                    return (
+                                                        <option key={year} value={year}>
+                                                            {year}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div className={`${formErrors.make ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.make}.
+                                            </div>
+                                            <select
+                                                className={styles.input}
+                                                value={newVehicle.vehicle_make || ""}
+                                                onChange={(e) => handleChange("vehicle_make", e.target.value)}
+                                            >
+                                                <option value="">* Make</option>
+                                                {carMakers.map((maker, i) => (
+                                                    <option key={i} value={maker}>
+                                                        {maker}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div className={`${formErrors.model ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.model}.
+                                            </div>
+                                            <select
+                                                // className={style.input}
+                                                value={newVehicle.vehicle_model || ""}
+                                                onChange={(e) => handleChange("vehicle_model", e.target.value)}
+                                                disabled={!newVehicle.vehicle_make}
+                                            >
+                                                <option value="">* Model</option>
+                                                {newVehicle.vehicle_make &&
+                                                    carModelsByMake[newVehicle.vehicle_make].map((model, i) => (
+                                                        <option key={i} value={model}>
+                                                            {model}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div className={`${formErrors.type ? styles.error : styles.hidden}`} role="alert">
+                                                {formErrors.type}.
+                                            </div>
+                                            <select
+                                                className={styles.input}
+                                                value={newVehicle.vehicle_type || ""}
+                                                onChange={(e) => handleChange("vehicle_type", e.target.value)}
+                                            >
+                                                <option value="">* Type</option>
+                                                {vehicleTypes.map((type) => (
+                                                    <option key={type} value={type}>{type}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.color ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.color}.
+                                        </div>
                                         <input
                                             type="text"
                                             name="vehicle_color"
-                                            placeholder="Vehicle color"
+                                            placeholder="* Color"
                                             value={newVehicle.vehicle_color}
-                                            onChange={handleInputChange}
+                                            onChange={(e) => handleChange("vehicle_color", e.target.value)}
                                         />
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.mileage ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.mileage}.
+                                        </div>
                                         <input
                                             type="text"
                                             name="vehicle_mileage"
-                                            placeholder="Vehicle mileage"
+                                            placeholder="* Mileage"
                                             value={newVehicle.vehicle_mileage}
-                                            onChange={handleInputChange}
+                                            onChange={(e) => handleChange("vehicle_mileage", e.target.value)}
                                         />
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.tag ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.tag}.
+                                        </div>
                                         <input
                                             type="text"
                                             name="vehicle_tag"
-                                            placeholder="Vehicle tag"
+                                            placeholder="* License Plate"
                                             value={newVehicle.vehicle_tag}
-                                            onChange={handleInputChange}
+                                            onChange={(e) => handleChange("vehicle_tag", e.target.value)}
                                         />
+                                        </div>
+                                        <div>
+                                        <div className={`${formErrors.serial ? styles.error : styles.hidden}`} role="alert">
+                                            {formErrors.serial}.
+                                        </div>
                                         <input
                                             type="text"
                                             name="vehicle_serial"
-                                            placeholder="VIN Number"
+                                            placeholder="* VIN Number"
                                             value={newVehicle.vehicle_serial}
-                                            onChange={handleInputChange}
+                                            onChange={(e) => handleChange("vehicle_serial", e.target.value)}
                                         />
+                                        </div>
                                         <button onClick={handleAddVehicle}>Add Vehicle</button>
                                     </div>
                                 </div>
