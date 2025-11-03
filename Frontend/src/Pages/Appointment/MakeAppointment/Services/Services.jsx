@@ -75,14 +75,13 @@ function Services() {
                     <h2>Schedule Appointment <span>____</span></h2>
                     <div className={style.makeAppointment}>
                         <ul>
-                            <li><Link to="/make-appointment/customer">Customer</Link> <FaChevronRight className={style.arrow} /></li>
-                            <li><Link to="/make-appointment/vehicle">Vehicle</Link> <FaChevronRight className={style.arrow} /></li>
-                            <li>Services <FaChevronRight className={style.arrow} /></li>
-                            <li>Appointment <FaChevronRight className={style.arrow} /></li>
-                            <li>Review</li>
+                            <li className={style.completed}><Link to="/make-appointment/customer">Customer</Link> <FaChevronRight className={style.arrow} /></li>
+                            <li className={style.completed}><Link to="/make-appointment/vehicle">Vehicle</Link> <FaChevronRight className={style.arrow} /></li>
+                            <li className={style.completed}><div>Services</div> <FaChevronRight className={style.arrow} /></li>
+                            <li className={style.completed}><div>Appointment</div> <FaChevronRight className={style.arrow} /></li>
+                            <li className={style.completed}><div>Review</div></li>
                         </ul>
                     </div>
-                    <p>Have an account? <Link to="/auth">Sign In</Link> or continue as guest.</p>
                     <div className={style.tittle}><FaWrench /> Choose Services</div>
                     <p>Select the services you need by checking the boxes.</p>
 
