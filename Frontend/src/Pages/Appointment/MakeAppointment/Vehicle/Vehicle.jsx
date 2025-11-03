@@ -4,7 +4,7 @@ import { FaChevronRight, FaCar, FaChevronLeft } from "react-icons/fa";
 import { useAppointment } from '../../../../Contexts/AppointmentContext';
 import Layout from '../../../../Layout/Layout';
 import style from "./Vehicle.module.css";
-import carMakersData from "./carMakers.json";
+import carMakersData from "../../../../assets/json/carMakers.json";
 
 function Vehicle() {
   const navigate = useNavigate();
@@ -84,26 +84,22 @@ function Vehicle() {
           </h2>
           <div className={style.makeAppointment}>
             <ul>
-              <li>
+              <li className={style.completed}>
                 <Link to="/make-appointment/customer">Customer</Link>{" "}
                 <FaChevronRight className={style.arrow} />
               </li>
-              <li>
-                Vehicle <FaChevronRight className={style.arrow} />
+              <li className={style.completed}>
+                <div>Vehicle</div> <FaChevronRight className={style.arrow} />
               </li>
-              <li>
-                Services <FaChevronRight className={style.arrow} />
+              <li className={style.completed}>
+                <div>Services</div> <FaChevronRight className={style.arrow} />
               </li>
-              <li>
-                Appointment <FaChevronRight className={style.arrow} />
+              <li className={style.completed}>
+                <div>Appointment</div> <FaChevronRight className={style.arrow} />
               </li>
-              <li>Review</li>
+              <li className={style.completed}><div>Review</div></li>
             </ul>
           </div>
-          <p>
-            Have an account? <Link to="/auth">Sign In</Link> or continue as
-            guest.
-          </p>
           <div className={style.tittle}>
             <FaCar /> Vehicle Information
           </div>
@@ -133,7 +129,7 @@ function Vehicle() {
               {formErrors.model}.
             </div>
             <select
-              // className={style.input}
+              className={style.input}
               value={vehicleData.model || ""}
               onChange={(e) => handleChange("model", e.target.value)}
               disabled={!vehicleData.make}
