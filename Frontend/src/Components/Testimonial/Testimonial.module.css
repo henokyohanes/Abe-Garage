@@ -26,6 +26,10 @@
     cursor: pointer;
 }
 
+.testimonialsButtons i:hover {
+    color: white;
+}
+
 .testimonials p {
     font-size: clamp(.8em, 3vw, 1.2em);
     margin: 0;

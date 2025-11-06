@@ -308,13 +308,13 @@ const Account = () => {
   return (
     <Layout>
       <div className={`${styles.provideServices} row g-0`}>
-        <div className="d-none d-xl-block col-3">
+        <div className="d-none d-md-block col-3">
           <AdminMenu />
         </div>
-        <div className="d-block d-xl-none">
+        <div className="d-block d-md-none">
           <AdminMenuMobile />
         </div>
-        <div className="col-12 col-xl-9">
+        <div className="col-12 col-md-9">
           {!loading && !error ? (
             <div className={styles.accountContainer}>
               <div className={styles.profile}>

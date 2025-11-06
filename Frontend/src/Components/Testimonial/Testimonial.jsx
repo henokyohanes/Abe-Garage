@@ -9,7 +9,7 @@ const Testimonial = () => {
             <p>Working since 2000 <span>______</span></p>
             <h1>We are Leader in Car Mechanical Work</h1>
             <div className={style.testimonialsButtons}>
-                <Link to="https://www.youtube.com/watch?v=CZ3U5oHLyl8" target="_blank">
+                <Link to="https://www.youtube.com/watch?v=CZ3U5oHLyl8" target="_blank" rel="noopener noreferrer">
                     <i className="fab fa-youtube" />
                 </Link>
                 <p>Watch Intro Video<br />about us</p>
