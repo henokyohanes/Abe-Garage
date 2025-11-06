@@ -6,7 +6,7 @@ export const axiosImageURL = import.meta.env.VITE_API_URL;
 // Helper function to retrieve authentication headers
 const getAuthHeaders = () => {
     const storedToken = JSON.parse(localStorage.getItem("user"));
-    const token = storedToken?.sendBack.user_token;
+    const token = storedToken?.user_token;
     return {
         headers: {
             "Content-Type": "multipart/form-data",

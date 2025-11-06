@@ -7,8 +7,9 @@ const getAuth = async () => {
     
     // Read the data from the user's local storage
     const stored = JSON.parse(localStorage.getItem("user"));
-    if (stored && stored.sendBack.user_token) {
-      const decodedToken = decodeTokenPayload(stored.sendBack.user_token);
+    console.log("stored", stored);
+    if (stored && stored.user_token) {
+      const decodedToken = decodeTokenPayload(stored.user_token);
       const employee_id = stored?.userInfo?.employee_id;
       const customer_id = stored?.userInfo?.customer_id;
       
@@ -30,10 +31,12 @@ const getAuth = async () => {
       
       const userData = (employee && employee.data) || (customer && customer.data);
 
+      console.log("userData", userData);
+
       return {
         ...userData,
-        user_token: stored.sendBack.user_token,
-        user_role: userData.employee_role || null,
+        user_token: stored.user_token,
+        user_role: userData.company_role_id ? userData.company_role_id : 4,
         user_id: userData.employee_id || userData.customer_id,
         user_name: userData.employee_username || userData.customer_username,
         first_name: userData.employee_first_name || userData.customer_first_name,
