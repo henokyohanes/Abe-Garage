@@ -110,28 +110,24 @@ function Appointment() {
           </h2>
           <div className={style.makeAppointment}>
             <ul>
-              <li>
+              <li className={style.completed}>
                 <Link to="/make-appointment/customer">Customer</Link>{" "}
                 <FaChevronRight className={style.arrow} />
               </li>
-              <li>
+              <li className={style.completed}>
                 <Link to="/make-appointment/vehicle">Vehicle</Link>{" "}
                 <FaChevronRight className={style.arrow} />
               </li>
-              <li>
+              <li className={style.completed}>
                 <Link to="/make-appointment/services">Services</Link>{" "}
                 <FaChevronRight className={style.arrow} />
               </li>
-              <li>
-                Appointment <FaChevronRight className={style.arrow} />
+              <li className={style.completed}>
+                <div>Appointment</div> <FaChevronRight className={style.arrow} />
               </li>
-              <li>Review</li>
+              <li className={style.completed}><div>Review</div></li>
             </ul>
           </div>
-          <p>
-            Have an account? <Link to="/auth">Sign In</Link> or continue as
-            guest.
-          </p>
           <div className={style.tittle}>
             <FaCalendar /> Set Appointment
           </div>
