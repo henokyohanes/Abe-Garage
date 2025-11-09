@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./Contexts/AuthContext";
 import InactivityProvider from "./Contexts/InactivityProvider/InactivityProvider";
 import { AppointmentProvider } from "./Contexts/AppointmentContext"; // ⬅️ Import it
+import ScrollToTop from "./Components/ScrollToTop/ScrollToTop";
 import AppRoutes from "./routes/routes";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "@fontsource/inter";
@@ -13,6 +14,7 @@ const App = () => (
     <AuthProvider>
       <InactivityProvider>
         <AppointmentProvider>
+          <ScrollToTop />
           <AppRoutes />
         </AppointmentProvider>
       </InactivityProvider>

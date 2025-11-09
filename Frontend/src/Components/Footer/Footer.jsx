@@ -14,7 +14,7 @@ const Footer = () => {
     };
 
     return (
-        <div>
+        <footer>
             {/* back to top section */}
             <div onClick={scrollToTop} className={styles.backTop}>
                 <IoMdArrowDropup />
@@ -59,20 +59,20 @@ const Footer = () => {
                             <li>Transmission Service</li>
                             <li>Brake Repair & Service</li>
                             <li>Engine Service & Repair</li>
-                            <li>Tyre & Wheels</li>
+                            <li>Tire & Wheels</li>
                         </ul>
                     </div>
                     <div className="col-sm-12 col-md-5 col-lg-3">
                         <h4>Newsletter</h4>
                         <p>Get the latest updates and offers.</p>
                         <div className={styles.socialMedia}>
-                            <Link to="https://www.facebook.com/nani.love.16100" target="_blank" aria-label="Facebook">
+                            <Link to="https://www.facebook.com/nani.love.16100" target="_blank" aria-label="Facebook" rel="noopener noreferrer">
                                 <i className="fab fa-facebook-f"></i>
                             </Link>
-                            <Link to="https://x.com/Henokyohanes2" target="_blank" aria-label="Twitter">
+                            <Link to="https://x.com/Henokyohanes2" target="_blank" aria-label="Twitter" rel="noopener noreferrer">
                                 <i className="fab fa-x-twitter"></i>
                             </Link>
-                            <Link to="https://www.instagram.com/henok3303" target="_blank" aria-label="Instagram">
+                            <Link to="https://www.instagram.com/henok3303" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
                                 <i className="fab fa-instagram"></i>
                             </Link>
                             <Link to="/" aria-label="Google">
@@ -82,7 +82,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </footer>
     );
 };
 
