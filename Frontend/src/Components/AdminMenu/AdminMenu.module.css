@@ -7,11 +7,11 @@
 
 .adminMenuTitle {
   background-color: #1D2230;
-  padding: 1vw 2vw;
+  padding: 1vw;
 }
 
 .adminMenuTitle h2 {
-  font-size: clamp(1em, 3vw, 1.4em);
+  font-size: clamp(1em, 3vw, 1.3em);
   font-weight: bold;
   color: #D6D7DE;
 }

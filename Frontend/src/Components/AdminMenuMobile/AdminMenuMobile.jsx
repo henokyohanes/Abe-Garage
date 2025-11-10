@@ -12,7 +12,7 @@ const AdminMenuMobile = () => {
     const getRoleText = () => {
         if (isAdmin) return "Admin";
         if (isManager) return "Manager";
-        if (isEmployee) return "Mechanic";
+        if (isEmployee) return "Technician";
         return "User";
     };
 
@@ -23,15 +23,18 @@ const AdminMenuMobile = () => {
             </div>
             <div className={styles.listGroup}>
                 <Link to="/dashboard" className={styles.listGroupItem}>Dashboard</Link>
+                {isEmployee && <Link to="/my-profile" className={styles.listGroupItem}>My Profile</Link>}
+                {isEmployee && <Link to="/my-tasks" className={styles.listGroupItem}>My Tasks</Link>}
                 {(isAdmin || isManager || isEmployee) && <Link to="/orders" className={styles.listGroupItem}>Orders</Link>}
                 {(isAdmin || isManager) && <Link to="/new-order" className={styles.listGroupItem}>New order</Link>}
                 {isAdmin && <Link to="/add-employee" className={styles.listGroupItem}>Add employee</Link>}
                 {(isAdmin || isManager) && <Link to="/employees" className={styles.listGroupItem}>Employees</Link>}
                 {(isAdmin || isManager) && <Link to="/add-customer" className={styles.listGroupItem}>Add customer</Link>}
                 {(isAdmin || isManager) && <Link to="/customers" className={styles.listGroupItem}>Customers</Link>}
-                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-appointments" className={styles.listGroupItem}>My Appointments</Link>}
-                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-vehicles" className={styles.listGroupItem}>My Vehicles</Link>}
-                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-orders" className={styles.listGroupItem}>My Orders</Link>}
+                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-appointments" className={styles.listGroupItem}>Appointments</Link>}
+                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-vehicles" className={styles.listGroupItem}>Vehicles</Link>}
+                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-orders" className={styles.listGroupItem}>Orders</Link>}
+                {(!isAdmin && !isManager && !isEmployee) && <Link to="/my-notifications" className={styles.listGroupItem}>Notifications</Link>}
                 <Link to="/services" className={styles.listGroupItem}>Services</Link>
             </div>
         </div>
