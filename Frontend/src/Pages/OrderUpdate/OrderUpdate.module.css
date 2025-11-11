@@ -41,7 +41,7 @@
 }
 
 .orderDetails h4 {
-  font-size: clamp(1em, 3vw, 1.2em);
+  font-size: clamp(.9em, 3vw, 1.1em);
   font-weight: bold;
   color: #07184A;
   margin-bottom: 0;
@@ -101,11 +101,22 @@
 }
 
 .status {
+  background-color: #d82323;
   width: fit-content;
   font-size: clamp(.9em, 3vw, 1.1em);
   display: inline-block;
   color: white;
   border: none;
+  border-radius: .3em;
+  padding: .1em .6em;
+  cursor: pointer;
+}
+
+.technician {
+  width: fit-content;
+  font-size: clamp(.9em, 3vw, 1.1em);
+  display: inline-block;
+  border: 1px solid #ccc;
   border-radius: .3em;
   padding: .1em .6em;
   cursor: pointer;
