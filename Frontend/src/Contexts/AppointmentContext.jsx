@@ -77,6 +77,7 @@ export const AppointmentProvider = ({ children }) => {
   const clearFormData = () => {
     localStorage.removeItem("appointmentFormData");
     setFormData(defaultData);
+    console.log("formData", formData);
   };
 
   // Save to localStorage whenever formData changes

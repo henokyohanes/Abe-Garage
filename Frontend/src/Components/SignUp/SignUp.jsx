@@ -177,7 +177,7 @@ const Signup = ({ onToggle, setError }) => {
           });
           localStorage.setItem("user", JSON.stringify(customer.data));
           setTimeout(() => {
-            window.location.href = "/";
+            window.location.href = "/dashboard";
           }, 2000);
         }
       }

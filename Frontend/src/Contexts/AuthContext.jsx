@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isManager, setIsManager] = useState(false);
   const [isEmployee, setIsEmployee] = useState(false);
+  const [isCustomer, setIsCustomer] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -33,14 +34,20 @@ export const AuthProvider = ({ children }) => {
           }
 
           // Check if the employee is a manager
-          if (loggedInUser.company_role_id === 2) {
+          else if (loggedInUser.company_role_id === 2) {
             setIsManager(true);
           }
 
           // check if the employee is an employee
-          if (loggedInUser.company_role_id === 1) {
+          else if (loggedInUser.company_role_id === 1) {
             setIsEmployee(true);
           }
+
+          // check if the user is a customer
+          else {
+            setIsCustomer(true);
+          }
+
           setUser(loggedInUser);
         }
       } catch (error) {
@@ -59,6 +66,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin,
     isManager,
     isEmployee,
+    isCustomer,
     setIsAdmin,
     setIsLogged,
     user,

@@ -30,10 +30,21 @@ const AddCustomer = () => {
     // Handle form input changes
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-        });
+        const updatedValue = type === "checkbox" ? (checked ? 1 : 0) : value;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: updatedValue,
+        }));
+
+        // Clear the corresponding error when user types
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            ...(name === "customer_first_name" && { first_name: "" }),
+            ...(name === "customer_last_name" && { last_name: "" }),
+            ...(name === "customer_email" && { email: "" }),
+            ...(name === "customer_phone_number" && { phone: "" }),
+        }));
     };
 
     // Validate form
