@@ -85,9 +85,24 @@ export const checkUsernameAvailability = async (username) => {
   }
 };
 
+// -------------------- VERIFY OTP --------------------
+export const verifyOTP = async (data) => {
+  try {
+    const response = await axios.post(
+      `${api_url}/api/user/verify-otp`,
+      data,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    throw error.response?.data || { message: "Unknown error occurred" };
+  }
+};
+
 // A function to log out the user
 export const logOut = () => {
   localStorage.removeItem("user");
 };
 
-export default { register, logIn, forgotPassword, resetPassword, checkUsernameAvailability, logOut };
+export default { register, logIn, forgotPassword, resetPassword, checkUsernameAvailability, verifyOTP, logOut };
