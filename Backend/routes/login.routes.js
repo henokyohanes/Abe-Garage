@@ -17,4 +17,7 @@ router.post("/api/user/reset-password/:token", loginControllers.resetPassword);
 // Route to check if username is available
 router.get("/api/user/check-username", loginControllers.checkUsernameAvailability);
 
+// Route to Verify OTP after login (2FA)
+router.post("/api/user/verify-otp", loginControllers.verify2FA);
+
 module.exports = router;
