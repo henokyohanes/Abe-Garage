@@ -14,6 +14,8 @@ const Dashboard = () => {
 
     // List of services
     const services = [
+        { icon: "👤", title: "Profile", sub: "Open for Users", path: "/account" },
+        (isEmployee) && { icon: "📝", title: "My Tasks", sub: "Open For Technicians", path: "/my-tasks" },
         (isAdmin || isManager || isEmployee) && { icon: "📦", title: "All Orders", sub: "Open For Employees", path: "/orders"},
         (isAdmin || isManager) && { icon: "🆕", title: "New Orders", sub: "Open For Managers", path: "/new-order" },
         isAdmin && { icon: "➕👤", title: "Add Employee", sub: "Open For Admins", path: "/add-employee" },
@@ -22,7 +24,7 @@ const Dashboard = () => {
         (isAdmin || isManager) && { icon: "👥", title: "Customers", sub: "Open for Managers", path: "/customers" },
         (!isAdmin && !isManager && !isEmployee) && { icon: "📅", title: "My Appointments", sub: "Open For Customers", path: "/my-appointments" },
         (!isAdmin && !isManager && !isEmployee) && { icon: "🚗", title: "My Vehicles", sub: "Open For Customers", path: "/my-vehicles" }, 
-        (!isAdmin && ! isManager || isEmployee) && { icon: "📦", title: "My Orders", sub: "Open For Customers", path: "/my-orders" },
+        (!isAdmin && ! isManager && !isEmployee) && { icon: "📦", title: "My Orders", sub: "Open For Customers", path: "/my-orders" },
         { icon: "🛠️", title: "Services", sub: "Service and Repairs", path: "/services" },
         { icon: "🛞", title: "Tire & Wheels", sub: "Service And Repairs" },
     ].filter(Boolean);
