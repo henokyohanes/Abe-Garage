@@ -13,7 +13,7 @@ router.get('/api/customers', [authMiddleware.verifyToken, authMiddleware.isAdmin
 router.get('/api/customer/:id', authMiddleware.verifyToken, customerController.getCustomerById);
 
 // Route to Update customer endpoint
-router.put('/api/update-customer/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], customerController.updateCustomer);
+router.put('/api/update-customer/:id', authMiddleware.verifyToken, customerController.updateCustomer);
 
 // Route to Delete customer endpoint
 router.delete('/api/delete-customer/:id', [authMiddleware.verifyToken, authMiddleware.isAdminOrManager], customerController.deleteCustomer);

@@ -115,7 +115,8 @@ const updateCustomer = async (req, res) => {
     customer_phone_number,
     customer_first_name,
     customer_last_name,
-    active_customer_status 
+    active_customer_status,
+    two_factor_enabled
   } = req.body;
 
   // Validate the ID
@@ -138,6 +139,7 @@ const updateCustomer = async (req, res) => {
       customer_first_name,
       customer_last_name,
       active_customer_status,
+      two_factor_enabled
     });
 
     return res.status(200).json({status: "success", message: "Customer updated successfully", data: updatedCustomer});

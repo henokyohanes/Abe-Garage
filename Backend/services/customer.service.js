@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 // function to find customer by email
 const findCustomerByEmail = async (email) => {
+  console.log("email", email);
   try {
     // select customer by email
     const rows = await db.query(
@@ -11,6 +12,7 @@ const findCustomerByEmail = async (email) => {
       WHERE customer_identifier.customer_email = ?`,
       [email]
     );
+    console.log("rows", rows);
 
     return rows ? rows : null;
 
@@ -148,6 +150,7 @@ const getCustomerById = async (id) => {
   return rows[0]; // Return the first row if found
 };
 
+// Function to update a customer
 const updateCustomer = async (id, customerData) => {
   const {
     customer_first_name,
@@ -157,13 +160,17 @@ const updateCustomer = async (id, customerData) => {
     customer_email,
     customer_password,
     active_customer_status,
+    two_factor_enabled
   } = customerData;
 
   // Generate a salt and hash the password
-  let hashedPassword;
+  let hashedPassword = null;
+
   try {
-    const salt = await bcrypt.genSalt(10);
-    hashedPassword = await bcrypt.hash(customer_password, salt);
+    if (customer_password && customer_password.trim() !== "") {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(customer_password, salt);
+    }
   } catch (err) {
     console.error("Password hashing failed:", err.message);
     throw new Error("Failed to hash password");
@@ -196,14 +203,18 @@ const updateCustomer = async (id, customerData) => {
     valuesInfo.push(active_customer_status);
   }
 
+  if (two_factor_enabled !== undefined && two_factor_enabled !== null) {
+    fieldsInfo.push("customer_identifier.two_factor_enabled = ?");
+    valuesInfo.push(two_factor_enabled);
+  }
+
   if (customer_email) {
     fieldsIdentifier.push("customer_identifier.customer_email = ?");
     valuesIdentifier.push(customer_email);
   }
 
   if (customer_password) {
-    // Make sure to hash the password before storing
-    fieldsIdentifier.push("customer_identifier.customer_password = ?");
+    fieldsIdentifier.push("customer_identifier.customer_password_hashed = ?");
     valuesIdentifier.push(hashedPassword);
   }
 
@@ -234,7 +245,6 @@ const updateCustomer = async (id, customerData) => {
     throw new Error("Failed to update customer information");
   }
 };
-
 
 // function to delete a customer
 const deleteCustomer = async (id) => {
