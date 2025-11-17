@@ -14,7 +14,7 @@ const vehicleValidationSchema = checkSchema({
         notEmpty: { errorMessage: "Model is required" }
     },
     vehicle_year: {
-        isInt: { options: { min: 1900, max: new Date().getFullYear() }, errorMessage: "Year must be a valid year" },
+        isInt: { options: { min: 1986, max: new Date().getFullYear() + 1 }, errorMessage: "Year must be a valid year" },
         notEmpty: { errorMessage: "Year is required" },
     },
 });

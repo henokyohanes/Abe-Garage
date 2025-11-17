@@ -84,10 +84,11 @@ async function getAllEmployees() {
 // function to get an employee by ID
 const getEmployeeById = async (id) => {
   const rows = await db.query(
-    `SELECT employee.*, employee_info.*, employee_role.*, company_roles.*, orders.order_id FROM employee
+    `SELECT employee.*, employee_info.*, employee_role.*, company_roles.*, employee_pass.two_factor_enabled, orders.order_id FROM employee
     INNER JOIN employee_info ON employee.employee_id = employee_info.employee_id
     INNER JOIN employee_role ON employee.employee_id = employee_role.employee_id
     INNER JOIN company_roles ON employee_role.company_role_id = company_roles.company_role_id
+    LEFT JOIN employee_pass ON employee.employee_id = employee_pass.employee_id
     LEFT JOIN orders ON employee.employee_id = orders.employee_id
     WHERE employee.employee_id = ?`,
     [id]
@@ -103,11 +104,14 @@ async function updateEmployee(employeeId, employeeData) {
     employee_first_name,
     employee_last_name,
     company_role_id,
-    employee_phone } = employeeData;
+    employee_phone,
+    two_factor_enabled } = employeeData;
   try {
     // Check if the employee exists
     const existingEmployee = await getEmployeeByEmail(employee_email);
-    if (!existingEmployee) { throw new Error("Employee not found.")};
+    if (!existingEmployee) {
+      throw new Error("Employee not found.");
+    }
 
     // Start building the update query
     let updateQuery = "UPDATE employee SET ";
@@ -132,11 +136,20 @@ async function updateEmployee(employeeId, employeeData) {
       [employee_first_name, employee_last_name, employee_phone, employeeId]
     );
 
+    // === Update employee_pass table (for two-factor authentication) ===
+    if (two_factor_enabled !== undefined) {
+      await db.query(
+        `UPDATE employee_pass SET two_factor_enabled = ? WHERE employee_id = ?`,
+        [two_factor_enabled, employeeId]
+      );
+    }
+
     // Update employee role if provided
     if (company_role_id) {
       await db.query(
         `UPDATE employee_role SET company_role_id = ? WHERE employee_id = ?`,
-        [company_role_id, employeeId]);
+        [company_role_id, employeeId]
+      );
     }
 
     return { message: "Employee updated successfully" };
