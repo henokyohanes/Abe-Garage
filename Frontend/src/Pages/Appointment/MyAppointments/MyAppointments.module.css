@@ -1,0 +1,60 @@
+.customerAppointments {
+  background-color: #E6E4E9;
+}
+
+.appintmentContainer {
+  padding: 2vw 3vw;
+}
+
+.appintmentContainer h2 {
+  font-size: clamp(1.1em, 3vw, 1.8em);
+  font-weight: bold;
+  color: #07184A;
+}
+
+.appintmentContainer span {
+  color: #d82323;
+}
+
+.noAppointments {
+  font-size: clamp(.9em, 3vw, 1.1em);
+  font-weight: bold;
+  color: #d82323;
+  text-align: center;
+  margin: 2em 0;
+}
+
+.appointmentCard {
+  background-color: #FFFFFF;
+  width: 100%;
+  max-width: 30em;
+  margin-top: 1vw;
+  margin-bottom: 3em;
+  padding: 1vw;
+  border-radius: .4em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appointmentCard p,
+.appointmentCard ul li {
+  font-size: clamp(.9em, 3vw, 1.1em);
+  margin: .4em;
+}
+
+.appointment {
+  text-decoration: none;
+  padding: .5em 2em;
+  background-color: #d82323;
+  color: white;
+  font-size: clamp(.8em, 3vw, 1.2em);
+  font-weight: bold;
+  border-radius: .4em;
+  margin: 1em auto;
+  display: block;
+  width: fit-content;
+}
+
+.appointment:hover {
+  background-color: #07184A;
+  color: white;
+}
